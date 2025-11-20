@@ -11,7 +11,13 @@ const SongBody = () => {
     const currentKey = getTransposedKey(songKey, semitones);
     const preferSharps = shouldUseSharps(currentKey);
 
-    const handleTranspose = (delta) => setSemitones(s => s + delta);
+    const handleTranspose = (delta) => setSemitones(s => {
+        let next = s + delta;
+        if (next > 6) next -= 12;
+        else if (next < -5) next += 12;
+        return next;
+    })
+    
 
     const lines = lyrics.split('\n');
     return (
