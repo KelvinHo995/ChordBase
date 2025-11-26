@@ -93,6 +93,9 @@ const HoverChord = ({ chordName }) => {
                                 flex flex-col justify-center items-center z-50"
                 >
                     <div>
+                        <span></span>
+                    </div>
+                    <div>
                         <Chord chord={chordPositions[voicingIndex]} instrument={instrument} />
                     </div>
                     <div className="flex justify-center items-center gap-3 mt-1 text-sm">
