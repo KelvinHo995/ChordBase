@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import SongLine from './SongLine';
 import { getTransposedKey, shouldUseSharps, transposeChord } from '../utils/TransposeUtils';
+import { useInstrument } from '../context/InstrumentContext';
 
 const songKey = "G";
 const lyrics = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in";
 
 const SongBody = () => {
+    const { instrument, setInstrument, handleInstrumentChange } = useInstrument()
     const [semitones, setSemitones] = useState(0);
 
     const currentKey = getTransposedKey(songKey, semitones);
@@ -26,6 +28,11 @@ const SongBody = () => {
                 <button onClick={() => handleTranspose(-1)} className="px-2 py-1 bg-gray-200 rounded">-</button>
                 <span>Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
                 <button onClick={() => handleTranspose(+1)} className="px-2 py-1 bg-gray-200 rounded">+</button>
+                <select onChange={(e) => handleInstrumentChange(e.target.value)}>
+                    <option value={"guitar"}>Guitar</option>
+                    <option value={"ukulele"}>Ukelele</option>
+                    <option value={"piano"}>Piano</option>
+                </select>
             </div>
 
             {lines.map((line, i) => (

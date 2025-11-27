@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.1.16",
-    "@tombatossals/chords-db": "^0.5.1",
-    "@tombatossals/react-chords": "^0.2.10",
+    "@tombatossals/chords-db": "github:tombatossals/chords-db#f68e583",
+    "@tombatossals/react-chords": "github:tombatossals/react-chords#3788063",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.9.6",

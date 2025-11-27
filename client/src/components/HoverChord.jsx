@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import Chord from "./Chord";
-import guitarDb from "@tombatossals/chords-db/lib/guitar.json";
-console.log(guitarDb);
-// import instrument from "@tombatossals/chords-db/lib/guitar.json";
+import Chord from "@tombatossals/react-chords/lib/Chord";
+import ChordBlock from '@tombatossals/react-chords/lib/Chord/ChordBlock'
+import { useInstrument } from "../context/InstrumentContext";
+import { addMidiToPosition } from '@tombatossals/react-chords/lib/Chord/midiUtils';
 
-const getChordPositions = (chordName) => {
-    // const normalized = chordName.replace("/", "_");
-    
+
+const getChordPositions = (chordName, instrument) => {    
     const rootMatch = chordName.match(/^([A-G][b#]?)/);
     if (!rootMatch) return null;
 
     let root = rootMatch[1];
     let suffix = chordName.slice(root.length); // the rest (like "m_C#")
 
-    console.log(root, suffix);
+    // console.log(root, suffix);
 
     switch (root) {
         case "G#":
@@ -41,11 +40,11 @@ const getChordPositions = (chordName) => {
             break;
     }
     
-    if (suffix === "m") suffix = "minor";
+    if (suffix === "m" && instrument.name != "Piano") suffix = "minor";
     if (suffix === "") suffix = "major";
-    console.log(root, suffix);
-    const chordGroup = guitarDb.chords[root];
-    console.log(chordGroup);
+    // console.log(root, suffix);
+    const chordGroup = instrument.chords.chords[root];
+    // console.log(chordGroup);
     if (!chordGroup) return null;
 
     const chordData = chordGroup.find(c => c.suffix === suffix);
@@ -54,10 +53,11 @@ const getChordPositions = (chordName) => {
 }
 
 const HoverChord = ({ chordName }) => {
+    const { instrument } = useInstrument()
     const [hovered, setHovered] = useState(false)
     const [voicingIndex, setVoicingIndex] = useState(0);
 
-    const chordPositions = getChordPositions(chordName);
+    const chordPositions = getChordPositions(chordName, instrument);
 
     console.log(chordPositions);
 
@@ -67,16 +67,6 @@ const HoverChord = ({ chordName }) => {
 
     const getPrevVoicing = () => {
         setVoicingIndex((voicingIndex - 1 + chordPositions.length) % chordPositions.length);
-    }
-
-    const instrument = {
-        strings: 6,
-        fretsOnChord: 4,
-        name: 'Guitar',
-        keys: [],
-        tunings: {
-        standard: ['E', 'A', 'D', 'G', 'B', 'E']
-        }
     }
 
     return (
@@ -96,7 +86,12 @@ const HoverChord = ({ chordName }) => {
                         <span></span>
                     </div>
                     <div>
-                        <Chord chord={chordPositions[voicingIndex]} instrument={instrument} />
+                        <ChordBlock 
+                            position={chordPositions[voicingIndex]} 
+                            instrument={instrument} 
+                            name={chordName} 
+                            isPiano={instrument.name == "Piano"}
+                        />
                     </div>
                     <div className="flex justify-center items-center gap-3 mt-1 text-sm">
                         <button 
