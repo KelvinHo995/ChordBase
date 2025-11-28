@@ -27,7 +27,7 @@ const SongLine = ({ line, semitones, preferSharps }) => {
     const parts = line.split(/(\[[^\]]+\])/g);
 
     return (
-        <div className="leading-relaxed text-lg">
+        <div className="leading-relaxed text-lg py-2 px-5">
             {parts.map((part, i) => {
                 if (part.startsWith("[") && part.endsWith("]")) {
                     const rawChord = part.slice(1, -1);

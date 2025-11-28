@@ -1,17 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import SongLine from './SongLine';
 import { getTransposedKey, shouldUseSharps, transposeChord } from '../utils/TransposeUtils';
 import { useInstrument } from '../context/InstrumentContext';
 
 const songKey = "G";
-const lyrics = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in";
+const lyrics = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n";
 
 const SongBody = () => {
     const { instrument, setInstrument, handleInstrumentChange } = useInstrument()
     const [semitones, setSemitones] = useState(0);
+    const [isAutoscroll, setIsAutoscroll] = useState(false);
+    const [srcollSpeed, setScrollSpeed] = useState(1);
+    const lyricRef = useRef();
 
     const currentKey = getTransposedKey(songKey, semitones);
     const preferSharps = shouldUseSharps(currentKey);
+    const lines = lyrics.split('\n');
 
     const handleTranspose = (delta) => setSemitones(s => {
         let next = s + delta;
@@ -20,24 +24,66 @@ const SongBody = () => {
         return next;
     })
     
+    useEffect(() => {
+        if (!isAutoscroll) return;
 
-    const lines = lyrics.split('\n');
+        const el = lyricRef.current;
+        
+        const pxPerStep = srcollSpeed * 0.5;
+
+        const interval = setInterval(() => {
+            el.scrollTop += pxPerStep
+
+            if (el.scrollTop + el.clientHeight >= el.scrollHeight - 2) 
+                el.scrollTop = 0;
+        }, 30)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [srcollSpeed, isAutoscroll])
+
     return (
-        <div className="font-mono whitespace-pre-wrap">
-            <div className="flex items-center">
-                <button onClick={() => handleTranspose(-1)} className="px-2 py-1 bg-gray-200 rounded">-</button>
-                <span>Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
-                <button onClick={() => handleTranspose(+1)} className="px-2 py-1 bg-gray-200 rounded">+</button>
+        <div className="flex flex-col gap-3 font-mono whitespace-pre-wrap">
+            <div className="flex items-center bg-white border-white rounded-xl gap-x-5 p-2">
+                <div className="flex items-center rounded-full gap-x-3">
+                    <button onClick={() => handleTranspose(-1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">-</button>
+                    <span>Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
+                    <button onClick={() => handleTranspose(+1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">+</button>
+                </div>
+                
                 <select onChange={(e) => handleInstrumentChange(e.target.value)}>
                     <option value={"guitar"}>Guitar</option>
                     <option value={"ukulele"}>Ukelele</option>
                     <option value={"piano"}>Piano</option>
                 </select>
-            </div>
 
-            {lines.map((line, i) => (
-                <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps}/>
-            ))}
+                <button className='p-2 rounded-full' onClick={() => setIsAutoscroll(isAutoscroll => !isAutoscroll)}>
+                    {isAutoscroll ? "Stop" : "Autoscroll"}
+                </button>
+
+                {isAutoscroll && 
+                    <input
+                        name='scrollspeed'
+                        type='range' 
+                        min={1}
+                        max={10} 
+                        value={srcollSpeed} 
+                        onChange={(e) => setScrollSpeed(e.target.value)}
+                    />
+                }
+                
+            </div>  
+            
+            {/* Song line */}
+            <div 
+                className={`flex flex-col bg-white rounded-xl border-white ${isAutoscroll ? "h-screen overflow-auto" : ""}`}
+                ref={lyricRef}
+            >
+                {lines.map((line, i) => (
+                    <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps}/>
+                ))}
+            </div>
         </div>
     )
 }

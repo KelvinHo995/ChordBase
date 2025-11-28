@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Chord from "@tombatossals/react-chords/lib/Chord";
 import ChordBlock from '@tombatossals/react-chords/lib/Chord/ChordBlock'
 import { useInstrument } from "../context/InstrumentContext";
-import { addMidiToPosition } from '@tombatossals/react-chords/lib/Chord/midiUtils';
 
 
 const getChordPositions = (chordName, instrument) => {    
@@ -69,6 +68,9 @@ const HoverChord = ({ chordName }) => {
         setVoicingIndex((voicingIndex - 1 + chordPositions.length) % chordPositions.length);
     }
 
+    useEffect(() => {
+        setVoicingIndex(0);
+    }, [instrument])
     return (
         <span
             className="relative inline-block"
@@ -83,14 +85,11 @@ const HoverChord = ({ chordName }) => {
                                 flex flex-col justify-center items-center z-50"
                 >
                     <div>
-                        <span></span>
-                    </div>
-                    <div>
-                        <ChordBlock 
-                            position={chordPositions[voicingIndex]} 
+                        <Chord
+                            chord={chordPositions[voicingIndex]} 
                             instrument={instrument} 
-                            name={chordName} 
-                            isPiano={instrument.name == "Piano"}
+                            // name={chordName} 
+                            // isPiano={instrument.name == "Piano"}
                         />
                     </div>
                     <div className="flex justify-center items-center gap-3 mt-1 text-sm">
