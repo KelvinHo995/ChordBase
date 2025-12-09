@@ -77,7 +77,7 @@ const SongBody = () => {
             
             {/* Song line */}
             <div 
-                className={`flex flex-col bg-white rounded-xl border-white ${isAutoscroll ? "h-screen overflow-auto" : ""}`}
+                className={`flex flex-col bg-white rounded-xl border-white ${isAutoscroll ? "h-screen overflow-y-auto" : ""}`}
                 ref={lyricRef}
             >
                 {lines.map((line, i) => (

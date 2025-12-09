@@ -1,0 +1,29 @@
+import { createContext, useContext, useState } from "react";
+
+const AuthContext = createContext()
+
+export const useAuth = () => useContext(AuthContext)
+
+export const AuthProvider = ({ children }) => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
+    const [isAdmin, setIsAdmin] = useState(false)
+
+    const login = () => {
+        localStorage.setItem('auth_token', 'fake_token') // :))))))))))))))
+        setIsLoggedIn(true)
+        setIsAdmin(false) // based on role
+    }
+
+    const logout = () => {
+        localStorage.removeItem('auth_token')
+        setIsLoggedIn(false)
+        setIsAdmin(false)
+    }
+
+    return (
+        <AuthContext.Provider>
+            {children}
+        </AuthContext.Provider>
+    )
+}

@@ -52,7 +52,7 @@ const SongPage = () => {
 
   return (
     <InstrumentProvider value = {{ instrument, setInstrument, handleInstrumentChange }}>
-      <div className="space-y-6">
+      <div className="w-full max-w-2xl space-y-6">
         <SongBody />
         <ChordList />
       </div>

@@ -82,16 +82,14 @@ const HoverChord = ({ chordName }) => {
                 hovered && (
                 <div className="w-55 h-60 absolute left-1/2 -translate-x-1/2 mb-1
                                 bg-white border-white rounded-xl shadow-md p-1
-                                flex flex-col justify-center items-center z-50"
+                                flex flex-col justify-center items-center z-500"
                 >
-                    <div>
-                        <Chord
-                            chord={chordPositions[voicingIndex]} 
-                            instrument={instrument} 
-                            // name={chordName} 
-                            // isPiano={instrument.name == "Piano"}
-                        />
-                    </div>
+                    <Chord
+                        chord={chordPositions[voicingIndex]} 
+                        instrument={instrument} 
+                        // name={chordName} 
+                        // isPiano={instrument.name == "Piano"}
+                    />
                     <div className="flex justify-center items-center gap-3 mt-1 text-sm">
                         <button 
                             onClick={getPrevVoicing}
