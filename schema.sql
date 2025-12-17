@@ -19,6 +19,15 @@ CREATE TABLE users (
     deleted_at     TIMESTAMPTZ
 );
 
+CREATE TABLE password_resets (
+    reset_id BIGSERIAL PRIMARY KEY,
+    user_id BIGINT NOT NULL REFERENCES users(user_id),
+    reset_token TEXT NOT NULL UNIQUE,
+    expires_at TIMESTAMPTZ NOT NULL,
+    used BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE artists (
     artist_id   BIGSERIAL PRIMARY KEY,
     name        VARCHAR(200) NOT NULL,

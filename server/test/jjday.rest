@@ -1,0 +1,3 @@
+# GET http://localhost:3000/api/users/profile/1
+GET http://localhost:3000/api/users?page=1&limit=10&role=user
+Authorization: Bearer your_super_secret_jwt_key_change_this_in_production_min_32_chars
