@@ -84,29 +84,34 @@ const HoverChord = ({ chordName }) => {
                                 bg-white border-white rounded-xl shadow-md p-1
                                 flex flex-col justify-center items-center z-500"
                 >
-                    <Chord
-                        chord={chordPositions[voicingIndex]} 
-                        instrument={instrument} 
-                        // name={chordName} 
-                        // isPiano={instrument.name == "Piano"}
-                    />
-                    <div className="flex justify-center items-center gap-3 mt-1 text-sm">
-                        <button 
-                            onClick={getPrevVoicing}
-                            className="p-1 bg-gray-100 rounded hover:bg-gray-200"
-                        >
-                            ◀
-                        </button>
-                        <span>
-                            {voicingIndex + 1}/{chordPositions.length}
-                        </span>
-                        <button
-                            onClick={getNextVoicing}
-                            className="p-1 bg-gray-100 rounded hover:bg-gray-200"
-                        >
-                            ▶
-                        </button>
-                    </div>
+                    {chordPositions != null ? (
+                        <>
+                            <Chord
+                                chord={chordPositions[voicingIndex]} 
+                                instrument={instrument} 
+                                // name={chordName} 
+                                // isPiano={instrument.name == "Piano"}
+                            />
+                            <div className="flex justify-center items-center gap-3 mt-1 text-sm">
+                                <button 
+                                    onClick={getPrevVoicing}
+                                    className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                                >
+                                    ◀
+                                </button>
+                                <span>
+                                    {voicingIndex + 1}/{chordPositions.length}
+                                </span>
+                                <button
+                                    onClick={getNextVoicing}
+                                    className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                                >
+                                    ▶
+                                </button>
+                            </div>
+                        </>
+                    ) : (<span className="flex justify-center">Hợp âm không được hỗ trợ!</span>)}
+                    
                 </div>
                 )
             }

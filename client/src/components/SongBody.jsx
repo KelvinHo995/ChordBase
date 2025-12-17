@@ -3,10 +3,15 @@ import SongLine from './SongLine';
 import { getTransposedKey, shouldUseSharps, transposeChord } from '../utils/TransposeUtils';
 import { useInstrument } from '../context/InstrumentContext';
 
-const songKey = "G";
-const lyrics = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n";
+const songKeyTemp = "G";
+const lyricsTemp = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n";
 
-const SongBody = () => {
+const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
+    if (lyrics == null)
+        lyrics = lyricsTemp;
+    if (songKey == null) 
+        songKey = songKeyTemp;
+
     const { instrument, setInstrument, handleInstrumentChange } = useInstrument()
     const [semitones, setSemitones] = useState(0);
     const [isAutoscroll, setIsAutoscroll] = useState(false);
@@ -45,36 +50,36 @@ const SongBody = () => {
 
     return (
         <div className="flex flex-col gap-3 font-mono whitespace-pre-wrap">
-            <div className="flex items-center bg-white border-white rounded-xl gap-x-5 p-2">
-                <div className="flex items-center rounded-full gap-x-3">
-                    <button onClick={() => handleTranspose(-1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">-</button>
-                    <span>Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
-                    <button onClick={() => handleTranspose(+1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">+</button>
-                </div>
-                
-                <select onChange={(e) => handleInstrumentChange(e.target.value)}>
-                    <option value={"guitar"}>Guitar</option>
-                    <option value={"ukulele"}>Ukelele</option>
-                    <option value={"piano"}>Piano</option>
-                </select>
+            {showControl &&
+                <div className="flex items-center bg-white border-white rounded-xl gap-x-5 p-2">
+                    <div className="flex items-center rounded-full gap-x-3">
+                        <button onClick={() => handleTranspose(-1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">-</button>
+                        <span>Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
+                        <button onClick={() => handleTranspose(+1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">+</button>
+                    </div>
+                    
+                    <select onChange={(e) => handleInstrumentChange(e.target.value)}>
+                        <option value={"guitar"}>Guitar</option>
+                        <option value={"ukulele"}>Ukelele</option>
+                        <option value={"piano"}>Piano</option>
+                    </select>
 
-                <button className='p-2 rounded-full' onClick={() => setIsAutoscroll(isAutoscroll => !isAutoscroll)}>
-                    {isAutoscroll ? "Stop" : "Autoscroll"}
-                </button>
+                    <button className='p-2 rounded-full' onClick={() => setIsAutoscroll(isAutoscroll => !isAutoscroll)}>
+                        {isAutoscroll ? "Stop" : "Autoscroll"}
+                    </button>
 
-                {isAutoscroll && 
-                    <input
-                        name='scrollspeed'
-                        type='range' 
-                        min={1}
-                        max={10} 
-                        value={srcollSpeed} 
-                        onChange={(e) => setScrollSpeed(e.target.value)}
-                    />
-                }
-                
-            </div>  
-            
+                    {isAutoscroll && 
+                        <input
+                            name='scrollspeed'
+                            type='range' 
+                            min={1}
+                            max={10} 
+                            value={srcollSpeed} 
+                            onChange={(e) => setScrollSpeed(e.target.value)}
+                        />
+                    }
+                </div>  
+            }
             {/* Song line */}
             <div 
                 className={`flex flex-col bg-white rounded-xl border-white ${isAutoscroll ? "h-screen overflow-y-auto" : ""}`}
