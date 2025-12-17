@@ -7,16 +7,19 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import SongPage from "./pages/SongPage";
 import SearchPage from "./pages/SearchPage";
-import MainLayout from "./layouts/MainLayout";
-import AuthLayout from "./layouts/AuthLayout";
 import UploadPage from "./pages/UploadPage";
 import { InstrumentProvider } from "./context/InstrumentContext";
 import { AuthProvider } from "./context/AuthContext";
 import AdminDashboard from "./pages/admin/AdminDashboard";
-import SubmissionManagement from "./pages/admin/SubmissionManagement";
 import SongManagement from "./pages/admin/SongManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import PasswordReset from "./pages/PasswordReset";
+import MainLayout from "./layouts/MainLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import { ProtectedRoute, AdminRoute } from "./components/PrivateRoutes";
+import Playlists from "./pages/Playlists";
+import UserProfile from "./pages/UserProfile";
+import ChordGenerator from "./pages/ChordGenerator";
 
 function App() {
   const router = createBrowserRouter([
@@ -29,11 +32,19 @@ function App() {
             children: [
               { index: true, element: <Home /> },
               { path: "search", element: <SearchPage /> },
+              { path: "profile", element: <UserProfile />},
               {
                 element: <InstrumentProvider children={<Outlet />} />,
                 children: [
                   { path: "song", element: <SongPage /> },
                   { path: "upload", element: <UploadPage /> }
+                ]
+              },
+              {
+                element: <ProtectedRoute />,
+                children: [
+                  { path: "playlists", element: <Playlists />},
+                  { path: "chord-generator", element: <ChordGenerator />}
                 ]
               }
             ],
@@ -50,12 +61,14 @@ function App() {
         {
           path: "/admin",
           element: <MainLayout />,
-          children: [
-            { path: "dashboard", element: <AdminDashboard />},
-            { path: "song-management", element: <SongManagement />},
-            { path: "submission-manangement", element: <SubmissionManagement />},
-            { path: "user-management", element: <UserManagement />}
-          ]
+          children: [{
+            element: <AdminRoute />,
+            children: [
+              { path: "dashboard", element: <AdminDashboard />},
+              { path: "song-management", element: <SongManagement />},
+              { path: "user-management", element: <UserManagement />}
+            ]
+          }]
         }
       ]
     }

@@ -1,9 +1,20 @@
-import React from 'react'
+import { SongCard } from "./SongCard"
 
-const SongList = ({ query = "time=lastweek&sort=..." }) => {
+export function SongList({ songs = [], emptyMessage = "No songs found" }) {
+  if (songs.length === 0) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-zinc-500">{emptyMessage}</p>
+      </div>
+    );
+  }
+
   return (
-    <div>SongList</div>
-  )
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {songs.map((song) => (
+        <SongCard key={song.id} song={song} />
+      ))}
+    </div>
+  );
 }
 
-export default SongList

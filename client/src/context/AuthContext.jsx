@@ -5,9 +5,9 @@ const AuthContext = createContext()
 export const useAuth = () => useContext(AuthContext)
 
 export const AuthProvider = ({ children }) => {
-    const [isLoggedIn, setIsLoggedIn] = useState(false)
-    const [isLoading, setIsLoading] = useState(true)
-    const [isAdmin, setIsAdmin] = useState(false)
+    const [isLoggedIn, setIsLoggedIn] = useState(true)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(true)
 
     const login = () => {
         localStorage.setItem('auth_token', 'fake_token') // :))))))))))))))

@@ -7,20 +7,14 @@ const SearchBar = () => {
     }
 
     return (
-        <section className='w-full max-w-lg'>
-            <div className="flex justify-center items-center w-full max-w-xl bg-white border border-gray-300 rounded-lg shadow-sm">
-                <div className='px-2'>
-                    <Search size={20} /> 
-                </div>
-
-                <input
-                    type="text"
-                    placeholder="Search songs, artists, or chords..."
-                    className="w-full p-3 text-sm text-gray-700 placeholder-gray-500 bg-transparent focus:outline-none"
-                />
-                
-            </div>
-        </section>
+        <div className="relative">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
+            <input
+                type="text"
+                placeholder="Search songs, artists, or keywords..."
+                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-white text-gray-950 placeholder:text-zinc-500 focus:outline-none focus:ring-0 focus:border-slate-200 transition-all"
+            />
+        </div>
     )
 }
 
