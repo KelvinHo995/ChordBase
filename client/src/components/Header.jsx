@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useAuth } from "../context/AuthContext"
 import SearchBar from './SearchBar'
 import { Button } from "@/components/ui/button"
 import {
@@ -23,27 +24,13 @@ import {
   Shield,
   Moon,
   Sun,
-  Menu,
-  X,
 } from "lucide-react"
 
-
-const SAMPLE_USER = {
-  displayName: "John Doe",
-  email: "john@example.com",
-  avatar: "/placeholder-user.jpg",
-  role: "admin",
-}
 
 const Header = () => {
   const location = useLocation()
   const navigate = useNavigate()
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
-  // --- MOCK STATE (Replace these with your real props or state later) ---
-  const isLoggedIn = true 
-  const isAdmin = true
-  // ---------------------------------------------------------------------
+  const { isLoggedIn, isAdmin, user, logout } = useAuth()
 
   const pathname = location.pathname
 
@@ -55,9 +42,8 @@ const Header = () => {
   ]
 
   const handleLogout = () => {
-    // Add your logout logic here
-    console.log("Logging out...")
-    navigate("/login")
+    logout()
+    navigate("/auth/login")
   }
 
   return (
@@ -86,17 +72,17 @@ const Header = () => {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-9 w-9 rounded-full cursor-pointer">
                       <Avatar className="h-9 w-9 border border-gray-200">
-                        <AvatarImage src={SAMPLE_USER?.avatar || "/placeholder.svg"} alt={SAMPLE_USER?.displayName} />
+                        <AvatarImage src={user?.avatar || "/placeholder.svg"} alt={user?.displayName} />
                         <AvatarFallback className="bg-indigo-100 text-indigo-600">
-                          {SAMPLE_USER?.displayName?.[0]?.toUpperCase() || "U"}
+                          {user?.displayName?.[0]?.toUpperCase() || "U"}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <div className="flex flex-col space-y-1 p-2">
-                      <p className="text-sm font-medium text-gray-900">{SAMPLE_USER?.displayName}</p>
-                      <p className="text-xs text-gray-500">{SAMPLE_USER?.email}</p>
+                      <p className="text-sm font-medium text-gray-900">{user?.displayName}</p>
+                      <p className="text-xs text-gray-500">{user?.email}</p>
                     </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
@@ -125,87 +111,18 @@ const Header = () => {
               // Logged Out State
               <div className="hidden sm:flex sm:items-center sm:gap-2">
                 <Button variant="ghost" asChild>
-                  <Link to="/login">Log in</Link>
+                  <Link to="/auth/login">Log in</Link>
                 </Button>
                 <Button asChild className="bg-indigo-600 hover:bg-indigo-700">
-                  <Link to="/register">Sign up</Link>
+                  <Link to="/auth/register">Sign up</Link>
                 </Button>
               </div>
             )}
-
-            {/* Mobile Menu Toggle */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
           </div>
         </div>
-
-        {/* Mobile Menu Content */}
-        {mobileMenuOpen && (
-          <div className="border-t border-gray-200 py-4 md:hidden">
-            <div className="mb-4">
-               <SearchBar /> 
-            </div>
-            <div className="flex flex-col gap-2">
-              {isLoggedIn && actionLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
-                >
-                  <link.icon className="h-4 w-4" />
-                  {link.label}
-                </Link>
-              ))}
-
-              {isLoggedIn ? (
-                <>
-                   <Link
-                      to="/profile"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-md"
-                    >
-                      <User className="h-4 w-4" />
-                      Profile
-                  </Link>
-                  <button
-                    onClick={() => {
-                        handleLogout();
-                        setMobileMenuOpen(false);
-                    }}
-                    className="flex w-full items-center gap-2 px-3 py-2 text-sm font-medium text-red-600 hover:bg-gray-100 rounded-md text-left"
-                  >
-                    <LogOut className="h-4 w-4" />
-                    Log out
-                  </button>
-                </>
-              ) : (
-                <div className="mt-2 flex flex-col gap-2 border-t border-gray-200 pt-4">
-                  <Button variant="ghost" asChild className="justify-start">
-                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
-                      Log in
-                    </Link>
-                  </Button>
-                  <Button asChild className="justify-start bg-indigo-600 hover:bg-indigo-700">
-                    <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
-                      Sign up
-                    </Link>
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        <div className="hidden md:flex md:items-center md:gap-1 pb-3 border-t border-border pt-3">
-          {isLoggedIn &&
-            userLinks.map((link) => (
+        {isLoggedIn && (
+          <div className="hidden md:flex md:items-center md:gap-1 pb-3 border-t border-border pt-3">
+            {userLinks.map((link) => (
               <Link
                 key={link.href}
                 to={link.href}
@@ -219,42 +136,6 @@ const Header = () => {
                 {link.label}
               </Link>
             ))}
-        </div>
-
-        {mobileMenuOpen && (
-          <div className="border-t border-border py-4 md:hidden">
-            <div className="mb-4">
-              <SearchInput placeholder="Search songs, artists..." />
-            </div>
-            <div className="flex flex-col gap-2">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
-                    pathname === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground"
-                  }`}
-                >
-                  <link.icon className="h-4 w-4" />
-                  {link.label}
-                </Link>
-              ))}
-              {isLoggedIn &&
-                userLinks.map((link) => (
-                  <Link
-                    key={link.href}
-                    href={link.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium ${
-                      pathname === link.href ? "bg-primary/10 text-primary" : "text-muted-foreground"
-                    }`}
-                  >
-                    <link.icon className="h-4 w-4" />
-                    {link.label}
-                  </Link>
-                ))}
-            </div>
           </div>
         )}
       </div>

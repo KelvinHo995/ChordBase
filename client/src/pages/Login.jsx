@@ -5,9 +5,11 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Music, Mail, Lock } from "lucide-react"
 import { useNavigate, Link } from 'react-router-dom'
+import { useAuth } from "../context/AuthContext"
 
 const Login = () => {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -21,15 +23,22 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setLoading(true)
+    setError('')
     
     try {
       if (!formData.email || !formData.password) {
         setError('Please fill in all fields')
+        setLoading(false)
         return
       }
-      setTimeout(() => {
+
+      const result = await login(formData.email, formData.password)
+      
+      if (result.success) {
         navigate('/')
-      }, 1000)
+      } else {
+        setError(result.message)
+      }
     } catch (err) {
       setError('Login failed. Please try again.')
     } finally {
@@ -48,12 +57,20 @@ const Login = () => {
           <CardDescription>Sign in to your ChordBase account</CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="you@example.com" className="pl-10" />
+                <Input 
+                  id="email" 
+                  name="email"
+                  type="email" 
+                  placeholder="you@example.com" 
+                  className="pl-10" 
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
@@ -61,11 +78,19 @@ const Login = () => {
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="password" type="password" placeholder="Enter your password" className="pl-10" />
+                <Input 
+                  id="password" 
+                  name="password"
+                  type="password" 
+                  placeholder="Enter your password" 
+                  className="pl-10" 
+                  value={formData.password}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={loading}>
               Sign in
             </Button>
 
@@ -103,7 +128,7 @@ const Login = () => {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
-            <Link href="/register" className="font-medium text-primary hover:underline">
+            <Link to="/auth/register" className="font-medium text-primary hover:underline">
               Sign up
             </Link>
           </p>

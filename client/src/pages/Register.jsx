@@ -5,9 +5,11 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Music, User, Mail, Lock } from "lucide-react"
 import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from "../context/AuthContext"
 
 const Register = () => {
   const navigate = useNavigate()
+  const { register } = useAuth()
   const [formData, setFormData] = useState({ name: '', email: '', password: '', confirmPassword: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirm, setShowConfirm] = useState(false)
@@ -37,9 +39,17 @@ const Register = () => {
 
     setLoading(true)
     try {
-      setTimeout(() => {
+      const result = await register({
+        display_name: formData.name,
+        email: formData.email,
+        password: formData.password
+      })
+
+      if (result.success) {
         navigate('/auth/login')
-      }, 1000)
+      } else {
+        setError(result.message)
+      }
     } catch (err) {
       setError('Registration failed. Please try again.')
     } finally {
@@ -58,12 +68,20 @@ const Register = () => {
           <CardDescription>Join ChordBase and start sharing chord sheets</CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="space-y-4">
+          <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="username" type="text" placeholder="johndoe" className="pl-10" />
+                <Input 
+                  id="username" 
+                  name="name"
+                  type="text" 
+                  placeholder="johndoe" 
+                  className="pl-10" 
+                  value={formData.name}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
@@ -71,7 +89,15 @@ const Register = () => {
               <Label htmlFor="email">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="email" type="email" placeholder="you@example.com" className="pl-10" />
+                <Input 
+                  id="email" 
+                  name="email"
+                  type="email" 
+                  placeholder="you@example.com" 
+                  className="pl-10" 
+                  value={formData.email}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
@@ -79,7 +105,15 @@ const Register = () => {
               <Label htmlFor="password">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="password" type="password" placeholder="Create a password" className="pl-10" />
+                <Input 
+                  id="password" 
+                  name="password"
+                  type="password" 
+                  placeholder="Create a password" 
+                  className="pl-10" 
+                  value={formData.password}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
@@ -87,11 +121,19 @@ const Register = () => {
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input id="confirmPassword" type="password" placeholder="Confirm your password" className="pl-10" />
+                <Input 
+                  id="confirmPassword" 
+                  name="confirmPassword"
+                  type="password" 
+                  placeholder="Confirm your password" 
+                  className="pl-10" 
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
               </div>
             </div>
 
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full" disabled={loading}>
               Create account
             </Button>
 
@@ -129,7 +171,7 @@ const Register = () => {
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link href="/login" className="font-medium text-primary hover:underline">
+            <Link to="/auth/login" className="font-medium text-primary hover:underline">
               Sign in
             </Link>
           </p>
