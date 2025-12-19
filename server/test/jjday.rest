@@ -1,0 +1,47 @@
+# POST http://localhost:3000/api/auth/register
+# Content-Type: application/json
+
+# {
+#   "email": "quochasagi2k5@gmail.com",
+#   "password": "hehehe123",
+#   "display_name": "Quoc Ho"
+# }
+# Authorization: Bearer your_super_secret_jwt_key_change_this_in_production_min_32_chars
+
+# POST http://localhost:3000/api/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "quochasagi2k5@gmail.com",
+#     "password": "hehehe123"
+# }
+
+POST http://localhost:3000/api/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "quochasagi2k5@gmail.com"
+}
+
+#  POST http://localhost:3000/api/auth/forgot-password
+# Content-Type: application/json
+
+# {
+#   "reset_token": "8efa46d979b60e78873f71f5172bccf16d9e24795fab5e3992d2296bed622e62"
+# }
+
+# POST http://localhost:3000/api/auth/reset-password
+# Content-Type: application/json
+
+# {
+#   "reset_token": "8efa46d979b60e78873f71f5172bccf16d9e24795fab5e3992d2296bed622e62",
+#   "new_password": "mynewpassword123"
+# }
+
+# POST http://localhost:3000/api/auth/login
+# Content-Type: application/json
+
+# {
+#   "email": "john@example.com",
+#   "password": "mynewpassword123"
+# }
