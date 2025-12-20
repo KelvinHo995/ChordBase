@@ -1,19 +1,42 @@
 import { useState } from "react"
+import { useAuth } from "../context/AuthContext"
+import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Label } from "@/components/ui/label"
 import { Star, MessageSquare } from "lucide-react"
+import { Link } from "react-router-dom"
 
-export function CommentSection({ isLoggedIn = false, comments = [], onSubmitComment = () => {} }) {
+export function CommentSection({ songId, comments: propComments = [] }) {
+  const { user, isLoggedIn } = useAuth()
   const [newComment, setNewComment] = useState("")
   const [rating, setRating] = useState(5)
   const [hoveredRating, setHoveredRating] = useState(0)
 
+  // Mock comments for UI demonstration
+  const comments = propComments.length > 0 ? propComments : [
+    {
+      id: 1,
+      username: "guitar_hero",
+      rating: 5,
+      createdAt: "2023-10-15T10:00:00Z",
+      text: "Great song! The chords are accurate."
+    },
+    {
+      id: 2,
+      username: "music_lover",
+      rating: 4,
+      createdAt: "2023-10-16T14:30:00Z",
+      text: "Fun to play, but the bridge is tricky."
+    }
+  ]
+
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (!newComment.trim()) return
+    if (!newComment.trim() || !isLoggedIn) return
 
-    onSubmitComment({
-      text: newComment.trim(),
-      rating: rating
-    })
+    console.log("Submit comment:", { songId, text: newComment, rating })
     setNewComment("")
     setRating(5)
   }
@@ -23,21 +46,22 @@ export function CommentSection({ isLoggedIn = false, comments = [], onSubmitComm
       year: "numeric",
       month: "short",
       day: "numeric",
-    });
+    })
   }
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-6">
-      <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-950 mb-6">
-        <MessageSquare className="h-5 w-5" />
-        Comments ({comments.length})
-      </h3>
-
-      <div className="space-y-6">
+    <Card>
+      <CardHeader>
+        <CardTitle className="flex items-center gap-2 text-xl">
+          <MessageSquare className="h-5 w-5" />
+          Comments ({comments.length})
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-6">
         {isLoggedIn ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-950 mb-2">Your Rating</label>
+              <Label className="mb-2 block text-base">Your Rating</Label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -46,75 +70,73 @@ export function CommentSection({ isLoggedIn = false, comments = [], onSubmitComm
                     onClick={() => setRating(star)}
                     onMouseEnter={() => setHoveredRating(star)}
                     onMouseLeave={() => setHoveredRating(0)}
-                    className="p-0.5 transition-transform hover:scale-110">
+                    className="p-0.5"
+                  >
                     <Star
-                      className={`h-5 w-5 transition-colors ${
-                        star <= (hoveredRating || rating)
-                          ? "fill-amber-400 text-amber-400"
-                          : "text-zinc-500"
+                      className={`h-6 w-6 transition-colors ${
+                        star <= (hoveredRating || rating) ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
                       }`}
                     />
                   </button>
                 ))}
               </div>
             </div>
-            <textarea
+            <Textarea
               placeholder="Write your comment..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-white text-gray-950 placeholder:text-zinc-500 focus:outline-none focus:ring-0 focus:border-slate-200 transition-all"
+              className="text-base"
             />
-            <button
-              type="submit"
-              disabled={!newComment.trim()}
-              className="w-full py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50 transition-all">
+            <Button type="submit" disabled={!newComment.trim()} className="text-base">
               Post Comment
-            </button>
+            </Button>
           </form>
         ) : (
-          <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-center">
-            <p className="mb-3 text-zinc-500">Log in to leave a comment</p>
-            <button className="px-4 py-2 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-all">
-              Log in
-            </button>
+          <div className="rounded-lg border border-border bg-muted/50 p-4 text-center">
+            <p className="mb-3 text-muted-foreground text-base">Log in to leave a comment</p>
+            <Button asChild className="text-base">
+              <Link to="/auth/login">Log in</Link>
+            </Button>
           </div>
         )}
 
         <div className="space-y-4">
           {comments.length === 0 ? (
-            <p className="py-4 text-center text-zinc-500">No comments yet. Be the first to comment!</p>
+            <p className="py-4 text-center text-muted-foreground text-base">No comments yet. Be the first to comment!</p>
           ) : (
             comments.map((comment) => (
-              <div key={comment.id} className="flex gap-3 border-b border-slate-200 pb-4 last:border-0">
-                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-600">
-                  {comment.username[0].toUpperCase()}
-                </div>
+              <div key={comment.id} className="flex gap-3 border-b border-border pb-4 last:border-0">
+                <Avatar className="h-10 w-10">
+                  <AvatarFallback className="bg-primary/10 text-primary text-base">
+                    {comment.username ? comment.username[0].toUpperCase() : "U"}
+                  </AvatarFallback>
+                </Avatar>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-medium text-gray-950">{comment.username}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium text-foreground text-base">{comment.username}</span>
                     <div className="flex">
                       {[1, 2, 3, 4, 5].map((star) => (
                         <Star
                           key={star}
-                          className={`h-3 w-3 ${
-                            star <= comment.rating
-                              ? "fill-amber-400 text-amber-400"
-                              : "text-zinc-500"
+                          className={`h-4 w-4 ${
+                            star <= comment.rating ? "fill-yellow-400 text-yellow-400" : "text-muted-foreground"
                           }`}
                         />
                       ))}
                     </div>
-                    <span className="text-xs text-zinc-500">{formatDate(comment.createdAt)}</span>
+                    <span className="text-sm text-muted-foreground">{formatDate(comment.createdAt)}</span>
                   </div>
-                  <p className="text-sm text-gray-950">{comment.text}</p>
+                  <p className="mt-1 text-base text-foreground">{comment.text}</p>
                 </div>
               </div>
             ))
           )}
         </div>
-      </div>
-    </div>
-  );
+      </CardContent>
+    </Card>
+  )
 }
+
+export default CommentSection
 

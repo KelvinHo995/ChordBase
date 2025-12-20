@@ -80,14 +80,14 @@ const HoverChord = ({ chordName, hoverable=true }) => {
             >
                 {chordPositions != null ? (
                     <div className="flex flex-col items-center">
-                        <span>{chordName}</span>
+                        <span className="text-xl font-bold">{chordName}</span>
                         <Chord
                             chord={chordPositions[voicingIndex]} 
                             instrument={instrument} 
                             // name={chordName} 
                             // isPiano={instrument.name == "Piano"}
                         />
-                        <div className="flex justify-center gap-3 mt-1 text-sm">
+                        <div className="flex justify-center gap-3 mt-1 text-base">
                             <button 
                                 onClick={getPrevVoicing}
                                 className="p-1 bg-gray-100 rounded hover:bg-gray-200"
@@ -105,7 +105,7 @@ const HoverChord = ({ chordName, hoverable=true }) => {
                             </button>
                         </div>
                     </div>
-                ) : (<span className="flex justify-center">Hợp âm không được hỗ trợ!</span>)}
+                ) : (<span className="flex justify-center text-base">Hợp âm không được hỗ trợ!</span>)}
                 
             </div>
         )

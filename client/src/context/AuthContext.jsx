@@ -11,24 +11,24 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [isAdmin, setIsAdmin] = useState(false)
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            setIsLoggedIn(true);
-            // Fetch user details on load
-            AuthService.getMe()
-                .then(response => {
-                    if (response.success) {
-                        setUser(response.data);
-                        setIsAdmin(response.data.role === 'admin');
-                    }
-                })
-                .catch(() => {
-                    // If token is invalid, logout
-                    logout();
-                });
-        }
-    }, []);
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if (token) {
+    //         setIsLoggedIn(true);
+    //         // Fetch user details on load
+    //         AuthService.getMe()
+    //             .then(response => {
+    //                 if (response.success) {
+    //                     setUser(response.data);
+    //                     setIsAdmin(response.data.role === 'admin');
+    //                 }
+    //             })
+    //             .catch(() => {
+    //                 // If token is invalid, logout
+    //                 logout();
+    //             });
+    //     }
+    // }, []);
 
     const login = async (email, password) => {
         setIsLoading(true);
