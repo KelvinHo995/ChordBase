@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { AuthService } from "../services/BackendService";
+import { th } from "zod/v4/locales";
 
 const AuthContext = createContext()
 
@@ -11,68 +12,37 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [isAdmin, setIsAdmin] = useState(false)
 
-    useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            setIsLoggedIn(true);
-            // Fetch user details on load
-            AuthService.getMe()
-                .then(response => {
-                    if (response.success) {
-                        setUser(response.data);
-                        setIsAdmin(response.data.role === 'admin');
-                    }
-                })
-                .catch(() => {
-                    // If token is invalid, logout
-                    logout();
-                });
-        }
-    }, []);
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+
+    //     if (token) {
+    //         setIsLoggedIn(true);
+    //         // Fetch user details on load
+    //         AuthService.getMe()
+    //             .then(response => {
+    //                 if (response.success) {
+    //                     setUser(response.data);
+    //                     setIsAdmin(response.data.role === 'admin');
+    //                 }
+    //             })
+    //             .catch(() => {
+    //                 // If token is invalid, logout
+    //                 logout();
+    //             });
+    //     }
+    // }, []);
 
     const login = async (email, password) => {
         setIsLoading(true);
         try {
-            // --- MOCK LOGIN FOR TESTING ---
-            // Giả lập độ trễ mạng
-            await new Promise(resolve => setTimeout(resolve, 500));
-
-            const mockUser = {
-                _id: "mock_user_id_123",
-                email: email,
-                display_name: "Test Admin User",
-                role: "admin",
-                avatar: "https://github.com/shadcn.png"
-            };
-
-            localStorage.setItem('token', 'mock_jwt_token_123456');
-            setUser(mockUser);
+            //REAL LOGIN CODE (COMMENTED OUT)
+            const user = await AuthService.loginUser({ email, password });
+            setUser(user);
             setIsLoggedIn(true);
-            setIsAdmin(true); // Luôn là admin
-            
+            setIsAdmin(user.role === 'admin');
             return { success: true };
-            // ------------------------------
-
-            /* REAL LOGIN CODE (COMMENTED OUT)
-            const response = await AuthService.loginUser({ email, password });
-            if (response.success) {
-                localStorage.setItem('token', response.data.token);
-                setUser(response.data.user);
-                setIsLoggedIn(true);
-                setIsAdmin(response.data.user.role === 'admin');
-                return { success: true };
-            } else {
-                return {
-                    success: false,
-                    message: response.message || 'Login failed'
-                };
-            }
-            */
         } catch (error) {
-            return { 
-                success: false, 
-                message: error.response?.data?.message || 'Login failed' 
-            };
+            throw error;
         } finally {
             setIsLoading(false);
         }
@@ -82,18 +52,13 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(true);
         try {
             // --- MOCK REGISTER FOR TESTING ---
-            await new Promise(resolve => setTimeout(resolve, 500));
-            return { success: true };
+            // await new Promise(resolve => setTimeout(resolve, 500));
+            // return { success: true };
             // ---------------------------------
 
-            /* REAL REGISTER CODE (COMMENTED OUT)
+            // REAL REGISTER CODE (COMMENTED OUT)
             const response = await AuthService.registerUser(userData);
-            if (response.success) {
-                return { success: true };
-            } else {
-                return { success: false, message: response.message };
-            }
-            */
+            return { success: true };
         } catch (error) {
             return { 
                 success: false, 

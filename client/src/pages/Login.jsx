@@ -24,7 +24,6 @@ const Login = () => {
     e.preventDefault()
     setLoading(true)
     setError('')
-    
     try {
       if (!formData.email || !formData.password) {
         setError('Please fill in all fields')
@@ -33,12 +32,8 @@ const Login = () => {
       }
 
       const result = await login(formData.email, formData.password)
-      
-      if (result.success) {
-        navigate('/')
-      } else {
-        setError(result.message)
-      }
+      console.log(result)
+      navigate('/')
     } catch (err) {
       setError('Login failed. Please try again.')
     } finally {

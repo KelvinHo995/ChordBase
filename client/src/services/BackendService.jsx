@@ -90,13 +90,23 @@ export const PlaylistService = {
 
 export const AuthService = {
     loginUser: async (credentials) => {
-        const response = await apiClient.post('/auth/login', credentials);
-        return response.data;
+        try {   
+            const response = await apiClient.post('/auth/login', credentials);
+            console.log('Logged in:', response);
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            return response.data.user;
+        } catch (error) {
+            // console.log('Login error:', error);
+            throw new Error(error.response?.data?.message || 'Login failed');
+        }
     },
 
     registerUser: async (credentials) => {
         const response = await apiClient.post('/auth/register', credentials);
-        return response.data;
+        const token = response.data.token;
+        localStorage.setItem('token', token);
+        return response.data.user;
     },
 
     requestPasswordReset: async (email) => {
