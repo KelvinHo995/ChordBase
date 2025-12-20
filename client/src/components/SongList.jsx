@@ -12,7 +12,7 @@ export function SongList({ songs = [], emptyMessage = "No songs found" }) {
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {songs.map((song) => (
-        <SongCard key={song.id} song={song} />
+        <SongCard key={song.song_id} song={song} />
       ))}
     </div>
   );

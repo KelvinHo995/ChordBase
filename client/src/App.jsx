@@ -38,10 +38,10 @@ function App() {
           </Route>
 
           {/* Protected User Routes */}
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
             <Route path="playlists" element={<Playlists />} />
             <Route path="chord-generator" element={<ChordGenerator />} />
-          </Route>
+          {/* </Route> */}
         </Route>
 
         {/* === Authentication Section === */}
@@ -53,11 +53,11 @@ function App() {
 
         {/* === Admin Section (Reuses MainLayout + Admin Guard) === */}
         <Route path="/admin" element={<MainLayout />}>
-          <Route element={<AdminRoute />}>
+          {/* <Route element={<AdminRoute />}> */}
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="song-management" element={<SongManagement />} />
             <Route path="user-management" element={<UserManagement />} />
-          </Route>
+          {/* </Route> */}
         </Route>
       </Route>
     )

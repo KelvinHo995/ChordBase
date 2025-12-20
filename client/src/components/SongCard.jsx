@@ -34,31 +34,25 @@ export function SongCard({ song }) {
 
   return (
     <Link to={`/song/${song.id}`}>
-      <Card
-        className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
+      <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Music2 className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h3
-                  className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {song.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">{song.artist}</p>
               </div>
             </div>
             {isLoggedIn && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 shrink-0"
-                onClick={handleFavoriteClick}>
+              <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={handleFavoriteClick}>
                 <Heart
-                  className={`h-4 w-4 ${favorite ? "fill-destructive text-destructive" : "text-muted-foreground"}`} />
+                  className={`h-4 w-4 ${favorite ? "fill-destructive text-destructive" : "text-muted-foreground"}`}
+                />
               </Button>
             )}
           </div>
@@ -67,9 +61,7 @@ export function SongCard({ song }) {
             <Badge variant="secondary" className="text-xs">
               {song.genre}
             </Badge>
-            <Badge
-              className={`text-xs ${getDifficultyColor(song.difficulty)}`}
-              variant="outline">
+            <Badge className={`text-xs ${getDifficultyColor(song.difficulty)}`} variant="outline">
               {song.difficulty}
             </Badge>
           </div>
