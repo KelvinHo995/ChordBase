@@ -8,6 +8,7 @@ const { sendEmail } = require('../utils/email');
 class AuthService {
     // Register new user
     async register(userData) {
+        console.log('Registering user:', userData);
         const { email, password, display_name } = userData;
 
         // Check if user already exists
@@ -29,7 +30,7 @@ class AuthService {
         const token = this.generateToken(user);
 
         return {
-            user: user.toJSON(),
+            user: user,
             token
         };
     }

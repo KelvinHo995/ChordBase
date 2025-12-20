@@ -1,11 +1,13 @@
-# POST http://localhost:3000/api/auth/register
-# Content-Type: application/json
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
 
-# {
-#   "email": "quochasagi2k5@gmail.com",
-#   "password": "hehehe123",
-#   "display_name": "Quoc Ho"
-# }
+{
+  "email": "caube02@gmail.com",
+  "password": "capyboi02",
+  "display_name": "caube02"
+}
+
+###
 # Authorization: Bearer your_super_secret_jwt_key_change_this_in_production_min_32_chars
 
 # POST http://localhost:3000/api/auth/login
@@ -16,12 +18,12 @@
 #     "password": "hehehe123"
 # }
 
-POST http://localhost:3000/api/auth/forgot-password
-Content-Type: application/json
+# POST http://localhost:3000/api/auth/forgot-password
+# Content-Type: application/json
 
-{
-  "email": "quochasagi2k5@gmail.com"
-}
+# {
+#   "email": "quochasagi2k5@gmail.com"
+# }
 
 #  POST http://localhost:3000/api/auth/forgot-password
 # Content-Type: application/json
@@ -35,13 +37,33 @@ Content-Type: application/json
 
 # {
 #   "reset_token": "8efa46d979b60e78873f71f5172bccf16d9e24795fab5e3992d2296bed622e62",
-#   "new_password": "mynewpassword123"
+#   "new_password": "myswordnewpas123"
 # }
 
-# POST http://localhost:3000/api/auth/login
-# Content-Type: application/json
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
 
-# {
-#   "email": "john@example.com",
-#   "password": "mynewpassword123"
-# }
+{
+  "email": "pink@gmail.com",
+  "password": "pinkpink"
+}
+
+###
+
+GET http://localhost:3000/api/users/profile/5
+# Headers: Authorization: Bearer your_super_secret_jwt_key_min_32_characters_change_in_production_abc123xyz789
+
+###
+GET http://localhost:3000/api/search/chords?chords=C,G
+
+###
+GET http://localhost:3000/api/search?q=shape of you&type=song
+
+###
+GET http://localhost:3000/api/search?q=ed sheeran&type=artist
+
+###
+GET http://localhost:3000/api/search/popular?limit=10
+
+###
+GET http://localhost:3000/api/search?type=genre&genre_id=3
