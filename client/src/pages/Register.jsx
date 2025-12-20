@@ -23,7 +23,6 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
       setError('Please fill in all fields')
       return
@@ -32,24 +31,20 @@ const Register = () => {
       setError('Passwords do not match')
       return
     }
-    if (formData.password.length < 8) {
-      setError('Password must be at least 8 characters')
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters')
       return
     }
 
-    setLoading(true)
     try {
+      setLoading(true)
+      console.log('Registering user:', formData)
       const result = await register({
         display_name: formData.name,
         email: formData.email,
         password: formData.password
       })
-
-      if (result.success) {
-        navigate('/auth/login')
-      } else {
-        setError(result.message)
-      }
+      navigate('/auth/login')
     } catch (err) {
       setError('Registration failed. Please try again.')
     } finally {
