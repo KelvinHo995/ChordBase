@@ -12,25 +12,13 @@ export const AuthProvider = ({ children }) => {
     const [isLoading, setIsLoading] = useState(false)
     const [isAdmin, setIsAdmin] = useState(false)
 
-    // useEffect(() => {
-    //     const token = localStorage.getItem('token');
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const savedUser = JSON.parse(localStorage.getItem('user'));
 
-    //     if (token) {
-    //         setIsLoggedIn(true);
-    //         // Fetch user details on load
-    //         AuthService.getMe()
-    //             .then(response => {
-    //                 if (response.success) {
-    //                     setUser(response.data);
-    //                     setIsAdmin(response.data.role === 'admin');
-    //                 }
-    //             })
-    //             .catch(() => {
-    //                 // If token is invalid, logout
-    //                 logout();
-    //             });
-    //     }
-    // }, []);
+        if (token && savedUser)
+            setUser(savedUser);
+    }, []);
 
     const login = async (email, password) => {
         setIsLoading(true);
@@ -40,6 +28,7 @@ export const AuthProvider = ({ children }) => {
             setUser(user);
             setIsLoggedIn(true);
             setIsAdmin(user.role === 'admin');
+            localStorage.setItem('user', JSON.stringify(user))
             return { success: true };
         } catch (error) {
             throw error;
@@ -51,13 +40,7 @@ export const AuthProvider = ({ children }) => {
     const register = async (userData) => {
         setIsLoading(true);
         try {
-            // --- MOCK REGISTER FOR TESTING ---
-            // await new Promise(resolve => setTimeout(resolve, 500));
-            // return { success: true };
-            // ---------------------------------
-
-            // REAL REGISTER CODE (COMMENTED OUT)
-            const response = await AuthService.registerUser(userData);
+            const user = await AuthService.registerUser(userData);
             return { success: true };
         } catch (error) {
             return { 
@@ -71,6 +54,7 @@ export const AuthProvider = ({ children }) => {
 
     const logout = () => {
         localStorage.removeItem('token')
+        localStorage.removeItem('user')
         setUser(null)
         setIsLoggedIn(false)
         setIsAdmin(false)

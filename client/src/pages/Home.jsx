@@ -1,7 +1,29 @@
 import { TrendingUp, Clock, Music2 } from "lucide-react"
 import { SongList } from "../components/SongList"
 
-export default function HomePage({ trendingSongs = [], recentSongs = [], searchQuery = "", filteredSongs = [] }) {
+import { mockSongs } from "@/lib/mock-data";
+import { useEffect, useState } from "react";
+import { SongService } from "@/services/BackendService";
+
+export default function HomePage() {
+  const [trendingSongs, setTrendingSongs] = useState([]);
+  const [recentSongs, setRecentSongs] = useState([]);
+  const filteredSongs = [];
+
+  useEffect(() => {
+    const fetchSongs = async () => {
+      try {
+        const res = await SongService.getAll();
+        console.log(res);
+        setTrendingSongs(res);
+        setRecentSongs(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    fetchSongs();
+  }, [])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -19,35 +41,32 @@ export default function HomePage({ trendingSongs = [], recentSongs = [], searchQ
         </p>
       </div>
 
-      {/* Search Results */}
+      {/* Search Results
       {searchQuery && (
         <section className="mb-12">
           <h2 className="mb-6 text-2xl font-bold text-gray-950">Search Results for "{searchQuery}"</h2>
           <SongList songs={filteredSongs} emptyMessage="No songs found matching your search." />
         </section>
-      )}
+      )} */}
 
-      {/* Trending Songs */}
-      {!searchQuery && (
-        <>
-          <section className="mb-12">
-            <div className="mb-6 flex items-center gap-2">
-              <TrendingUp className="h-5 w-5 text-blue-600" />
-              <h2 className="text-2xl font-bold text-gray-950">Trending Songs</h2>
-            </div>
-            <SongList songs={trendingSongs} />
-          </section>
+      
+      <section className="mb-12">
+        <div className="mb-6 flex items-center gap-2">
+          <TrendingUp className="h-5 w-5 text-blue-600" />
+          <h2 className="text-2xl font-bold text-gray-950">Trending Songs</h2>
+        </div>
+        <SongList songs={trendingSongs} />
+      </section>
 
-          {/* Recently Added */}
-          <section>
-            <div className="mb-6 flex items-center gap-2">
-              <Clock className="h-5 w-5 text-blue-600" />
-              <h2 className="text-2xl font-bold text-gray-950">Recently Added</h2>
-            </div>
-            <SongList songs={recentSongs} />
-          </section>
-        </>
-      )}
+      {/* Recently Added */}
+      <section>
+        <div className="mb-6 flex items-center gap-2">
+          <Clock className="h-5 w-5 text-blue-600" />
+          <h2 className="text-2xl font-bold text-gray-950">Recently Added</h2>
+        </div>
+        <SongList songs={recentSongs} />
+      </section>
+        
     </div>
   );
 }
