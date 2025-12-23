@@ -4,78 +4,57 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { ListMusic, Plus, Check } from "lucide-react"
+import { ListMusic, Plus } from "lucide-react"
 
-export function PlaylistModal({ open, onOpenChange, songId }) {
-  const { user } = useAuth()
-  const { getUserPlaylists, createPlaylist, addToPlaylist, playlists } = useApp()
+export function PlaylistModal({ open, onOpenChange }) {
   const [newPlaylistName, setNewPlaylistName] = useState("")
   const [showNewPlaylistInput, setShowNewPlaylistInput] = useState(false)
 
-  const userPlaylists = user ? getUserPlaylists(user.id) : []
-
-  const handleAddToPlaylist = (playlistId) => {
-    addToPlaylist(playlistId, songId)
-    onOpenChange(false)
-  }
-
-  const handleCreatePlaylist = () => {
-    if (!newPlaylistName.trim() || !user) return
-    const newPlaylist = createPlaylist(newPlaylistName.trim(), user.id)
-    addToPlaylist(newPlaylist.id, songId)
-    setNewPlaylistName("")
-    setShowNewPlaylistInput(false)
-    onOpenChange(false)
-  }
-
-  const isSongInPlaylist = (playlistId) => {
-    const playlist = playlists.find((p) => p.id === playlistId)
-    return playlist?.songIds.includes(songId);
-  }
+  // Mock playlists for UI display only
+  const userPlaylists = [
+    { id: "1", name: "My Favorites" },
+    { id: "2", name: "Acoustic Songs" },
+    { id: "3", name: "Party Playlist" },
+  ]
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add to Playlist</DialogTitle>
-          <DialogDescription>Select a playlist or create a new one.</DialogDescription>
+          <DialogTitle className="text-2xl">Add to Playlist</DialogTitle>
+          <DialogDescription className="text-base">Select a playlist or create a new one.</DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[300px]">
           <div className="space-y-2">
-            {userPlaylists.length === 0 ? (
-              <p className="py-4 text-center text-sm text-muted-foreground">You don't have any playlists yet.</p>
-            ) : (
-              userPlaylists.map((playlist) => (
-                <Button
-                  key={playlist.id}
-                  variant="outline"
-                  className="w-full justify-start gap-2 bg-transparent"
-                  onClick={() => handleAddToPlaylist(playlist.id)}
-                  disabled={isSongInPlaylist(playlist.id)}>
-                  <ListMusic className="h-4 w-4" />
-                  {playlist.name}
-                  {isSongInPlaylist(playlist.id) && <Check className="ml-auto h-4 w-4 text-success" />}
-                </Button>
-              ))
-            )}
+            {userPlaylists.map((playlist) => (
+              <Button
+                key={playlist.id}
+                variant="outline"
+                className="w-full justify-start gap-2 bg-transparent text-lg h-12"
+                onClick={() => onOpenChange(false)}>
+                <ListMusic className="h-5 w-5" />
+                {playlist.name}
+              </Button>
+            ))}
           </div>
         </ScrollArea>
 
         <div className="border-t border-border pt-4">
           {showNewPlaylistInput ? (
             <div className="space-y-3">
-              <Label htmlFor="new-playlist">New Playlist Name</Label>
+              <Label htmlFor="new-playlist" className="text-base">New Playlist Name</Label>
               <Input
                 id="new-playlist"
                 placeholder="My Playlist"
+                className="text-base h-12"
                 value={newPlaylistName}
                 onChange={(e) => setNewPlaylistName(e.target.value)} />
               <div className="flex gap-2">
-                <Button onClick={handleCreatePlaylist} disabled={!newPlaylistName.trim()}>
+                <Button onClick={() => setShowNewPlaylistInput(false)} className="text-lg h-12">
                   Create & Add
                 </Button>
-                <Button variant="outline" onClick={() => setShowNewPlaylistInput(false)}>
+                <Button variant="outline" onClick={() => setShowNewPlaylistInput(false)} className="text-lg h-12">
                   Cancel
                 </Button>
               </div>
@@ -83,9 +62,9 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
           ) : (
             <Button
               variant="outline"
-              className="w-full gap-2 bg-transparent"
+              className="w-full gap-2 bg-transparent text-lg h-12"
               onClick={() => setShowNewPlaylistInput(true)}>
-              <Plus className="h-4 w-4" />
+              <Plus className="h-5 w-5" />
               Create New Playlist
             </Button>
           )}

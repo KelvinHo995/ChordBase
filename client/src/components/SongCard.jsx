@@ -32,19 +32,16 @@ export function SongCard({ song }) {
   }
 
   return (
-    <Link to={`/songs/${song.id}`}>
-      <Card
-        className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
+    <Link to={`/song/${song.id}`}>
+      <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div
-                className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
                 <Music2 className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h3
-                  className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
+                <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {song.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">{song.artist}</p>

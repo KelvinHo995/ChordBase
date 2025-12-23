@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { getAdapter } from 'axios';
 
 // 1. Create the Axios Instance
 // We don't export this directly to force the app to use the functions below

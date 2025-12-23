@@ -11,8 +11,8 @@ export function ChordList({
   
   if (!chords || chords.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground flex items-center gap-2 italic">
-        <Music className="h-4 w-4" /> No chords listed
+      <div className="text-lg text-muted-foreground flex items-center gap-2 italic">
+        <Music className="h-5 w-5" /> No chords listed
       </div>
     )
   }
