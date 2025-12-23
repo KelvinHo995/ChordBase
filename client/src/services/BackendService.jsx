@@ -33,7 +33,7 @@ export const SongService = {
         if (userId) 
             config.params.submittedBy = userId;
 
-        const response = await apiClient.get(`/songs/${songId}`, config);
+        const response = await apiClient.get(`/songs/${songId}`);
         return response.data;
     },
 

@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Heart, Eye, Star, Music2 } from "lucide-react"
 
 export function SongCard({ song }) {
-  const isLoggedIn = true
-  const favorite = true
+  // const isLoggedIn = true
 
   const handleFavoriteClick = (e) => {
     e.preventDefault()
@@ -33,7 +32,7 @@ export function SongCard({ song }) {
   }
 
   return (
-    <Link to={`/song/${song.id}`}>
+    <Link to={`/songs/${song.id}`}>
       <Card
         className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
         <CardContent className="p-4">
@@ -51,30 +50,20 @@ export function SongCard({ song }) {
                 <p className="text-sm text-muted-foreground">{song.artist}</p>
               </div>
             </div>
-            {isLoggedIn && (
-              <Button
-                variant="ghost"
-                size="icon"
-                className="h-8 w-8 shrink-0"
-                onClick={handleFavoriteClick}>
-                <Heart
-                  className={`h-4 w-4 ${favorite ? "fill-destructive text-destructive" : "text-muted-foreground"}`} />
-              </Button>
-            )}
           </div>
 
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <Badge variant="secondary" className="text-xs">
               {song.genre}
             </Badge>
-            <Badge
+            {/* <Badge
               className={`text-xs ${getDifficultyColor(song.difficulty)}`}
               variant="outline">
               {song.difficulty}
-            </Badge>
+            </Badge> */}
           </div>
 
-          <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
+          {/* <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Star className="h-3.5 w-3.5 fill-warning text-warning" />
               {song.rating.toFixed(1)}
@@ -83,7 +72,7 @@ export function SongCard({ song }) {
               <Eye className="h-3.5 w-3.5" />
               {song.views.toLocaleString()}
             </span>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </Link>

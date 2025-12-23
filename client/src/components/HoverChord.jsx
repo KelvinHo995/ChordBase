@@ -58,8 +58,6 @@ const HoverChord = ({ chordName, hoverable=true }) => {
 
     const chordPositions = getChordPositions(chordName, instrument);
 
-    console.log(chordPositions);
-
     const getNextVoicing = () => {
         setVoicingIndex((voicingIndex + 1) % chordPositions.length);
     }

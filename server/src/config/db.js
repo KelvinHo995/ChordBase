@@ -35,7 +35,9 @@ const sequelize = new Sequelize(
                 require: true,
                 rejectUnauthorized: false
             } : false
-        }
+        },
+
+        ssl: false
     }
 );
 
