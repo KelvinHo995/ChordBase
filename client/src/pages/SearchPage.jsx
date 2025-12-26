@@ -1,91 +1,47 @@
-import { useMemo } from "react"
+import { useMemo, useState, useEffect } from "react"
+import { useSearchParams } from "react-router-dom"
 import { SongList } from "@/components/SongList"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Library, Filter, ArrowUpDown } from "lucide-react"
-
-const SAMPLE_SONGS = [
-  {
-    id: "1",
-    title: "Wonderwall",
-    artist: "Oasis",
-    genre: "Rock",
-    rating: 4.8,
-    views: 15420,
-    tags: ["90s"],
-    createdAt: "2024-01-15",
-  },
-  {
-    id: "2",
-    title: "Let It Be",
-    artist: "The Beatles",
-    genre: "Rock",
-    rating: 4.9,
-    views: 12890,
-    tags: ["classic"],
-    createdAt: "2024-01-20",
-  },
-  {
-    id: "3",
-    title: "Shape of You",
-    artist: "Ed Sheeran",
-    genre: "Pop",
-    rating: 4.7,
-    views: 18350,
-    tags: ["modern"],
-    createdAt: "2024-02-01",
-  },
-  {
-    id: "4",
-    title: "Hallelujah",
-    artist: "Leonard Cohen",
-    genre: "Folk",
-    rating: 5.0,
-    views: 20120,
-    tags: ["classic"],
-    createdAt: "2024-01-10",
-  },
-]
+import { Library, Filter, ArrowUpDown, Loader2 } from "lucide-react"
+import { SongService } from "@/services/BackendService"
 
 const GENRES = ["Rock", "Pop", "Folk", "Country", "Jazz", "Blues"]
 
 const SearchPage = () => {
-  const searchQuery = ""
-  const selectedGenre = "all"
-  const sortBy = "rating"
+  const [searchParams] = useSearchParams()
+  const searchQuery = searchParams.get("q") || ""
+  const [selectedGenre, setSelectedGenre] = useState("all")
+  const [sortBy, setSortBy] = useState("rating")
+  
+  const [songs, setSongs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const filteredAndSortedSongs = useMemo(() => {
-    let result = [...SAMPLE_SONGS]
+  useEffect(() => {
+    const fetchSongs = async () => {
+      setLoading(true)
+      setError(null)
+      try {
+        const params = {}
+        if (searchQuery) params.query = searchQuery
+        if (selectedGenre !== "all") params.genre = selectedGenre
+        if (sortBy) params.sort = sortBy
 
-    if (searchQuery) {
-      const query = searchQuery.toLowerCase()
-      result = result.filter(
-        (song) =>
-          song.title.toLowerCase().includes(query) ||
-          song.artist.toLowerCase().includes(query) ||
-          song.tags.some((tag) => tag.toLowerCase().includes(query)),
-      )
+        const data = await SongService.getAll(params)
+        // Assuming the backend returns an array of songs directly or { data: [...] }
+        // Adjust based on actual API response structure. 
+        // SongService.getAll returns response.data. 
+        // If response.data is the array, then:
+        setSongs(Array.isArray(data) ? data : data.songs || [])
+      } catch (err) {
+        console.error("Failed to fetch songs:", err)
+        setError("Failed to load songs. Please try again later.")
+      } finally {
+        setLoading(false)
+      }
     }
 
-    if (selectedGenre !== "all") {
-      result = result.filter((song) => song.genre === selectedGenre)
-    }
-
-    switch (sortBy) {
-      case "rating":
-        result.sort((a, b) => b.rating - a.rating)
-        break
-      case "latest":
-        result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-        break
-      case "views":
-        result.sort((a, b) => b.views - a.views)
-        break
-      case "title":
-        result.sort((a, b) => a.title.localeCompare(b.title))
-        break
-    }
-
-    return result
+    fetchSongs()
   }, [searchQuery, selectedGenre, sortBy])
 
   return (
@@ -101,7 +57,7 @@ const SearchPage = () => {
       <div className="mb-6 space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row">
           <div className="flex gap-2">
-            <Select value={selectedGenre} disabled>
+            <Select value={selectedGenre} onValueChange={setSelectedGenre}>
               <SelectTrigger className="w-[140px]">
                 <Filter className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Genre" />
@@ -116,7 +72,7 @@ const SearchPage = () => {
               </SelectContent>
             </Select>
 
-            <Select value={sortBy} disabled>
+            <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[140px]">
                 <ArrowUpDown className="mr-2 h-4 w-4" />
                 <SelectValue placeholder="Sort" />
@@ -134,12 +90,23 @@ const SearchPage = () => {
 
       {/* Results */}
       <div className="mb-4">
-        <p className="text-sm text-muted-foreground">
-          Showing {filteredAndSortedSongs.length} of {SAMPLE_SONGS.length} songs
-        </p>
+        {loading ? (
+             <div className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Searching...</span>
+             </div>
+        ) : error ? (
+            <div className="text-red-500">{error}</div>
+        ) : (
+            <p className="text-sm text-muted-foreground">
+            Showing {songs.length} songs
+            </p>
+        )}
       </div>
 
-      <SongList songs={filteredAndSortedSongs} emptyMessage="No songs found with the current filters." />
+      {!loading && !error && (
+        <SongList songs={songs} emptyMessage="No songs found with the current filters." />
+      )}
     </div>
   )
 }

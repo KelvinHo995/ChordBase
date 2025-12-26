@@ -2,6 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import SongLine from './SongLine';
 import { getTransposedKey, shouldUseSharps, transposeChord } from '../utils/TransposeUtils';
 import { useInstrument } from '../context/InstrumentContext';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Plus, Minus, Play, Pause, Download, RotateCcw } from "lucide-react"
 
 const songKeyTemp = "G";
 const lyricsTemp = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n";
@@ -49,47 +53,85 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
     }, [srcollSpeed, isAutoscroll])
 
     return (
-        <div className="flex flex-col gap-3 font-mono whitespace-pre-wrap">
-            {showControl &&
-                <div className="flex items-center bg-white border-white rounded-xl gap-x-5 p-2">
-                    <div className="flex items-center rounded-full gap-x-3">
-                        <button onClick={() => handleTranspose(-1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">-</button>
-                        <span>Transpose: {semitones > 0 ? `+${semitones}` : semitones}</span>
-                        <button onClick={() => handleTranspose(+1)} className="p-2 w-12 h-10 bg-gray-200 border-white rounded-full">+</button>
+        <Card>
+            {showControl && (
+                <CardHeader className="pb-3">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                        <CardTitle className="text-xl">Chord Sheet</CardTitle>
+                        <div className="flex flex-wrap items-center gap-2">
+                            {/* Transpose Controls */}
+                            <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/50 p-1">
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleTranspose(-1)}>
+                                    <Minus className="h-4 w-4" />
+                                </Button>
+                                <span className="min-w-[60px] text-center text-base font-medium">
+                                    {semitones > 0 ? `+${semitones}` : semitones}
+                                </span>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleTranspose(1)}>
+                                    <Plus className="h-4 w-4" />
+                                </Button>
+                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setSemitones(0)}>
+                                    <RotateCcw className="h-4 w-4" />
+                                </Button>
+                            </div>
+
+                            {/* Instrument Selector */}
+                            <Select onValueChange={handleInstrumentChange} defaultValue="guitar">
+                                <SelectTrigger className="h-10 w-[120px] text-base">
+                                    <SelectValue placeholder="Instrument" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="guitar" className="text-base">Guitar</SelectItem>
+                                    <SelectItem value="ukulele" className="text-base">Ukulele</SelectItem>
+                                    <SelectItem value="piano" className="text-base">Piano</SelectItem>
+                                </SelectContent>
+                            </Select>
+
+                            {/* Autoscroll Controls */}
+                            <Button
+                                variant={isAutoscroll ? "default" : "outline"}
+                                size="sm"
+                                onClick={() => setIsAutoscroll(!isAutoscroll)}
+                                className="text-base h-10 px-4"
+                            >
+                                {isAutoscroll ? (
+                                    <>
+                                        <Pause className="mr-2 h-4 w-4" /> Stop
+                                    </>
+                                ) : (
+                                    <>
+                                        <Play className="mr-2 h-4 w-4" /> Scroll
+                                    </>
+                                )}
+                            </Button>
+
+                            {isAutoscroll && (
+                                <input
+                                    name='scrollspeed'
+                                    type='range' 
+                                    min={1}
+                                    max={10} 
+                                    value={srcollSpeed} 
+                                    onChange={(e) => setScrollSpeed(e.target.value)}
+                                    className="w-24"
+                                />
+                            )}
+                        </div>
                     </div>
-                    
-                    <select onChange={(e) => handleInstrumentChange(e.target.value)}>
-                        <option value={"guitar"}>Guitar</option>
-                        <option value={"ukulele"}>Ukelele</option>
-                        <option value={"piano"}>Piano</option>
-                    </select>
-
-                    <button className='p-2 rounded-full' onClick={() => setIsAutoscroll(isAutoscroll => !isAutoscroll)}>
-                        {isAutoscroll ? "Stop" : "Autoscroll"}
-                    </button>
-
-                    {isAutoscroll && 
-                        <input
-                            name='scrollspeed'
-                            type='range' 
-                            min={1}
-                            max={10} 
-                            value={srcollSpeed} 
-                            onChange={(e) => setScrollSpeed(e.target.value)}
-                        />
-                    }
-                </div>  
-            }
-            {/* Song line */}
-            <div 
-                className={`flex flex-col bg-white rounded-xl border-white ${isAutoscroll ? "h-screen overflow-y-auto" : ""}`}
-                ref={lyricRef}
-            >
-                {lines.map((line, i) => (
-                    <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps}/>
-                ))}
-            </div>
-        </div>
+                </CardHeader>
+            )}
+            
+            <CardContent className="py-6 px-2 m-6 bg-gray-100 rounded-2xl">
+                <div 
+                    className={`flex flex-col font-mono whitespace-pre-wrap ${isAutoscroll ? "h-[500px] overflow-y-auto" : ""}`}
+                    ref={lyricRef}
+                >
+                    {lines.map((line, i) => (
+                        <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps}/>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     )
 }
 

@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { getAdapter } from 'axios';
 
 // 1. Create the Axios Instance
 // We don't export this directly to force the app to use the functions below
@@ -33,7 +33,7 @@ export const SongService = {
         if (userId) 
             config.params.submittedBy = userId;
 
-        const response = await apiClient.get(`/songs/${songId}`, config);
+        const response = await apiClient.get(`/songs/${songId}`);
         return response.data;
     },
 

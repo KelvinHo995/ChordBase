@@ -11,15 +11,15 @@ export function ChordList({
   
   if (!chords || chords.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground flex items-center gap-2 italic">
-        <Music className="h-4 w-4" /> No chords listed
+      <div className="text-lg text-muted-foreground flex items-center gap-2 italic">
+        <Music className="h-5 w-5" /> No chords listed
       </div>
     )
   }
 
   return (
     <div 
-      className="w-full flex flex-row justify-around rounded-2xl"
+      className="w-full flex flex-row justify-around wrap rounded-2xl"
     >
       {chords.map((name, index) => (
         <HoverChord key={`${name}-${index}`} chordName={name} hoverable={false}/>

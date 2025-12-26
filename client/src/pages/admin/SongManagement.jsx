@@ -41,6 +41,16 @@ const SongManagement = () => {
     })
   }
 
+  const handleApprove = (songId) => {
+    // Implement approve logic here
+    console.log("Approved song with ID:", songId)
+  }
+
+  const handleReject = (songId) => {
+    // Implement reject logic here
+    console.log("Rejected song with ID:", songId)
+  }
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8">
@@ -95,16 +105,16 @@ const SongManagement = () => {
                       <TableCell>
                         <div className="flex justify-end gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link href={`/song/${song.id}`}>
+                            <Link to={`/song/${song.id}`}>
                               <Eye className="mr-1 h-3 w-3" />
                               Preview
                             </Link>
                           </Button>
-                          <Button size="sm" className="gap-1">
+                          <Button onClick={() => handleApprove(song.id)} size="sm" className="gap-1">
                             <Check className="h-3 w-3" />
                             Approve
                           </Button>
-                          <Button variant="destructive" size="sm" className="gap-1">
+                          <Button variant="destructive" onClick={() => handleReject(song.id)} size="sm" className="gap-1">
                             <X className="h-3 w-3" />
                             Reject
                           </Button>

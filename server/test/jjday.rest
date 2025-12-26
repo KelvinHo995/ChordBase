@@ -17,9 +17,18 @@ Content-Type: application/json
 #   "email": "quochasagi2k5@gmail.com",
 #     "password": "hehehe123"
 # }
+ 
+@baseURL=http://localhost:3000/api/
+###
+POST {{baseURL}}/auth/register
+Content-Type: application/json
 
-# POST http://localhost:3000/api/auth/forgot-password
-# Content-Type: application/json
+{
+  "email": 
+}
+###
+POST http://localhost:3000/api/auth/forgot-password
+Content-Type: application/json
 
 # {
 #   "email": "quochasagi2k5@gmail.com"
