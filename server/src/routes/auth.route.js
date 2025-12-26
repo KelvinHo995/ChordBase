@@ -12,7 +12,7 @@ router.post('/forgot-password', authController.forgotPassword);
 router.post('/reset-password', authController.resetPassword);
 
 // Protected routes
-router.get('/me', authController.getCurrentUser);
+router.get('/me', protect, authController.getCurrentUser);
 router.post('/logout', protect, authController.logout);
 
 module.exports = router;

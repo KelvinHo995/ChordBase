@@ -32,7 +32,7 @@ export function SongCard({ song }) {
   }
 
   return (
-    <Link to={`/song/${song.id}`}>
+    <Link to={`/songs/${song.id}`}>
       <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
         <CardContent className="p-4">
           <div className="flex items-start justify-between gap-3">

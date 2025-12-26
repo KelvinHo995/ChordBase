@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import SongBody from '../components/SongBody'
 import ChordList from '../components/ChordList'
@@ -11,9 +11,10 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Heart, Share2, ListPlus, ArrowLeft } from 'lucide-react'
 import { mockSongs } from '../lib/mock-data'
+import { SongService } from '@/services/BackendService'
 
 const SongPage = () => {
-  const { id } = useParams() // Get ID from URL
+  const { songID } = useParams() // Get ID from URL
   const navigate = useNavigate()
   const { isLoggedIn } = useAuth()
 
@@ -24,7 +25,20 @@ const SongPage = () => {
 
   // Find song by ID, or default to first one if not found/no ID (for testing)
   // In a real app, you'd fetch this or handle 404
-  const song = mockSongs.find(s => s.id === id) || mockSongs[0]
+  const song = mockSongs.find(s => s.id === songID) || mockSongs[0]
+
+  useEffect(() => {
+    const fetchSong = async () => {
+      try {
+        const res = await SongService.getById(songID);
+        console.log(res);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+
+    fetchSong();
+  }, [])
 
   if (!song) {
     return (
