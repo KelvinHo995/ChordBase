@@ -3,9 +3,7 @@ const { Sequelize } = require('sequelize');
 const vars = require('./vars');
 
 const sequelize = new Sequelize(
-    vars.dbName,
-    vars.dbUser,
-    vars.dbPass,
+    process.env.DATABASE_URL,
     {
         host: vars.dbHost,
         port: vars.dbPort,

@@ -1,11 +1,14 @@
-# POST http://localhost:3000/api/auth/register
-# Content-Type: application/json
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
 
-# {
-#   "email": "quochasagi2k5@gmail.com",
-#   "password": "hehehe123",
-#   "display_name": "Quoc Ho"
-# }
+{
+  "email": "straightguy@gmail.com",
+  "password": "hehehe12345",
+  "display_name": "Quoc Ho Tan"
+}
+
+###
+
 # Authorization: Bearer your_super_secret_jwt_key_change_this_in_production_min_32_chars
 
 # POST http://localhost:3000/api/auth/login
@@ -15,7 +18,16 @@
 #   "email": "quochasagi2k5@gmail.com",
 #     "password": "hehehe123"
 # }
+ 
+@baseURL=http://localhost:3000/api/
+###
+POST {{baseURL}}/auth/register
+Content-Type: application/json
 
+{
+  "email": 
+}
+###
 POST http://localhost:3000/api/auth/forgot-password
 Content-Type: application/json
 
