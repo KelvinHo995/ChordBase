@@ -3,7 +3,7 @@ const { Song, Artist, Genre, ChordSheet, User, SongView } = require('../models')
 const { Op, fn, col, literal } = require('sequelize');
 const { sequelize } = require('../config/db');
 
-class SearchService {
+class SongService {
     // ===== MAIN SEARCH FUNCTION =====
     async search(query, options = {}) {
         const {
@@ -486,4 +486,4 @@ class SearchService {
     }
 }
 
-module.exports = new SearchService();
+module.exports = new SongService();

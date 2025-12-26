@@ -1,7 +1,7 @@
 // server/src/controllers/search.controller.js
-const searchService = require('../services/search.service');
+const songService = require('../services/song.service');
 
-class SearchController {
+class SongController {
     // GET /api/search?q=shape&type=song&page=1&limit=20
     async search(req, res) {
         try {
@@ -109,4 +109,4 @@ class SearchController {
     }
 }
 
-module.exports = new SearchController();
+module.exports = new SongController();

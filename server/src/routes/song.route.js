@@ -1,6 +1,6 @@
 // server/src/routes/search.route.js
 const express = require('express');
-const searchController = require('../controllers/search.controller');
+const songController = require('../controllers/song.controller');
 const { optionalAuth } = require('../middlewares/auth.middleware');
 
 const router = express.Router();
@@ -8,15 +8,15 @@ const router = express.Router();
 // Public routes (optional auth for personalization)
 
 // Main search endpoint
-router.get('/', optionalAuth, searchController.search);
+router.get('/', optionalAuth, songController.search);
 
 // Get specific song with all versions
-router.get('/songs/:song_id', optionalAuth, searchController.getSong);
+router.get('/:song_id', optionalAuth, songController.getSong);
 
 // Search by chord progression
-router.get('/chords', optionalAuth, searchController.searchByChords);
+router.get('/chords', optionalAuth, songController.searchByChords);
 
 // Get popular songs
-router.get('/popular', searchController.getPopular);
+router.get('/popular', songController.getPopular);
 
 module.exports = router;

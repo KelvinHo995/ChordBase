@@ -6,7 +6,7 @@ const { vars, dbConnect } = require('./config');
 // Import routes
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');  
-const searchRoutes = require('./routes/search.route'); // ← THÊM MỚI
+const songRoutes = require('./routes/song.route'); // ← THÊM MỚI
 
 const app = express();
 
@@ -18,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
-app.use('/api/search', searchRoutes); // ← THÊM MỚI
+app.use('/api/songs', songRoutes); 
 
 // Health check
 app.get('/health', (req, res) => {
@@ -30,24 +30,7 @@ app.get('/health', (req, res) => {
     });
 });
 
-// 404 handler
-app.use((req, res) => {
-    res.status(404).json({
-        success: false,
-        message: 'Route not found',
-        path: req.path, 
-        method: req.method
-    });
-});
 
-// Error handler
-app.use((err, req, res, next) => {
-    console.error('Error:', err);
-    res.status(err.status || 500).json({
-        success: false,
-        message: err.message || 'Internal server error'
-    });
-});
 
 // Start server
 const startServer = async () => {
@@ -71,5 +54,24 @@ const startServer = async () => {
 };
 
 startServer();
+
+// 404 handler
+app.use((req, res) => {
+    res.status(404).json({
+        success: false,
+        message: 'Route not found',
+        path: req.path, 
+        method: req.method
+    });
+});
+
+// Error handler
+app.use((err, req, res, next) => {
+    console.error('Error:', err);
+    res.status(err.status || 500).json({
+        success: false,
+        message: err.message || 'Internal server error'
+    });
+});
 
 module.exports = app;
