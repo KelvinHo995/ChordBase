@@ -15,7 +15,7 @@ const router = express.Router();
 // ====== USER ROUTES (Protected - require login) ======
 
 // Get current user's full profile
-router.get('/me', userController.getMyProfile);
+router.get('/me', protect,userController.getMyProfile);
 // Get public profile of any user
 router.get('/profile/:userId', userController.getUserProfile);
 // Update current user's profile
