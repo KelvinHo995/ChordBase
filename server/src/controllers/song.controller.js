@@ -21,7 +21,7 @@ class SongController {
                 });
             }
 
-            const result = await searchService.search(query, {
+            const result = await songService.search(query, {
                 page: parseInt(page),
                 limit: parseInt(limit),
                 search_type: type,
@@ -46,7 +46,7 @@ class SongController {
     async getSong(req, res) {
         try {
             const { song_id } = req.params;
-            const song = await searchService.getSongById(song_id);
+            const song = await songService.getSongById(song_id);
 
             res.status(200).json({
                 success: true,
@@ -73,7 +73,7 @@ class SongController {
             }
 
             const chordArray = chords.split(',').map(c => c.trim());
-            const result = await searchService.searchByChords(chordArray, {
+            const result = await songService.searchByChords(chordArray, {
                 page: parseInt(req.query.page) || 1,
                 limit: parseInt(req.query.limit) || 20
             });
@@ -92,13 +92,14 @@ class SongController {
 
     // GET /api/search/popular
     async getPopular(req, res) {
+        console.log('Fetching popular songs');
         try {
             const limit = parseInt(req.query.limit) || 10;
-            const songs = await searchService.getPopularSongs(limit);
+            const songs = await songService.getPopularSongs(limit);
 
             res.status(200).json({
                 success: true,
-                data: { songs }
+                data: songs 
             });
         } catch (error) {
             res.status(500).json({

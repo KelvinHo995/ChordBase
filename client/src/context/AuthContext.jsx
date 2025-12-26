@@ -1,6 +1,7 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { AuthService } from "../services/BackendService";
 import { th } from "zod/v4/locales";
+import { se } from "date-fns/locale";
 
 const AuthContext = createContext()
 
@@ -18,6 +19,8 @@ export const AuthProvider = ({ children }) => {
 
         if (token && savedUser)
             setUser(savedUser);
+            setIsLoggedIn(true);
+            setIsAdmin(savedUser.role === 'admin');
     }, []);
 
     const login = async (email, password) => {

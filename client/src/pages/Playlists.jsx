@@ -77,7 +77,7 @@ const Playlists = () => {
         </div>
         <h1 className="text-2xl font-bold mb-4">Login Required</h1>
         <p className="text-muted-foreground mb-6">Please log in to view your favorites and playlists.</p>
-        <Link to="/login">
+        <Link to="/auth/login">
           <Button>Login</Button>
         </Link>
       </div>

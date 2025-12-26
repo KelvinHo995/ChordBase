@@ -13,10 +13,10 @@ export default function HomePage() {
   useEffect(() => {
     const fetchSongs = async () => {
       try {
-        const res = await SongService.getAll();
-        console.log(res);
-        setTrendingSongs(res);
-        setRecentSongs(res);
+        const resTrending = await SongService.getTrending();
+        console.log(resTrending.data);
+        setTrendingSongs(resTrending.data);
+        // setRecentSongs(res);
       } catch (err) {
         console.log(err);
       }

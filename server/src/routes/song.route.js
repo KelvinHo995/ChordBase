@@ -10,13 +10,14 @@ const router = express.Router();
 // Main search endpoint
 router.get('/', optionalAuth, songController.search);
 
-// Get specific song with all versions
-router.get('/:song_id', optionalAuth, songController.getSong);
+// Get popular songs
+router.get('/popular', songController.getPopular);
 
 // Search by chord progression
 router.get('/chords', optionalAuth, songController.searchByChords);
 
-// Get popular songs
-router.get('/popular', songController.getPopular);
+// Get specific song with all versions
+router.get('/:song_id', optionalAuth, songController.getSong);
+
 
 module.exports = router;

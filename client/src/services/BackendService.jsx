@@ -25,6 +25,11 @@ export const SongService = {
         return response.data;
     },
 
+    getTrending: async () => {
+        const response = await apiClient.get('/songs/popular');
+        return response.data;
+    },
+
     getById: async (songId, userId = null) => {
         const config = {
             params: {}
