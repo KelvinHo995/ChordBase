@@ -30,6 +30,11 @@ export const SongService = {
         return response.data;
     },
 
+    getPending: async () => {
+        const response = await apiClient.get('/songs/pending');
+        return response.data;
+    },
+
     getById: async (songId, userId = null) => {
         const config = {
             params: {}
@@ -39,6 +44,16 @@ export const SongService = {
             config.params.submittedBy = userId;
 
         const response = await apiClient.get(`/songs/${songId}`);
+        return response.data;
+    },
+
+    approve: async (chordSheetId) => {
+        const response = await apiClient.post(`/songs/pending/approve/${chordSheetId}`);
+        return response.data;
+    },
+
+    reject: async (chordSheetId) => {
+        const response = await apiClient.post(`/songs/pending/reject/${chordSheetId}`);
         return response.data;
     },
 
@@ -74,22 +89,54 @@ export const UserService = {
     create: async (userData) => {
         const response = await apiClient.post('/users', userData);
         return response.data;
+    },
+
+    updateStatus: async (id, userData) => {
+        console.log("Updating user status:", userData);
+        const response = await apiClient.put(`/users/${id}/status`, {status: userData.status});
+        return response.data;
+    },
+
+    updateRole: async (id, userData) => {
+        const response = await apiClient.put(`/users/${id}/role`, userData);
+        return response.data;
     }
 }
 
 export const PlaylistService = {
-    getAll: async () => {
-        const response = await apiClient.get('/playlists');
+    getAllPlaylists: async () => {
+        const response = await apiClient.get(`/playlists`);
         return response.data;
     },
 
-    getById: async () => {
-        const response = await apiClient.get(`/playlist/${id}`);
+    getById: async (id) => {
+        const response = await apiClient.get(`/playlists/${id}`);
+        return response.data;
+    },
+
+    getFavoriteSongs: async () => {
+        const response = await apiClient.get(`/playlists/favorites`);
         return response.data;
     },
 
     create: async (playlistData) => {
         const response = await apiClient.post('/playlists', playlistData);
+        return response.data;
+    },
+
+    delete: async (playlistId) => {
+        const response = await apiClient.delete(`/playlists/${playlistId}`);
+        return response.data;
+    },
+
+    addSong: async (playlistId, songId) => {
+        const response = await apiClient.post(`/playlists/${playlistId}/songs`, { song_id: songId });
+        return response.data;
+    },
+
+    removeSong: async (playlistId, songId) => {
+        const response = await apiClient.delete(`/playlists/${playlistId}/songs/${songId}`);
+        return response.data;
     }
 }
 

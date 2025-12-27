@@ -6,6 +6,7 @@ const { vars, dbConnect } = require('./config');
 // Import routes
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');  
+const playlistRoutes = require('./routes/playlist.route');
 const songRoutes = require('./routes/song.route'); // ← THÊM MỚI
 const uploadRoutes = require('./routes/upload.route'); // ← THÊM MỚI
 const commentRoutes = require('./routes/comment.route');
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
+app.use('/api/playlists', playlistRoutes);
 app.use('/api/songs', songRoutes); 
 app.use('/api/upload', uploadRoutes);
 app.use('/api/comments', commentRoutes); 

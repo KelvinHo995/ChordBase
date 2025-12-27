@@ -109,6 +109,59 @@ class SongController {
             });
         }
     }
+
+    // GET /api/search/pending
+    async getPending(req, res) {
+        console.log('Fetching pending songs');
+        try {
+            const songs = await songService.getPendingSongs();
+            
+            res.status(200).json({
+                success: true,
+                data: songs 
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    // POST /api/search/pending/approve/:song_id
+    async approveSong(req, res) {
+        console.log('Approving song:', req.params.chord_sheet_id);
+        try {
+            const { chord_sheet_id } = req.params;
+            await songService.approveSong(chord_sheet_id);
+            res.status(200).json({
+                success: true,
+                message: 'Song approved successfully'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async rejectSong(req, res) {
+        console.log('Rejecting song:', req.params.chord_sheet_id);
+        try {
+            const { chord_sheet_id } = req.params;
+            await songService.rejectSong(chord_sheet_id);
+            res.status(200).json({
+                success: true,
+                message: 'Song rejected successfully'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = new SongController();

@@ -162,18 +162,22 @@ class UserService {
     // Update user status (admin)
     async updateUserStatus(userId, status) {
         const user = await User.findByPk(userId);
-        
+        console.log("Found user:", user);        
         if (!user) {
             throw new Error('User not found');
         }
 
-        const validStatuses = ['active', 'inactive', 'suspended'];
+        const validStatuses = ['active', 'locked'];
         if (!validStatuses.includes(status)) {
             throw new Error('Invalid status');
         }
-
         user.status = status;
-        await user.save();
+        try {
+            await user.save();
+        } catch (err) {
+            console.error("Error saving user status:", err);
+            throw new Error('Failed to update user status');
+        }
 
         return user.toJSON();
     }

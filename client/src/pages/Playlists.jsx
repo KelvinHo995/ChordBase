@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "../context/AuthContext"
 import { SongCard } from "../components/SongCard"
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 import { Heart, ListMusic, Plus, Trash2, Music, ArrowLeft, ExternalLink } from "lucide-react"
 import { mockSongs } from "../lib/mock-data"
+import { PlaylistService } from "../services/BackendService"
 
 // Mock initial data since it's not in context yet
 const INITIAL_FAVORITES = ["song-1", "song-2", "song-4"]
@@ -29,43 +30,76 @@ const INITIAL_PLAYLISTS = [
 
 const Playlists = () => {
   const { isLoggedIn } = useAuth()
-  
+
   // Local state to simulate data management
-  const [favorites, setFavorites] = useState(INITIAL_FAVORITES)
-  const [playlists, setPlaylists] = useState(INITIAL_PLAYLISTS)
+  const [favorites, setFavorites] = useState([])
+  const [playlists, setPlaylists] = useState([])
   const [selectedPlaylist, setSelectedPlaylist] = useState(null)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [newPlaylistName, setNewPlaylistName] = useState("")
 
-  // Helper functions
-  const createPlaylist = (name) => {
-    const newPlaylist = {
-      id: `pl-${Date.now()}`,
-      name: name,
-      songs: [],
-      createdAt: new Date(Date.now())
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      try {
+          const res = await PlaylistService.getFavoriteSongs()
+          const favSongs = res.data.map(fav => fav.song)
+          console.log("Fetched favorite songs:", favSongs)
+          setFavorites(favSongs)
+      } catch (error) {
+        console.error("Failed to fetch favorite songs:", error)
+      }
     }
-    setPlaylists([...playlists, newPlaylist])
+
+    const fetchPlaylists = async () => {
+      try {
+          const res = await PlaylistService.getAllPlaylists()
+          setPlaylists(res.data)
+          console.log("Fetched playlists:", res.data)
+      } catch (error) {
+        console.error("Failed to fetch playlists:", error)
+      }
+    }
+
+    fetchFavorites()
+    fetchPlaylists()
+  }, [])
+
+  // Helper functions
+  const createPlaylist = async (name) => {
+    try {
+      const res = await PlaylistService.create({ name });
+      if (res.success) {
+        setPlaylists([...playlists, res.data]);
+      }
+    } catch (error) {
+      console.error("Failed to create playlist:", error);
+    }
   }
 
   const removeFromFavorites = (songId) => {
     setFavorites(favorites.filter(id => id !== songId))
   }
 
-  const removeFromPlaylist = (playlistId, songId) => {
-    setPlaylists(playlists.map(pl => {
-      if (pl.id === playlistId) {
-        return { ...pl, songs: pl.songs.filter(id => id !== songId) }
-      }
-      return pl
-    }))
-    
-    // Also update selected playlist view if it's the one being modified
-    if (selectedPlaylist && selectedPlaylist.id === playlistId) {
-      setSelectedPlaylist(prev => ({
-        ...prev,
-        songs: prev.songs.filter(id => id !== songId)
+  const removeFromPlaylist = async (playlistId, songId) => {
+    try {
+      await PlaylistService.removeSong(playlistId, songId);
+      
+      setPlaylists(playlists.map(pl => {
+        if (pl.id === playlistId) {
+          return { ...pl, songs: pl.songs.filter(s => s.id !== songId) }
+        }
+        return pl
       }))
+      
+      // Also update selected playlist view if it's the one being modified
+      if (selectedPlaylist && selectedPlaylist.id === playlistId) {
+        setSelectedPlaylist(prev => ({
+          ...prev,
+          songs: prev.songs.filter(s => s.id !== songId)
+        }))
+      }
+    } catch (error) {
+      console.error("Failed to remove song from playlist:", error);
     }
   }
 
@@ -84,7 +118,7 @@ const Playlists = () => {
     )
   }
 
-  const favoriteSongs = mockSongs.filter((song) => favorites.includes(song.id))
+  // const favoriteSongs = mockSongs.filter((song) => favorites.includes(song.id))
 
   const handleCreatePlaylist = (e) => {
     e.preventDefault()
@@ -95,7 +129,7 @@ const Playlists = () => {
   }
 
   const getPlaylistSongs = (playlist) => {
-    return mockSongs.filter((song) => playlist.songs.includes(song.id))
+    return playlist.songs || [];
   }
 
   return (
@@ -119,14 +153,14 @@ const Playlists = () => {
 
         {/* Favorites Tab */}
         <TabsContent value="favorites">
-          {favoriteSongs.length > 0 ? (
+          {favorites.length > 0 ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <p className="text-muted-foreground">{favoriteSongs.length} songs in favorites</p>
+                <p className="text-muted-foreground">{favorites.length} songs in favorites</p>
               </div>
-              <div className="grid gap-4 md:grid-cols-2">
-                {favoriteSongs.map((song) => (
-                  <div key={song.id} className="relative group">
+              <div className="grid gap-4 md:grid-cols-3">
+                {favorites.map((song) => (
+                  <div key={song.song_id} className="relative group">
                     <SongCard song={song} />
                     <Button
                       variant="destructive"
@@ -134,7 +168,7 @@ const Playlists = () => {
                       className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={(e) => {
                         e.preventDefault()
-                        removeFromFavorites(song.id)
+                        removeFromFavorites(song.song_id)
                       }}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -182,7 +216,7 @@ const Playlists = () => {
                 </CardHeader>
                 <CardContent>
                   {getPlaylistSongs(selectedPlaylist).length > 0 ? (
-                    <div className="space-y-3">
+                    <div className="space-y-3 md:grid md:grid-cols-3 gap-4">
                       {getPlaylistSongs(selectedPlaylist).map((song) => (
                         <div
                           key={song.id}

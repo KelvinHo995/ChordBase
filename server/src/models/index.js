@@ -6,6 +6,9 @@ const ChordSheet = require('./chordSheet.model');
 const User = require('./user.model');
 const SongView = require('./songView.model');
 const SongArtist = require('./song_artist.model');
+const Favorite = require('./favorite.model');
+const PlaylistSong = require('./playlist_song.model');
+const Playlist = require('./playlist.model');
 const Comment = require('./comment.model');
 const Rating = require('./rating.model');
 const { sequelize } = require('../config/db');
@@ -50,6 +53,21 @@ User.hasMany(ChordSheet, { foreignKey: 'uploader_id', as: 'uploaded_sheets' });
 Song.hasMany(SongView, { foreignKey: 'song_id', as: 'views' });
 SongView.belongsTo(Song, { foreignKey: 'song_id', as: 'song' });
 
+// Favorite - User (Many to One)
+Favorite.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(Favorite, { foreignKey: 'user_id', as: 'favorites' });
+
+// Favorite - Song (Many to One)
+Favorite.belongsTo(Song, { foreignKey: 'song_id', as: 'song' });
+Song.hasMany(Favorite, { foreignKey: 'song_id', as: 'favorited_by' });
+
+// PlaylistSong - Playlist (Many to One)
+PlaylistSong.belongsTo(Playlist, { foreignKey: 'playlist_id', as: 'playlist' });
+Playlist.hasMany(PlaylistSong, { foreignKey: 'playlist_id', as: 'playlist_songs' });
+
+// PlaylistSong - Song (Many to One)
+PlaylistSong.belongsTo(Song, { foreignKey: 'song_id', as: 'song' });
+Song.hasMany(PlaylistSong, { foreignKey: 'song_id', as: 'in_playlists' });
 // Comment - ChordSheet (Many to One)
 Comment.belongsTo(ChordSheet, { foreignKey: 'chord_sheet_id', as: 'chord_sheet' });
 ChordSheet.hasMany(Comment, { foreignKey: 'chord_sheet_id', as: 'comments' });
@@ -78,6 +96,9 @@ module.exports = {
     User,
     SongView,
     SongArtist,
+    Favorite,
+    PlaylistSong,
+    Playlist,
     Comment,
     Rating,
     sequelize
