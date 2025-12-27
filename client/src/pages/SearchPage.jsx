@@ -30,7 +30,7 @@ const SearchPage = () => {
 
         const res = await SongService.getAll(params)
         console.log(res);
-        setSongs(res.data.songs);
+        setSongs(res.data.songs || []);
         // Assuming the backend returns an array of songs directly or { data: [...] }
         // Adjust based on actual API response structure. 
         // SongService.getAll returns response.data. 

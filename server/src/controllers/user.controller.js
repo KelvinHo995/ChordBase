@@ -48,10 +48,11 @@ class UserController {
     async updateProfile(req, res) {
         try {
             const userId = req.user.user_id;
-            const { display_name, preferences } = req.body;
+            const { display_name, bio, preferences } = req.body;
 
             const user = await userService.updateProfile(userId, {
                 display_name,
+                bio,
                 preferences
             });
 

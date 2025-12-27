@@ -100,6 +100,16 @@ export const UserService = {
     updateRole: async (id, userData) => {
         const response = await apiClient.put(`/users/${id}/role`, userData);
         return response.data;
+    },
+
+    updateProfile: async (profileData) => {
+        const response = await apiClient.put('/users/profile', profileData);
+        return response.data;
+    },
+
+    getMyProfile: async () => {
+        const response = await apiClient.get('/users/me');
+        return response.data;
     }
 }
 

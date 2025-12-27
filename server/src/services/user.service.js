@@ -22,7 +22,7 @@ class UserService {
     // Get user profile (public info)
     async getUserProfile(userId) {
         const user = await User.findByPk(userId, {
-            attributes: ['user_id', 'email', 'display_name', 'role', 'created_at']
+            attributes: ['user_id', 'email', 'display_name', 'role', 'created_at', 'bio']
         });
         
         if (!user || user.is_deleted) {
@@ -41,7 +41,7 @@ class UserService {
         }
 
         // Only allow updating certain fields
-        const allowedFields = ['display_name', 'preferences'];
+        const allowedFields = ['display_name', 'bio', 'preferences'];
         const updates = {};
         
         allowedFields.forEach(field => {

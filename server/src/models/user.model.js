@@ -30,6 +30,10 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING(100),
         allowNull: false
     },
+    bio: {
+        type: DataTypes.TEXT,
+        allowNull: true
+    },
     role: {
         type: DataTypes.STRING(20),
         allowNull: false,
