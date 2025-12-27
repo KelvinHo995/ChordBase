@@ -55,7 +55,7 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
     return (
         <Card>
             {showControl && (
-                <CardHeader className="pb-3">
+                <CardHeader className="pb-3 print:hidden">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <CardTitle className="text-xl">Chord Sheet</CardTitle>
                         <div className="flex flex-wrap items-center gap-2">

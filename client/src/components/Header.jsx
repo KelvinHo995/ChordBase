@@ -46,7 +46,7 @@ const Header = () => {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm print:hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           

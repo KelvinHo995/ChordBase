@@ -9,7 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
-import { Heart, Share2, ListPlus, ArrowLeft } from 'lucide-react'
+import { Heart, Share2, Printer, ListPlus, ArrowLeft } from 'lucide-react'
 import { mockSongs } from '../lib/mock-data'
 import { SongService } from '@/services/BackendService'
 
@@ -39,6 +39,10 @@ const SongPage = () => {
 
     fetchSong();
   }, [])
+
+  const handlePrint = () => {
+    window.print();
+  }
 
   if (!song) {
     return (
@@ -95,7 +99,7 @@ const SongPage = () => {
   const chords = extractChords(song.chordSheet)
 
   return (
-    <main className="container mx-auto px-4 py-8 text-lg">
+    <main className="container mx-auto px-4 py-8 text-lg print:p-8 print:bg-white print:text-black">
       {showLoginPrompt && !isLoggedIn && (
         <Card className="mb-6 border-yellow-500/50 bg-yellow-50">
           <CardContent className="flex items-center justify-between p-4">
@@ -107,7 +111,7 @@ const SongPage = () => {
         </Card>
       )}
 
-      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6 gap-2 text-lg -ml-4">
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6 gap-2 text-lg -ml-4 print:hidden">
         <ArrowLeft className="h-5 w-5" />
         Back
       </Button>
@@ -122,15 +126,15 @@ const SongPage = () => {
                 <h1 className="text-5xl font-bold mb-2">{song.title}</h1>
                 <p className="text-2xl text-muted-foreground">{song.artist}</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex gap-2 print:hidden">
                 <Button variant={favorite ? "default" : "outline"} size="icon" onClick={handleFavoriteClick}>
                   <Heart className={`h-5 w-5 ${favorite ? "fill-current" : ""}`} />
                 </Button>
                 <Button variant="outline" size="icon" onClick={handlePlaylistClick}>
                   <ListPlus className="h-5 w-5" />
                 </Button>
-                <Button variant="outline" size="icon">
-                  <Share2 className="h-5 w-5" />
+                <Button variant="outline" size="icon" onClick={handlePrint}>
+                  <Printer className="h-5 w-5" />
                 </Button>
               </div>
             </div>
@@ -154,7 +158,7 @@ const SongPage = () => {
           <SongBody lyrics={song.chordSheet} songKey="G" showControl={true} />
 
           {/* Comments Section */}
-          <div className="mt-8">
+          <div className="mt-8 print:hidden">
             <CommentSection songId={song.id} />
           </div>
         </div>

@@ -20,7 +20,7 @@ export function SongInformation({ song }) {
   }
 
   return (
-    <Card>
+    <Card className="print:hidden">
       <CardHeader>
         <CardTitle className="text-xl flex items-center gap-2">
           <Music2 className="h-5 w-5 text-primary" />
