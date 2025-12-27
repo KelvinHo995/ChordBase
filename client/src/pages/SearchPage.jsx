@@ -10,6 +10,7 @@ const GENRES = ["Rock", "Pop", "Folk", "Country", "Jazz", "Blues"]
 const SearchPage = () => {
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get("q") || ""
+  console.log(searchQuery)
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [sortBy, setSortBy] = useState("rating")
   
@@ -23,16 +24,18 @@ const SearchPage = () => {
       setError(null)
       try {
         const params = {}
-        if (searchQuery) params.query = searchQuery
+        if (searchQuery) params.q = searchQuery
         if (selectedGenre !== "all") params.genre = selectedGenre
         if (sortBy) params.sort = sortBy
 
-        const data = await SongService.getAll(params)
+        const res = await SongService.getAll(params)
+        console.log(res);
+        setSongs(res.data.songs);
         // Assuming the backend returns an array of songs directly or { data: [...] }
         // Adjust based on actual API response structure. 
         // SongService.getAll returns response.data. 
         // If response.data is the array, then:
-        setSongs(Array.isArray(data) ? data : data.songs || [])
+        // setSongs(Array.isArray(data) ? data : data.songs || [])
       } catch (err) {
         console.error("Failed to fetch songs:", err)
         setError("Failed to load songs. Please try again later.")

@@ -9,6 +9,8 @@ const SongArtist = require('./song_artist.model');
 const Favorite = require('./favorite.model');
 const PlaylistSong = require('./playlist_song.model');
 const Playlist = require('./playlist.model');
+const Comment = require('./comment.model');
+const Rating = require('./rating.model');
 const { sequelize } = require('../config/db');
 
 // ===== RELATIONSHIPS =====
@@ -66,6 +68,25 @@ Playlist.hasMany(PlaylistSong, { foreignKey: 'playlist_id', as: 'playlist_songs'
 // PlaylistSong - Song (Many to One)
 PlaylistSong.belongsTo(Song, { foreignKey: 'song_id', as: 'song' });
 Song.hasMany(PlaylistSong, { foreignKey: 'song_id', as: 'in_playlists' });
+// Comment - ChordSheet (Many to One)
+Comment.belongsTo(ChordSheet, { foreignKey: 'chord_sheet_id', as: 'chord_sheet' });
+ChordSheet.hasMany(Comment, { foreignKey: 'chord_sheet_id', as: 'comments' });
+
+// Comment - User (Many to One)
+Comment.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(Comment, { foreignKey: 'user_id', as: 'comments' });
+
+// Comment - Comment (Self-referencing for nested comments)
+Comment.belongsTo(Comment, { foreignKey: 'parent_comment_id', as: 'parent' });
+Comment.hasMany(Comment, { foreignKey: 'parent_comment_id', as: 'replies' });
+
+// Rating - ChordSheet (Many to One)
+Rating.belongsTo(ChordSheet, { foreignKey: 'chord_sheet_id', as: 'chord_sheet' });
+ChordSheet.hasMany(Rating, { foreignKey: 'chord_sheet_id', as: 'ratings' });
+
+// Rating - User (Many to One)
+Rating.belongsTo(User, { foreignKey: 'user_id', as: 'user' });
+User.hasMany(Rating, { foreignKey: 'user_id', as: 'ratings' });
 
 module.exports = {
     Song,
@@ -78,5 +99,7 @@ module.exports = {
     Favorite,
     PlaylistSong,
     Playlist,
+    Comment,
+    Rating,
     sequelize
 };

@@ -34,6 +34,7 @@ function App() {
           {/* Instrument Context Group */}
           <Route element={<InstrumentProvider><Outlet /></InstrumentProvider>}>
             <Route path="songs/:songID" element={<SongPage />} />
+            <Route path="songs/:songID/:versionID" element={<SongPage />} />
             <Route path="upload" element={<UploadPage />} />
           </Route>
 
