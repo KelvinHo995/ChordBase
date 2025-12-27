@@ -441,7 +441,7 @@ class SongService {
             limit
         });
 
-        return await Promise.all(songs.map(song => this.enrichSongData2(song)));
+        return await Promise.all(songs.map(song => this.enrichSongData(song)));
     }
 
     async getPendingSongs() {
