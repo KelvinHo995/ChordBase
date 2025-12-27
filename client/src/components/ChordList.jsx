@@ -19,7 +19,7 @@ export function ChordList({
 
   return (
     <div 
-      className="w-full flex flex-row justify-around wrap rounded-2xl"
+      className="w-full grid grid-cols-2 items-center justify-around wrap rounded-2xl"
     >
       {chords.map((name, index) => (
         <HoverChord key={`${name}-${index}`} chordName={name} hoverable={false}/>
