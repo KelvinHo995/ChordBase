@@ -1,5 +1,5 @@
 // server/src/services/search.service.js
-const { Song, Artist, Genre, ChordSheet, User, SongView } = require('../models');
+const { Song, Artist, Genre, ChordSheet, User, SongArtist, SongView } = require('../models');
 const { Op, fn, col, literal } = require('sequelize');
 const { sequelize } = require('../config/db');
 
@@ -495,6 +495,66 @@ class SongService {
         });
 
         return await Promise.all(songs.map(song => this.enrichSongData2(song)));
+    }
+
+    async getPendingSongs() {
+        const songs = await ChordSheet.findAll({
+            where: { status: 'pending', is_deleted: false },
+            include: [
+                {
+                    model: Song,
+                    as: 'song',
+                    include: [
+                        {
+                            model: SongArtist,
+                            as: 'song_artists',
+                            attributes: ['song_id', 'artist_id'],
+                        },
+                        {
+                            model: Artist,
+                            as: 'artists',
+                            attributes: ['artist_id', 'name'],
+                            through: { attributes: [] }
+                        },
+                        {
+                            model: Genre,
+                            as: 'genre',
+                            attributes: ['genre_id', 'name']
+                        }
+                    ]
+                },
+                {
+                    model: User,
+                    as: 'uploader',
+                    attributes: ['user_id', 'display_name']
+                }
+            ]
+        });
+        return songs;
+    }
+
+    async approveSong(chord_sheet_id) {
+        await ChordSheet.update(
+            { status: 'approved' },
+            {
+                where: {
+                    chord_sheet_id: chord_sheet_id,
+                    status: 'pending'
+                }
+            }
+        );
+    }
+
+    async rejectSong(chord_sheet_id) {
+        await ChordSheet.update(
+            { status: 'rejected' },
+            {
+                where: {
+                    chord_sheet_id: chord_sheet_id,
+                    status: 'pending'
+                }
+            }
+        );
     }
 }
 

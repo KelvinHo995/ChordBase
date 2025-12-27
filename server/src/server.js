@@ -6,7 +6,8 @@ const { vars, dbConnect } = require('./config');
 // Import routes
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');  
-const songRoutes = require('./routes/song.route'); // ← THÊM MỚI
+const songRoutes = require('./routes/song.route');
+const playlistRoutes = require('./routes/playlist.route');
 
 const app = express();
 
@@ -18,7 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
-app.use('/api/songs', songRoutes); 
+app.use('/api/songs', songRoutes);
+app.use('/api/playlists', playlistRoutes);
 
 // Health check
 app.get('/health', (req, res) => {

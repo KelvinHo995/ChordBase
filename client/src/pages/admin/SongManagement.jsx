@@ -4,33 +4,9 @@ import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Music, Clock, Check, X, Eye } from "lucide-react"
 import { Link } from "react-router-dom"
-
-const PENDING_SONGS = [
-  {
-    id: "5",
-    title: "Blackbird",
-    artist: "The Beatles",
-    genre: "Folk",
-    uploaderName: "Sarah Wilson",
-    createdAt: "2024-02-10",
-  },
-  {
-    id: "6",
-    title: "Sweet Child O' Mine",
-    artist: "Guns N' Roses",
-    genre: "Rock",
-    uploaderName: "Mike Johnson",
-    createdAt: "2024-02-11",
-  },
-  {
-    id: "7",
-    title: "Thinking Out Loud",
-    artist: "Ed Sheeran",
-    genre: "Pop",
-    uploaderName: "Emma Davis",
-    createdAt: "2024-02-12",
-  },
-]
+import { useEffect } from "react"
+import { useState } from "react"
+import { SongService } from "@/services/BackendService"
 
 const SongManagement = () => {
   const formatDate = (dateString) => {
@@ -41,15 +17,40 @@ const SongManagement = () => {
     })
   }
 
-  const handleApprove = (songId) => {
-    // Implement approve logic here
-    console.log("Approved song with ID:", songId)
+  const handleApprove = async (chord_sheet_id) => {
+    try {
+      const res = await SongService.approve(chord_sheet_id);
+      setAllPendingSongs(prevSongs => prevSongs.filter(song => song.chord_sheet_id !== chord_sheet_id));
+    } catch (error) {
+      console.error("Error approving song with ID:", chord_sheet_id, error);
+    }
+    console.log("Approved song with ID:", chord_sheet_id)
   }
 
-  const handleReject = (songId) => {
-    // Implement reject logic here
-    console.log("Rejected song with ID:", songId)
+  const handleReject = async (chord_sheet_id) => {
+    try {
+      const res = await SongService.reject(chord_sheet_id);
+      setAllPendingSongs(prevSongs => prevSongs.filter(song => song.chord_sheet_id !== chord_sheet_id));
+    } catch (error) {
+      console.error("Error rejecting song with ID:", chord_sheet_id, error);
+    }
+    console.log("Rejected song with ID:", chord_sheet_id)
   }
+
+  const [allPendingSongs, setAllPendingSongs] = useState([]);
+  useEffect(() => {
+    const fetchPendingSongs = async () => {
+      try {
+        const res = await SongService.getPending();
+        console.log(res);
+        setAllPendingSongs(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchPendingSongs();
+  }, []);
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -67,10 +68,10 @@ const SongManagement = () => {
             <Clock className="h-5 w-5" />
             Pending Review
           </CardTitle>
-          <CardDescription>{PENDING_SONGS.length} chord sheets waiting for approval</CardDescription>
+          <CardDescription>{allPendingSongs.length} chord sheets waiting for approval</CardDescription>
         </CardHeader>
         <CardContent>
-          {PENDING_SONGS.length === 0 ? (
+          {allPendingSongs.length === 0 ? (
             <div className="py-12 text-center">
               <Check className="mx-auto mb-4 h-12 w-12 text-success" />
               <p className="text-lg font-medium text-foreground">All caught up!</p>
@@ -89,32 +90,32 @@ const SongManagement = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {PENDING_SONGS.map((song) => (
-                    <TableRow key={song.id}>
+                  {allPendingSongs.map((song) => (
+                    <TableRow key={song.song_id}>
                       <TableCell>
                         <div>
-                          <p className="font-medium text-foreground">{song.title}</p>
-                          <p className="text-sm text-muted-foreground">{song.artist}</p>
+                          <p className="font-medium text-foreground">{song.song.title}</p>
+                          <p className="text-sm text-muted-foreground">{song.song.artists[0].name}</p>
                         </div>
                       </TableCell>
                       <TableCell>
-                        <Badge variant="secondary">{song.genre}</Badge>
+                        <Badge variant="secondary">{song.song.genre.name}</Badge>
                       </TableCell>
-                      <TableCell className="text-muted-foreground">{song.uploaderName}</TableCell>
-                      <TableCell className="text-muted-foreground">{formatDate(song.createdAt)}</TableCell>
+                      <TableCell className="text-muted-foreground">{song.uploader ? song.uploader.display_name : "AI Generator"}</TableCell>
+                      <TableCell className="text-muted-foreground">{formatDate(song.created_at)}</TableCell>
                       <TableCell>
                         <div className="flex justify-end gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link to={`/song/${song.id}`}>
+                            <Link to={`/song/${song.song_id}`}>
                               <Eye className="mr-1 h-3 w-3" />
                               Preview
                             </Link>
                           </Button>
-                          <Button onClick={() => handleApprove(song.id)} size="sm" className="gap-1">
+                          <Button onClick={() => handleApprove(song.chord_sheet_id)} size="sm" className="gap-1">
                             <Check className="h-3 w-3" />
                             Approve
                           </Button>
-                          <Button variant="destructive" onClick={() => handleReject(song.id)} size="sm" className="gap-1">
+                          <Button variant="destructive" onClick={() => handleReject(song.chord_sheet_id)} size="sm" className="gap-1">
                             <X className="h-3 w-3" />
                             Reject
                           </Button>
