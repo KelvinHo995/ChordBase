@@ -11,7 +11,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { Heart, Share2, Printer, ListPlus, ArrowLeft } from 'lucide-react'
 import { mockSongs } from '../lib/mock-data'
-import { SongService, CommentService, RatingService } from '@/services/BackendService'
+import { SongService, CommentService, RatingService, PlaylistService } from '@/services/BackendService'
 
 const SongPage = () => {
   const { songID, versionID } = useParams() // Get ID from URL
@@ -122,13 +122,13 @@ const SongPage = () => {
         console.log(res.data.song);
 
         setSong(res.data.song);
-        // if (!versionID)
+        setFavorite(Boolean(res.data.song.is_favorited ?? res.data.song.is_favourited));
+        if (!versionID)
           setVersion(res.data.song.chord_versions[0]);
-        // else {
-        //   const currentVersion = res.data.song.chord_versions.find(ver => ver.chord_sheet_id === versionID);
-        //   console.log(currentVersion);
-        //   setVersion(currentVersion);
-        // }
+        else {
+          const currentVersion = res.data.song.chord_versions.find(ver => ver.chord_sheet_id === versionID);
+          setVersion(currentVersion);
+        }
       } catch (err) {
         console.log(err);
       } finally {
@@ -203,7 +203,7 @@ const SongPage = () => {
   if (isLoading) {
     return (
       <main className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8"> 
-        <h1 className="text-2xl font-bold text-foreground">Song loading</h1>
+        <h1 className="text-2xl font-bold text-foreground">Loading...</h1>
       </main>
     )
   }
@@ -222,12 +222,24 @@ const SongPage = () => {
     )
   }
 
-  const handleFavoriteClick = () => {
+  const handleFavoriteClick = async () => {
     if (!isLoggedIn) {
       setShowLoginPrompt(true)
       return
     }
-    setFavorite(!favorite)
+    const next = !favorite;
+    setFavorite(next);
+    try {
+      if (next) {
+        await PlaylistService.addFavorite(song.song_id);
+      } else {
+        await PlaylistService.removeFavorite(song.song_id);
+      }
+    } catch (error) {
+      console.error('Favorite toggle failed:', error);
+      setFavorite(!next); // revert
+      alert('Could not update favorite. Please try again.');
+    }
   }
 
   const handlePlaylistClick = () => {
@@ -309,7 +321,7 @@ const SongPage = () => {
           {/* Comments Section */}
           <div className="mt-8 print:hidden">
             <CommentSection 
-              songId={song.id} 
+              songId={song.song_id} 
               comments={comments}
               onPostComment={handlePostComment}
               onUpdateComment={handleUpdateComment}
@@ -340,7 +352,7 @@ const SongPage = () => {
       </div>
 
       {/* Playlist Modal */}
-      <PlaylistModal open={playlistModalOpen} onOpenChange={setPlaylistModalOpen} songId={song.id} />
+      <PlaylistModal open={playlistModalOpen} onOpenChange={setPlaylistModalOpen} songId={song?.song_id} />
     </main>
   )
 }

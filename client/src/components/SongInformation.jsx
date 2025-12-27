@@ -96,7 +96,7 @@ export function SongInformation({ song, version }) {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Uploaded by</span>
-            <span className="text-base font-semibold text-foreground">{version.uploader.display_name}</span>
+            <span className="text-base font-semibold text-foreground">{version.uploader?.display_name || "AI Generator"}</span>
           </div>
 
           <div className="flex items-center justify-between">
