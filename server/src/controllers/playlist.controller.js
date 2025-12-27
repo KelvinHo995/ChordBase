@@ -129,6 +129,28 @@ class PlaylistController {
             });
         }
     }
+
+    async addFavorite(req, res) {
+        try {
+            const user_id = req.user.user_id;
+            const { songId } = req.params;
+            await playlistService.addFavoriteSong(user_id, songId);
+            res.status(200).json({ success: true, message: 'Added to favorites' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async removeFavorite(req, res) {
+        try {
+            const user_id = req.user.user_id;
+            const { songId } = req.params;
+            await playlistService.removeFavoriteSong(user_id, songId);
+            res.status(200).json({ success: true, message: 'Removed from favorites' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
 }
 
 module.exports = new PlaylistController();

@@ -134,6 +134,16 @@ export const PlaylistService = {
         return response.data;
     },
 
+    addFavorite: async (songId) => {
+        const response = await apiClient.post(`/playlists/favorites/${songId}`);
+        return response.data;
+    },
+
+    removeFavorite: async (songId) => {
+        const response = await apiClient.delete(`/playlists/favorites/${songId}`);
+        return response.data;
+    },
+
     create: async (playlistData) => {
         const response = await apiClient.post('/playlists', playlistData);
         return response.data;
