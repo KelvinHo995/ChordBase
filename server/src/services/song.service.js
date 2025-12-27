@@ -444,6 +444,30 @@ class SongService {
         return await Promise.all(songs.map(song => this.enrichSongData(song)));
     }
 
+    // ===== GET RECENT SONGS =====
+    async getRecentSongs(limit = 10) {
+        const songs = await Song.findAll({
+            where: { is_deleted: false },
+            include: [
+                {
+                    model: Genre,
+                    as: 'genre',
+                    attributes: ['genre_id', 'name']
+                },
+                {
+                    model: Artist,
+                    as: 'artists',
+                    attributes: ['artist_id', 'name'],
+                    through: { attributes: [] }
+                }
+            ],
+            order: [['created_at', 'DESC']],
+            limit
+        });
+
+        return await Promise.all(songs.map(song => this.enrichSongData(song)));
+    }
+
     async getPendingSongs() {
         const songs = await ChordSheet.findAll({
             where: { status: 'pending', is_deleted: false },
