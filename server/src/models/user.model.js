@@ -43,7 +43,7 @@ const User = sequelize.define('User', {
         allowNull: false,
         defaultValue: 'active',
         validate: {
-            isIn: [['active', 'inactive', 'suspended']]
+            isIn: [['active', 'inactive', 'suspended', 'locked']]
         }
     },
     preferences: {

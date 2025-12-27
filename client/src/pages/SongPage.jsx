@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import SongBody from '../components/SongBody'
 import ChordList from '../components/ChordList'
@@ -25,20 +25,7 @@ const SongPage = () => {
 
   // Find song by ID, or default to first one if not found/no ID (for testing)
   // In a real app, you'd fetch this or handle 404
-  const song = mockSongs.find(s => s.id === songID) || mockSongs[0]
-
-  useEffect(() => {
-    const fetchSong = async () => {
-      try {
-        const res = await SongService.getById(songID);
-        console.log(res);
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    fetchSong();
-  }, [])
+  const song = SongService.getById(songID)
 
   if (!song) {
     return (

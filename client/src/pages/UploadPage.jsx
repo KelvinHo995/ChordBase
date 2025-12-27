@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { SongService } from '../services/BackendService';
 import SongBody from '../components/SongBody';
+import { useAuth } from '@/context/AuthContext';
 // import { parseChordContent } from '../utils/chordParser';
 
 const CreateSong = () => {
@@ -21,7 +22,9 @@ const CreateSong = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await SongService.create(formData);
+      const uploader_id = useAuth().user.user_id;
+      const param = {...formData, uploader_id};
+      await SongService.create(param);
       // Reset or redirect...
     } catch (error) {
       console.error(error);

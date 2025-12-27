@@ -6,18 +6,6 @@ import { Heart, Eye, Star, Music2 } from "lucide-react"
 
 export function SongCard({ song }) {
   // const isLoggedIn = true
-
-  const handleFavoriteClick = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    // if (!isLoggedIn) return
-    // if (favorite) {
-    //   removeFromFavorites(song.id)
-    // } else {
-    //   addToFavorites(song.id)
-    // }
-  }
-
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Beginner":

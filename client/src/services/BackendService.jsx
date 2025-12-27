@@ -74,6 +74,17 @@ export const UserService = {
     create: async (userData) => {
         const response = await apiClient.post('/users', userData);
         return response.data;
+    },
+
+    updateStatus: async (id, userData) => {
+        console.log("Updating user status:", userData);
+        const response = await apiClient.put(`/users/${id}/status`, {status: userData.status});
+        return response.data;
+    },
+
+    updateRole: async (id, userData) => {
+        const response = await apiClient.put(`/users/${id}/role`, userData);
+        return response.data;
     }
 }
 

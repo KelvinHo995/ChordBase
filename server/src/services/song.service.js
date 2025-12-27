@@ -379,6 +379,18 @@ class SongService {
                     as: 'artists',
                     attributes: ['artist_id', 'name'],
                     through: { attributes: [] }
+                },
+                {
+                    model: ChordSheet,
+                    as: 'chord_sheets',
+                    attributes: ['chord_sheet_id', 'content', 'is_canonical', 'created_at'],
+                    include: [
+                        {
+                            model: User,
+                            as: 'uploader',
+                            attributes: ['user_id', 'display_name']
+                        }
+                    ]
                 }
             ]
         });
@@ -388,7 +400,7 @@ class SongService {
         }
 
         // return await this.enrichSongData(song);
-        return song;
+        return song.dataValues;
     }
 
     // ===== SEARCH BY CHORD PROGRESSION =====

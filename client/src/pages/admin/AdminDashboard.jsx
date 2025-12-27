@@ -155,7 +155,7 @@ const AdminDashboard = () => {
           <CardDescription>Common administrative tasks</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-3 md:grid-cols-3">
+          <div className="grid gap-3 md:grid-cols-2">
             <Link to="/admin/user-management">
               <Button variant="outline" className="w-full justify-start h-auto py-4 bg-transparent">
                 <UserCog className="h-5 w-5 mr-3" />
@@ -174,13 +174,13 @@ const AdminDashboard = () => {
                 </div>
               </Button>
             </Link>
-            <Button variant="outline" className="w-full justify-start h-auto py-4 bg-transparent">
+            {/* <Button variant="outline" className="w-full justify-start h-auto py-4 bg-transparent">
               <Settings className="h-5 w-5 mr-3" />
               <div className="text-left">
                 <p className="font-medium">Site Settings</p>
                 <p className="text-xs text-muted-foreground">Configure app settings</p>
               </div>
-            </Button>
+            </Button> */}
           </div>
         </CardContent>
       </Card>
