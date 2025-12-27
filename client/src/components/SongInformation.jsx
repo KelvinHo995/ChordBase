@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { Calendar, Eye, Star, User, Music2, TrendingUp } from "lucide-react"
 
-export function SongInformation({ song }) {
+export function SongInformation({ song, version }) {
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Beginner":
@@ -46,13 +46,13 @@ export function SongInformation({ song }) {
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Genre</span>
             <Badge variant="secondary" className="text-sm">
-              {song.genre}
+              {song.genre.name}
             </Badge>
           </div>
 
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Difficulty</span>
-            <Badge className={`${getDifficultyColor(song.difficulty)} text-sm`}>{song.difficulty}</Badge>
+            <Badge className={`${getDifficultyColor(song.difficulty)} text-sm`}>{song.difficulty || "Beginner"}</Badge>
           </div>
         </div>
 
@@ -66,7 +66,7 @@ export function SongInformation({ song }) {
               <span className="text-sm font-medium">Rating</span>
             </div>
             <div className="flex items-center gap-1">
-              <span className="text-base font-bold text-foreground">{song.rating.toFixed(1)}</span>
+              <span className="text-base font-bold text-foreground">{version.rating.avg.toFixed(1)}</span>
               <span className="text-sm text-muted-foreground">/ 5.0</span>
             </div>
           </div>
@@ -76,7 +76,7 @@ export function SongInformation({ song }) {
               <Eye className="h-4 w-4" />
               <span className="text-sm font-medium">Views</span>
             </div>
-            <span className="text-base font-bold text-foreground">{song.views.toLocaleString()}</span>
+            <span className="text-base font-bold text-foreground">{song.stats.total_views.toLocaleString()}</span>
           </div>
 
           <div className="flex items-center justify-between">
@@ -96,7 +96,7 @@ export function SongInformation({ song }) {
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">Uploaded by</span>
-            <span className="text-base font-semibold text-foreground">{song.uploaderName}</span>
+            <span className="text-base font-semibold text-foreground">{version.uploader.display_name}</span>
           </div>
 
           <div className="flex items-center justify-between">
@@ -105,7 +105,7 @@ export function SongInformation({ song }) {
               <span className="text-sm font-medium">Upload Date</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {new Date(song.createdAt).toLocaleDateString("en-US", {
+              {new Date(version.created_at).toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",

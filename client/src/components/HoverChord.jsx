@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Chord from "@tombatossals/react-chords/lib/Chord";
 import ChordBlock from '@tombatossals/react-chords/lib/Chord/ChordBlock'
 import { useInstrument } from "../context/InstrumentContext";
@@ -55,6 +55,9 @@ const HoverChord = ({ chordName, hoverable=true }) => {
     const { instrument } = useInstrument()
     const [hovered, setHovered] = useState(false)
     const [voicingIndex, setVoicingIndex] = useState(0);
+    const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
+    const chordRef = useRef(null);
+    const hoverTimeout = useRef(null);
 
     const chordPositions = getChordPositions(chordName, instrument);
 
@@ -70,14 +73,37 @@ const HoverChord = ({ chordName, hoverable=true }) => {
         setVoicingIndex(0);
     }, [instrument])
 
+    useEffect(() => {
+        if (hovered && chordRef.current) {
+            const rect = chordRef.current.getBoundingClientRect();
+            setPopupPosition({
+                top: rect.top - 10, // 10px gap above the chord
+                left: rect.left + rect.width / 2
+            });
+        }
+    }, [hovered]);
+
+    const handleMouseEnter = () => {
+        hoverTimeout.current = setTimeout(() => {
+            setHovered(true);
+        }, 500);
+    };
+
+    const handleMouseLeave = () => {
+        if (hoverTimeout.current) {
+            clearTimeout(hoverTimeout.current);
+        }
+        setHovered(false);
+    };
+
     if (!hoverable)
         return (
-            <div className="w-55 h-60 mb-1
+            <div className="w-full h-full min-w-20 min-h-20
                 bg-white border-white rounded-xl shadow-md p-1
                 flex flex-col justify-center items-center"
             >
                 {chordPositions != null ? (
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center w-full h-full">
                         <span className="text-xl font-bold">{chordName}</span>
                         <Chord
                             chord={chordPositions[voicingIndex]} 
@@ -109,47 +135,65 @@ const HoverChord = ({ chordName, hoverable=true }) => {
         )
     return (
         <span
-            className="relative inline-block"
-            onMouseEnter={() => setHovered(true)}
-            onMouseLeave={() => setHovered(false)}
+            ref={chordRef}
+            className="relative inline-block cursor-pointer"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
         >
-            <span className="text-red-500 font-semibold">[{chordName}]</span>
+            <span className="text-red-500 font-semibold hover:text-red-600 transition-colors">[{chordName}]</span>
             {
                 hovered && (
-                <div className="w-55 h-60 absolute left-1/2 -translate-x-1/2 mb-1
-                    bg-white border-white rounded-xl shadow-md p-1
-                    flex flex-col justify-center items-center z-500"
+                <div 
+                    className="w-56 bg-white border-2 border-gray-200 rounded-lg shadow-xl p-3
+                    flex flex-col justify-center items-center z-[9999]
+                    animate-in fade-in slide-in-from-bottom-2 duration-200"
+                    style={{ 
+                        position: 'fixed',
+                        top: `${popupPosition.top}px`,
+                        left: `${popupPosition.left}px`,
+                        transform: 'translate(-50%, -100%)'
+                    }}
+                    onMouseEnter={() => setHovered(true)}
+                    onMouseLeave={() => setHovered(false)}
                 >
                     {chordPositions != null ? (
-                        <div className="flex flex-col items-center">
-                            <span>{chordName}</span>
-                            <Chord
-                                chord={chordPositions[voicingIndex]} 
-                                instrument={instrument} 
-                                lite={false}
-                                // name={chordName} 
-                                // isPiano={instrument.name == "Piano"}
-                            />
-                            <div className="flex justify-center items-center gap-3 mt-1 text-sm">
+                        <div className="flex flex-col items-center w-full">
+                            <span className="text-base font-bold text-gray-800 mb-2">{chordName}</span>
+                            <div className="mb-2">
+                                <Chord
+                                    chord={chordPositions[voicingIndex]} 
+                                    instrument={instrument} 
+                                    lite={false}
+                                />
+                            </div>
+                            <div className="flex justify-center items-center gap-3 w-full bg-gray-50 rounded px-2 py-1.5">
                                 <button 
                                     onClick={getPrevVoicing}
-                                    className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                                    className="px-2.5 py-1 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                                    disabled={chordPositions.length <= 1}
                                 >
                                     ◀
                                 </button>
-                                <span>
+                                <span className="text-sm font-medium text-gray-600 min-w-[2.5rem] text-center">
                                     {voicingIndex + 1}/{chordPositions.length}
                                 </span>
                                 <button
                                     onClick={getNextVoicing}
-                                    className="p-1 bg-gray-100 rounded hover:bg-gray-200"
+                                    className="px-2.5 py-1 bg-white border border-gray-300 rounded text-sm hover:bg-gray-100 hover:border-gray-400 transition-colors"
+                                    disabled={chordPositions.length <= 1}
                                 >
                                     ▶
                                 </button>
                             </div>
                         </div>
-                    ) : (<span className="flex justify-center">Hợp âm không được hỗ trợ!</span>)}
-                    
+                    ) : (
+                        <span className="flex justify-center text-sm text-gray-600 py-3">Chord not supported!</span>
+                    )}
+                    {/* Triangle pointer */}
+                    <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">
+                        <div className="w-0 h-0 border-l-6 border-r-6 border-t-6 border-transparent border-t-gray-200"></div>
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-[1px] w-0 h-0 border-l-[5px] border-r-[5px] border-t-[5px] border-transparent border-t-white"></div>
+                    </div>
                 </div>
                 )
             }

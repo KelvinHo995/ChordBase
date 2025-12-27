@@ -134,3 +134,48 @@ export const AuthService = {
         return response.data;
     }
 }
+export const CommentService = {
+    // Create a new comment
+    create: async (commentData) => {
+        const response = await apiClient.post('/comments', commentData);
+        return response.data;
+    },
+
+    // Get all comments for a chord sheet
+    getByChordSheet: async (chordSheetId, params = {}) => {
+        const response = await apiClient.get(`/comments/chord-sheet/${chordSheetId}`, { params });
+        return response.data;
+    },
+
+    // Update a comment
+    update: async (commentId, content) => {
+        const response = await apiClient.put(`/comments/${commentId}`, { content });
+        return response.data;
+    },
+
+    // Delete a comment
+    delete: async (commentId) => {
+        const response = await apiClient.delete(`/comments/${commentId}`);
+        return response.data;
+    }
+}    
+
+export const RatingService = {
+    // Create or update a rating
+    upsert: async (ratingData) => {
+        const response = await apiClient.post("/ratings", ratingData);
+        return response.data;
+    },
+
+    // Get rating info for a chord sheet
+    getByChordSheet: async (chordSheetId) => {
+        const response = await apiClient.get(`/ratings/chord-sheet/${chordSheetId}`);
+        return response.data;
+    },
+
+    // Delete a rating
+    delete: async (chordSheetId) => {
+        const response = await apiClient.delete(`/ratings/chord-sheet/${chordSheetId}`);
+        return response.data;
+    }
+}
