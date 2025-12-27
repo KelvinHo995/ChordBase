@@ -43,16 +43,15 @@ const Header = () => {
 
   const handleLogout = () => {
     logout()
-    navigate("/auth/login")
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm print:hidden">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 flex-shrink-0">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
             <Music className="h-8 w-8 text-indigo-600" />
             <span className="text-xl font-bold text-gray-900">ChordBase</span>
           </Link>

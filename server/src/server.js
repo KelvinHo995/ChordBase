@@ -8,6 +8,9 @@ const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');  
 const songRoutes = require('./routes/song.route'); // ← THÊM MỚI
 const uploadRoutes = require('./routes/upload.route'); // ← THÊM MỚI
+const commentRoutes = require('./routes/comment.route');
+const ratingRoutes = require('./routes/rating.route');
+
 const app = express();
 
 // Middlewares
@@ -20,6 +23,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/songs', songRoutes); 
 app.use('/api/upload', uploadRoutes);
+app.use('/api/comments', commentRoutes); 
+app.use('/api/ratings', ratingRoutes); 
+
 // Health check
 app.get('/health', (req, res) => {
     res.status(200).json({ 

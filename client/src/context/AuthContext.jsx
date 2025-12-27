@@ -1,9 +1,22 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { AuthService } from "../services/BackendService";
-import { th } from "zod/v4/locales";
-import { se } from "date-fns/locale";
+import { jwtDecode } from "jwt-decode";
 
 const AuthContext = createContext()
+
+const isTokenExpired = (token) => {
+  if (!token) return true;
+
+  try {
+    const decodedToken = jwtDecode(token);
+    // JWT exp claim is typically in seconds since the epoch
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp < currentTime;
+  } catch (error) {
+    // Handle decode errors (e.g., malformed token)
+    return true;
+  }
+};
 
 export const useAuth = () => useContext(AuthContext)
 
@@ -14,13 +27,27 @@ export const AuthProvider = ({ children }) => {
     const [isAdmin, setIsAdmin] = useState(false)
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        const savedUser = JSON.parse(localStorage.getItem('user'));
+        try {
+            setIsLoading(true);
+            const token = localStorage.getItem('token');
+            const savedUser = JSON.parse(localStorage.getItem('user'));
 
-        if (token && savedUser) {
-            setUser(savedUser);
-            setIsLoggedIn(true);
-            setIsAdmin(savedUser.role === 'admin');
+            if (token && savedUser) {
+                if (isTokenExpired(token)) {
+                    setUser(null);
+                    setIsAdmin(false);
+                    setIsLoggedIn(false);
+                } 
+                else {
+                    setUser(savedUser);
+                    setIsLoggedIn(true);
+                    setIsAdmin(savedUser.role === 'admin');
+                }
+            }
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setIsLoading(false);
         }
     }, []);
 

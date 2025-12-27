@@ -204,85 +204,7 @@ class SongService {
     }
 
     // ===== ENRICH SONG WITH CHORD VERSIONS & STATS =====
-    async enrichSongData(song) {
-        const songData = song.toJSON();
-
-        // Get all chord versions for this song
-        const chordVersions = await ChordSheet.findAll({
-            where: {
-                song_id: song.song_id,
-                status: 'approved',
-                is_deleted: false
-            },
-            include: [
-                {
-                    model: User,
-                    as: 'uploader',
-                    attributes: ['user_id', 'display_name']
-                }
-            ],
-            order: [
-                ['is_canonical', 'DESC'],
-                ['created_at', 'DESC']
-            ]
-        });
-
-        // Get ratings for each chord version
-        // const enrichedVersions = await Promise.all(
-        //     chordVersions.map(async (version) => {
-        //         const versionData = version.toJSON();
-                
-        //         // Get average rating
-        //         const [ratingResult] = await sequelize.query(`
-        //             SELECT 
-        //                 COUNT(rating_id) as count,
-        //                 COALESCE(ROUND(AVG(score), 2), 0) as avg
-        //             FROM ratings
-        //             WHERE chord_sheet_id = :chord_sheet_id
-        //         `, {
-        //             replacements: { chord_sheet_id: version.chord_sheet_id },
-        //             type: sequelize.QueryTypes.SELECT
-        //         });
-
-        //         return {
-        //             ...versionData,
-        //             content: undefined, // Don't include full content in search results
-        //             content_preview: versionData.content.substring(0, 200) + '...',
-        //             rating: {
-        //                 avg: parseFloat(ratingResult.avg) || 0,
-        //                 count: parseInt(ratingResult.count) || 0
-        //             }
-        //         };
-        //     })
-        // );
-
-        // // Get stats
-        // const [statsResult] = await sequelize.query(`
-        //     SELECT 
-        //         COUNT(DISTINCT sv.song_view_id) as total_views,
-        //         COUNT(DISTINCT fs.user_id) as total_favorites
-        //     FROM songs s
-        //     LEFT JOIN song_views sv ON s.song_id = sv.song_id
-        //     LEFT JOIN favorite_songs fs ON s.song_id = fs.song_id
-        //     WHERE s.song_id = :song_id
-        //     GROUP BY s.song_id
-        // `, {
-        //     replacements: { song_id: song.song_id },
-        //     type: sequelize.QueryTypes.SELECT
-        // });
-
-        return {
-            ...songData,
-            chord_versions: chordVersions,
-            // stats: {
-            //     total_views: parseInt(statsResult?.total_views) || 0,
-            //     total_favorites: parseInt(statsResult?.total_favorites) || 0,
-            //     total_versions: enrichedVersions.length
-            // }
-        };
-    }
-
-     async enrichSongData2(song) {
+    async enrichSongData(song, includeFullContent = false) {
         const songData = song.toJSON();
 
         // Get all chord versions for this song
@@ -322,15 +244,21 @@ class SongService {
                     type: sequelize.QueryTypes.SELECT
                 });
 
-                return {
+                const result = {
                     ...versionData,
-                    content: undefined, // Don't include full content in search results
-                    content_preview: versionData.content.substring(0, 200) + '...',
                     rating: {
                         avg: parseFloat(ratingResult.avg) || 0,
                         count: parseInt(ratingResult.count) || 0
                     }
                 };
+
+                // For search results, don't include full content
+                if (!includeFullContent) {
+                    result.content = undefined;
+                    result.content_preview = versionData.content.substring(0, 200) + '...';
+                }
+
+                return result;
             })
         );
 
@@ -352,17 +280,16 @@ class SongService {
         return {
             ...songData,
             chord_versions: enrichedVersions,
-            // stats: {
-            //     total_views: parseInt(statsResult?.total_views) || 0,
-            //     total_favorites: parseInt(statsResult?.total_favorites) || 0,
-            //     total_versions: enrichedVersions.length
-            // }
+            stats: {
+                total_views: parseInt(statsResult?.total_views) || 0,
+                total_favorites: parseInt(statsResult?.total_favorites) || 0,
+                total_versions: enrichedVersions.length
+            }
         };
     }
 
-
     // ===== GET SINGLE SONG WITH DETAILS =====
-    async getSongById(song_id) {
+    async getSongById(song_id, user_id = null) {
         const song = await Song.findOne({
             where: {
                 song_id,
@@ -399,8 +326,28 @@ class SongService {
             throw new Error('Song not found');
         }
 
-        // return await this.enrichSongData(song);
-        return song;
+        // Enrich with chord versions and stats
+        const enrichedSong = await this.enrichSongData(song, true); // includeFullContent = true
+
+        // Check if song is favorited by user
+        let is_favorited = false;
+        if (user_id) {
+            const [favoriteResult] = await sequelize.query(`
+                SELECT EXISTS(
+                    SELECT 1 FROM favorite_songs
+                    WHERE user_id = :user_id AND song_id = :song_id
+                ) as is_favorited
+            `, {
+                replacements: { user_id, song_id },
+                type: sequelize.QueryTypes.SELECT
+            });
+            is_favorited = favoriteResult.is_favorited;
+        }
+
+        return {
+            ...enrichedSong,
+            is_favorited
+        };
     }
 
     // ===== SEARCH BY CHORD PROGRESSION =====
