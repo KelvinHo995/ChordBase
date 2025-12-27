@@ -16,6 +16,7 @@ export default function HomePage() {
         const resTrending = await SongService.getTrending();
         console.log(resTrending.data);
         setTrendingSongs(resTrending.data);
+
         // setRecentSongs(res);
       } catch (err) {
         console.log(err);

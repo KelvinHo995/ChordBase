@@ -32,7 +32,7 @@ export function SongCard({ song }) {
                 <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-1">
                   {song.title}
                 </h3>
-                {/* <p className="text-sm text-muted-foreground">{song.artists[0].name}</p> */}
+                <p className="text-sm text-muted-foreground">{song.artists[0].name}</p>
               </div>
             </div>
           </div>
