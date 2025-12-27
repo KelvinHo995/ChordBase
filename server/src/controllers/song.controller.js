@@ -110,6 +110,25 @@ class SongController {
         }
     }
 
+    // GET /api/search/recent
+    async getRecent(req, res) {
+        console.log('Fetching recent songs');
+        try {
+            const limit = parseInt(req.query.limit) || 10;
+            const songs = await songService.getRecentSongs(limit);
+
+            res.status(200).json({
+                success: true,
+                data: songs 
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
     // GET /api/search/pending
     async getPending(req, res) {
         console.log('Fetching pending songs');

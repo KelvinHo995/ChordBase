@@ -13,6 +13,9 @@ router.get('/', optionalAuth, songController.search);
 // Get popular songs
 router.get('/popular', songController.getPopular);
 
+// Get recently added/edited songs
+router.get('/recent', songController.getRecent);
+
 // Get pending songs
 router.get('/pending', songController.getPending);
 

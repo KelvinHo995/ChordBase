@@ -30,6 +30,11 @@ export const SongService = {
         return response.data;
     },
 
+    getRecent: async () => {
+        const response = await apiClient.get('/songs/recent');
+        return response.data;
+    },
+
     getPending: async () => {
         const response = await apiClient.get('/songs/pending');
         return response.data;
