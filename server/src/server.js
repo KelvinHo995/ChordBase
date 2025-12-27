@@ -7,7 +7,7 @@ const { vars, dbConnect } = require('./config');
 const authRoutes = require('./routes/auth.route');
 const userRoutes = require('./routes/user.route');  
 const songRoutes = require('./routes/song.route'); // ← THÊM MỚI
-
+const uploadRoutes = require('./routes/upload.route'); // ← THÊM MỚI
 const app = express();
 
 // Middlewares
@@ -19,7 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes); 
 app.use('/api/songs', songRoutes); 
-
+app.use('/api/upload', uploadRoutes);
 // Health check
 app.get('/health', (req, res) => {
     res.status(200).json({ 

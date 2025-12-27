@@ -17,10 +17,11 @@ export const AuthProvider = ({ children }) => {
         const token = localStorage.getItem('token');
         const savedUser = JSON.parse(localStorage.getItem('user'));
 
-        if (token && savedUser)
+        if (token && savedUser) {
             setUser(savedUser);
             setIsLoggedIn(true);
             setIsAdmin(savedUser.role === 'admin');
+        }
     }, []);
 
     const login = async (email, password) => {
