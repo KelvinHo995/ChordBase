@@ -126,8 +126,6 @@ class UserService {
 
     // Get all users (admin)
     async getAllUsers(page = 1, limit = 10, filters = {}) {
-        const offset = (page - 1) * limit;
-        
         const where = { is_deleted: false };
         
         // Apply filters
@@ -140,21 +138,26 @@ class UserService {
             ];
         }
 
-        const { count, rows } = await User.findAndCountAll({
+        const queryOptions = {
             where,
-            limit,
-            offset,
             order: [['created_at', 'DESC']],
             attributes: { exclude: ['password_hash'] }
-        });
+        };
+
+        if (page !== -1 && limit !== -1) {
+            queryOptions.limit = limit;
+            queryOptions.offset = (page - 1) * limit;
+        }
+
+        const { count, rows } = await User.findAndCountAll(queryOptions);
 
         return {
             users: rows,
             pagination: {
                 total: count,
-                page,
-                limit,
-                totalPages: Math.ceil(count / limit)
+                page: (page === -1 || limit === -1) ? -1 : page,
+                limit: (page === -1 || limit === -1) ? count : limit,
+                totalPages: (page === -1 || limit === -1) ? 1 : Math.ceil(count / limit)
             }
         };
     }

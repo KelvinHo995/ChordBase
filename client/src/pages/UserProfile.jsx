@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { UserService } from '../services/BackendService'
+import { PlaylistService, UserService, SongService } from '../services/BackendService'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -20,11 +20,33 @@ const UserProfile = () => {
     bio: user?.bio || ''
   });
 
-  const stats = {
-      uploaded: 12,
-      favorites: 84,
-      playlists: 5
-  }
+  const [stats, setStats] = useState({
+    uploaded: 0,
+    favorites: 0,
+    playlists: 0
+  });
+
+  useEffect(() => {
+    const fetchUserStats = async () => {
+      try {
+        const results = await Promise.all([
+          SongService.getAllChordSheets({ uploaded_id: user?.user_id }),
+          PlaylistService.getFavoriteSongs(),
+          PlaylistService.getAllPlaylists()
+        ]);
+
+        setStats({
+          uploaded: results[0].data.length,
+          favorites: results[1].data.length,
+          playlists: results[2].data.length
+        })
+      } catch (error) {
+        console.error("Failed to fetch user stats:", error);
+      }
+    };
+
+    fetchUserStats();
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -71,7 +93,7 @@ const UserProfile = () => {
   }
   
   return (
-      <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
         <p className="mt-2 text-muted-foreground">Manage your account and view your activity.</p>

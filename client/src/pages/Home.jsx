@@ -53,7 +53,7 @@ export default function HomePage() {
           <TrendingUp className="h-5 w-5 text-blue-600" />
           <h2 className="text-2xl font-bold text-gray-950">Trending Songs</h2>
         </div>
-        {isLoading ? <h>Loading...</h> : <SongList songs={trendingSongs} />}
+        {isLoading ? <h1>Loading...</h1> : <SongList songs={trendingSongs} />}
       </section>
 
       {/* Recently Added */}
@@ -62,7 +62,7 @@ export default function HomePage() {
           <Clock className="h-5 w-5 text-blue-600" />
           <h2 className="text-2xl font-bold text-gray-950">Recently Added</h2>
         </div>
-        {isLoading ? <h>Loading...</h> : <SongList songs={recentSongs} />}
+        {isLoading ? <h1>Loading...</h1> : <SongList songs={recentSongs} />}
       </section>
         
     </div>

@@ -3,31 +3,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Shield, Music, FileText, Users, Sparkles, TrendingUp, Heart, BarChart3, Settings, UserCog, Clock } from "lucide-react"
+import { SongService, UserService } from "@/services/BackendService"
+import { use, useEffect, useState } from "react"
+import { get } from "react-hook-form"
+import { set } from "date-fns"
+import { fi } from "date-fns/locale"
 
 const AdminDashboard = () => {
-  // Mock data for UI demonstration
-  const stats = [
-    {
-      title: "Total Songs",
-      value: 156,
-      icon: Music,
-    },
-    {
-      title: "Total Users",
-      value: 342,
-      icon: Users,
-    },
-    {
-      title: "Pending Review",
-      value: 8,
-      icon: Clock,
-    },
-    {
-      title: "AI Generates Today",
-      value: 47,
-      icon: Sparkles,
-    },
-  ]
 
   const topSongs = [
     { title: "Wonderwall", favorites: 1240 },
@@ -36,6 +18,58 @@ const AdminDashboard = () => {
     { title: "Hallelujah", favorites: 850 },
     { title: "Hotel California", favorites: 720 },
   ]
+
+  const [stats, setStats] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        setIsLoading(true);
+        
+        const getNumSongs = async () => {
+          const response = await SongService.getAll({ type: 'all', limit: 1 });
+          return response.success && response.data.pagination ? response.data.pagination.total : 0;
+        };
+
+        const getNumChordSheets = async () => {
+          const response = await SongService.getAllChordSheets();
+          return response.success && Array.isArray(response.data) ? response.data.length : 0;
+        };
+
+        const getNumUsers = async () => {
+          const response = await UserService.getAll({ page: -1, limit: -1 });
+          return response.success && response.data.pagination ? response.data.pagination.total : 0;
+        };
+
+        const getNumPendingReviews = async () => {
+          const response = await SongService.getPending();
+          return response.success && Array.isArray(response.data) ? response.data.length : 0;
+        };
+
+        const [songsCount, chordSheetsCount, usersCount, pendingCount] = await Promise.all([
+          getNumSongs(),
+          getNumChordSheets(),
+          getNumUsers(),
+          getNumPendingReviews()
+        ]);
+
+        setStats([
+          { title: "Total Songs", value: songsCount, icon: Music },
+          { title: "Total Chord Sheets", value: chordSheetsCount, icon: FileText },
+          { title: "Total Users", value: usersCount, icon: Users },
+          { title: "Pending Review", value: pendingCount, icon: Clock },
+        ]);
+      }
+      catch (err) {
+        console.log(err);
+      } 
+      finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchStats();
+  }, []);
 
   return (
     <div className="container py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -46,12 +80,12 @@ const AdminDashboard = () => {
         </div>
         <div className="flex gap-2">
           <Link to="/admin/user-management">
-            <Button variant="outline">
+            <Button variant="outline" className="cursor-pointer">
               <UserCog className="h-4 w-4 mr-2" />
               Manage Users
             </Button>
           </Link>
-          <Button variant="outline">
+          <Button variant="outline" className="cursor-pointer">
             <Settings className="h-4 w-4 mr-2" />
             Settings
           </Button>
@@ -157,7 +191,7 @@ const AdminDashboard = () => {
         <CardContent>
           <div className="grid gap-3 md:grid-cols-2">
             <Link to="/admin/user-management">
-              <Button variant="outline" className="w-full justify-start h-auto py-4 bg-transparent">
+              <Button variant="outline" className="cursor-pointer w-full justify-start h-auto py-4 bg-transparent">
                 <UserCog className="h-5 w-5 mr-3" />
                 <div className="text-left">
                   <p className="font-medium">Manage Users</p>
@@ -166,7 +200,7 @@ const AdminDashboard = () => {
               </Button>
             </Link>
             <Link to="/admin/song-management">
-              <Button variant="outline" className="w-full justify-start h-auto py-4 bg-transparent">
+              <Button variant="outline" className="cursor-pointer w-full justify-start h-auto py-4 bg-transparent">
                 <FileText className="h-5 w-5 mr-3" />
                 <div className="text-left">
                   <p className="font-medium">Review Uploads</p>

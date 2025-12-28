@@ -420,6 +420,15 @@ class SongService {
         }
     }
 
+    // ===== GET ALL CHORD SHEETS =====
+    async getAllChordSheets(params) {
+        const {uploader_id} = params || {};
+        const chordSheets = await ChordSheet.findAll({
+            where: uploader_id ? { uploader_id, is_deleted: false } : { is_deleted: false }
+        });
+        return chordSheets;
+    }
+
     // ===== GET POPULAR SONGS =====
     async getPopularSongs(limit = 10) {
         const songs = await Song.findAll({

@@ -25,6 +25,11 @@ export const SongService = {
         return response.data;
     },
 
+    getAllChordSheets: async (params = {}) => {
+        const response = await apiClient.get('/songs/chord-sheets', { params });
+        return response.data;
+    },
+
     getTrending: async () => {
         const response = await apiClient.get('/songs/popular');
         return response.data;
@@ -81,8 +86,8 @@ export const SongService = {
 }
 
 export const UserService = {
-    getAll: async () => {
-        const response = await apiClient.get('/users');
+    getAll: async (params) => {
+        const response = await apiClient.get('/users', { params });
         return response.data
     },
 

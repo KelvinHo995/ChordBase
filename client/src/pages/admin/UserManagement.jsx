@@ -4,54 +4,10 @@ import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Users, Lock, Unlock } from "lucide-react"
+import { Users, Lock, Unlock, ArrowLeft } from "lucide-react"
 import { UserService } from "@/services/BackendService"
-import { use } from "react"
 import { useEffect, useState } from "react"
-import { ca, tr } from "date-fns/locale"
-
-const SAMPLE_USERS = [
-  {
-    id: "1",
-    username: "johndoe",
-    displayName: "John Doe",
-    email: "john@example.com",
-    role: "admin",
-    locked: false,
-    avatar: "/placeholder-user.jpg",
-    joinDate: "2024-01-01",
-  },
-  {
-    id: "2",
-    username: "janedoe",
-    displayName: "Jane Doe",
-    email: "jane@example.com",
-    role: "user",
-    locked: false,
-    avatar: "/placeholder-user.jpg",
-    joinDate: "2024-01-15",
-  },
-  {
-    id: "3",
-    username: "mikewilson",
-    displayName: "Mike Wilson",
-    email: "mike@example.com",
-    role: "user",
-    locked: false,
-    avatar: "/placeholder-user.jpg",
-    joinDate: "2024-02-01",
-  },
-  {
-    id: "4",
-    username: "sarahbrown",
-    displayName: "Sarah Brown",
-    email: "sarah@example.com",
-    role: "user",
-    locked: true,
-    avatar: "/placeholder-user.jpg",
-    joinDate: "2024-01-20",
-  },
-]
+import { useNavigate } from "react-router-dom"
 
 const UserManagement = () => {
   const formatDate = (dateString) => {
@@ -92,8 +48,15 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="cursor-pointer mb-6 gap-2 text-lg -ml-4 print:hidden">
+        <ArrowLeft className="h-5 w-5" />
+        Back
+      </Button>
+
       <div className="mb-8">
         <div className="flex items-center gap-2">
           <Users className="h-6 w-6 text-primary" />
