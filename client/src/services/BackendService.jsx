@@ -139,6 +139,11 @@ export const PlaylistService = {
         return response.data;
     },
 
+    removeFavoriteSong: async (songId) => {
+        const response = await apiClient.delete(`/playlists/favorites/${songId}`);
+        return response.data;
+    },
+
     removeSong: async (playlistId, songId) => {
         const response = await apiClient.delete(`/playlists/${playlistId}/songs/${songId}`);
         return response.data;

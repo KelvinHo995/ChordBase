@@ -77,7 +77,13 @@ const Playlists = () => {
   }
 
   const removeFromFavorites = (songId) => {
-    setFavorites(favorites.filter(id => id !== songId))
+    try {
+      setFavorites(favorites.filter(song => song.song_id !== songId))
+      PlaylistService.removeFavoriteSong(songId);
+      console.log("Removed song from favorites:", songId);
+    } catch (error) {
+      console.error("Failed to remove song from favorites:", error);
+    }
   }
 
   const removeFromPlaylist = async (playlistId, songId) => {

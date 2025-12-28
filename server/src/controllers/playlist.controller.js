@@ -129,6 +129,25 @@ class PlaylistController {
             });
         }
     }
+
+    // DELETE /api/playlists/favorites/:songId
+    async removeSongFromFavorites(req, res) {
+        console.log("Removing song from favorites for user:", req.user);
+        try {
+            const user_id = req.user.user_id;
+            const song_id = req.params.songId;
+            await playlistService.removeSongFromFavorites(user_id, song_id);
+            res.status(200).json({
+                success: true,
+                message: 'Song removed from favorites'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = new PlaylistController();

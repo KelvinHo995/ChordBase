@@ -128,6 +128,15 @@ class PlaylistService {
         });
         return favorite_songs;
     }
+
+    async removeSongFromFavorites(user_id, song_id) {
+        await Favorite.destroy({
+            where: {
+                user_id,
+                song_id
+            }
+        });
+    }
 }
 
 module.exports = new PlaylistService();
