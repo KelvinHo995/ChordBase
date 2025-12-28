@@ -5,12 +5,12 @@ import { useInstrument } from '../context/InstrumentContext';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Minus, Play, Pause, Download, RotateCcw } from "lucide-react"
+import { Plus, Minus, Play, Pause, Download, RotateCcw, Music2 } from "lucide-react"
 
 const songKeyTemp = "G";
 const lyricsTemp = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n";
 
-const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
+const SongBody = ({ lyrics=null, songKey=null, showControl=true, versions=[], currentVersionId=null, onVersionChange=null }) => {
     if (lyrics == null)
         lyrics = lyricsTemp;
     if (songKey == null) 
@@ -59,6 +59,26 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                         <CardTitle className="text-xl">Hợp âm</CardTitle>
                         <div className="flex flex-wrap items-center gap-2">
+                            {/* Version Selector */}
+                            {versions && versions.length > 1 && (
+                                <Select 
+                                    value={currentVersionId?.toString()} 
+                                    onValueChange={(value) => onVersionChange && onVersionChange(value)}
+                                >
+                                    <SelectTrigger className="h-10 w-[140px] text-base">
+                                        <Music2 className="mr-2 h-4 w-4" />
+                                        <SelectValue placeholder="Chọn phiên bản" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {versions.map((version, index) => (
+                                            <SelectItem key={version.chord_sheet_id} value={version.chord_sheet_id.toString()} className="text-base">
+                                                Version {index + 1}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                            
                             {/* Transpose Controls */}
                             <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/50 p-1">
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleTranspose(-1)}>
