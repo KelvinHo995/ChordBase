@@ -1,12 +1,12 @@
 import HoverChord from "./HoverChord";
 import { transposeChord } from "../utils/TransposeUtils";
 
-const SongLine = ({ line, semitones, preferSharps }) => {
+const SongLine = ({ line, semitones, preferSharps, compact = false }) => {
 //   const tokens = parseChordLyrics(line);
     const parts = line.split(/(\[[^\]]+\])/g);
 
     return (
-        <div className="leading-relaxed text-xl py-2 px-5">
+        <div className={`leading-relaxed break-words ${compact ? 'text-base py-1 px-0' : 'text-xl py-2 px-5'}`}>
             {parts.map((part, i) => {
                 if (part.startsWith("[") && part.endsWith("]")) {
                     const rawChord = part.slice(1, -1);

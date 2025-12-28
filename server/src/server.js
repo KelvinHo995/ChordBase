@@ -15,6 +15,7 @@ const ratingRoutes = require('./routes/rating.route');
 const app = express();
 
 // Middlewares
+app.use(cors());
 app.use(cors({
     origin: vars.corsOrigin,
     credentials: true,

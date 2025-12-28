@@ -68,7 +68,7 @@ export const SongService = {
     },
 
     create: async (songData) => {
-        const response = await apiClient.post('/songs', songData);
+        const response = await apiClient.post('/upload/chord-sheet', songData);
         return response.data;
     },
 
@@ -84,6 +84,13 @@ export const SongService = {
         return response.data;
     }
 }
+
+export const GenreService = {
+    getAll: async () => {
+        const response = await apiClient.get('/upload/genres');
+        return response.data;
+    }
+};
 
 export const UserService = {
     getAll: async (params) => {
@@ -216,9 +223,15 @@ export const AuthService = {
         return response.data;
     },
 
-    loginWithGoogle: async (idToken) => {
-        const response = await apiClient.post('/auth/google', { token: idToken });
-        return response.data;
+    loginWithGoogle: async (accessToken) => {
+        try {
+            const response = await apiClient.post('/auth/google', { access_token: accessToken });
+            const token = response.data.token;
+            localStorage.setItem('token', token);
+            return response.data.user;
+        } catch (error) {
+            throw new Error(error.response?.data?.message || 'Google login failed');
+        }
     }
 }
 export const CommentService = {
