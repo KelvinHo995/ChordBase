@@ -16,6 +16,7 @@ const CreateSong = () => {
     content: ''
   });
   const [genres, setGenres] = useState([]);
+  const [contentError, setContentError] = useState('');
   
   const [loading, setLoading] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
@@ -117,11 +118,50 @@ const CreateSong = () => {
   };
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // Validate content field
+    if (name === 'content') {
+      validateContent(value);
+    }
+    
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const validateContent = (content) => {
+    const MIN_LENGTH = 50; // Minimum characters for meaningful content
+    const MAX_LENGTH = 50000; // Maximum characters to prevent abuse
+    
+    if (!content || content.trim().length === 0) {
+      setContentError('Nội dung không được để trống');
+      return false;
+    }
+    
+    const trimmedLength = content.trim().length;
+    
+    if (trimmedLength < MIN_LENGTH) {
+      setContentError(`Nội dung quá ngắn (tối thiểu ${MIN_LENGTH} ký tự, hiện tại: ${trimmedLength})`);
+      return false;
+    }
+    
+    if (trimmedLength > MAX_LENGTH) {
+      setContentError(`Nội dung quá dài (tối đa ${MAX_LENGTH} ký tự, hiện tại: ${trimmedLength})`);
+      return false;
+    }
+    
+    setContentError('');
+    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Validate content before submission
+    if (!validateContent(formData.content)) {
+      alert('Vui lòng kiểm tra lại nội dung hợp âm!');
+      return;
+    }
+    
     setLoading(true);
     try {
       const uploader_id = user?.user_id;
@@ -133,7 +173,7 @@ const CreateSong = () => {
         genre_id: formData.genre_id || null,
         key: formData.key,
         difficulty: formData.difficulty,
-        content: formData.content,
+        content: formData.content.trim(),
         uploader_id
       };
       
@@ -148,6 +188,7 @@ const CreateSong = () => {
       setFormData({ title: '', author: '', key: '', genre_id: '', difficulty: 'Beginner', content: '' });
       setSelectedSong(null);
       setSearchResults([]);
+      setContentError('');
     } catch (error) {
       console.error(error);
       alert('Có lỗi xảy ra. Vui lòng thử lại!');
@@ -322,25 +363,46 @@ const CreateSong = () => {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <label className="block text-sm font-medium text-gray-700">Nội dung</label>
-                <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
-                  Dùng [Em] để viết hợp âm
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                    Dùng [Em] để viết hợp âm
+                  </span>
+                  <span className={`text-xs px-2 py-1 rounded ${
+                    formData.content.trim().length < 50 
+                      ? 'bg-red-50 text-red-600' 
+                      : formData.content.trim().length > 45000
+                      ? 'bg-orange-50 text-orange-600'
+                      : 'bg-green-50 text-green-600'
+                  }`}>
+                    {formData.content.trim().length} / 50,000
+                  </span>
+                </div>
               </div>
               <textarea
                 name="content"
                 value={formData.content}
                 onChange={handleChange}
                 rows={15}
-                className="w-full p-4 font-mono text-base border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none whitespace-pre-wrap"
+                className={`w-full p-4 font-mono text-base border rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none whitespace-pre-wrap ${
+                  contentError ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                }`}
                 placeholder={`Nhập lời và hợp âm...\n\nVí dụ:\n[Em]Mùa xuân sang có [C]hoa anh đào\nMàu [D]hoa tôi trót [G]yêu...`}
                 required
               />
+              {contentError && (
+                <p className="mt-1 text-sm text-red-600 flex items-center gap-1">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  {contentError}
+                </p>
+              )}
             </div>
 
             {/* Submit Button */}
             <button 
               type="submit" 
-              disabled={loading}
+              disabled={loading || contentError !== ''}
               className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg transition-all transform active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? 'Đang xử lý...' : 'Đăng Hợp Âm'}

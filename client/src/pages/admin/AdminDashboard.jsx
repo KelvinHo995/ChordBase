@@ -54,10 +54,10 @@ const AdminDashboard = () => {
         ]);
 
         setStats([
-          { title: "Total Songs", value: songsCount, icon: Music },
-          { title: "Total Chord Sheets", value: chordSheetsCount, icon: FileText },
-          { title: "Total Users", value: usersCount, icon: Users },
-          { title: "Pending Review", value: pendingCount, icon: Clock },
+          { title: "Tổng bài hát", value: songsCount, icon: Music },
+          { title: "Tổng chord sheet", value: chordSheetsCount, icon: FileText },
+          { title: "Tổng người dùng", value: usersCount, icon: Users },
+          { title: "Chờ duyệt", value: pendingCount, icon: Clock },
         ]);
       }
       catch (err) {
@@ -75,19 +75,19 @@ const AdminDashboard = () => {
     <div className="container py-12 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-3xl font-bold">Admin Dashboard</h1>
-          <p className="text-muted-foreground">Overview of ChordBase statistics and management</p>
+          <h1 className="text-3xl font-bold">Bảng điều khiển Admin</h1>
+          <p className="text-muted-foreground">Tổng quan thống kê và quản lý ChordBase</p>
         </div>
         <div className="flex gap-2">
           <Link to="/admin/user-management">
             <Button variant="outline" className="cursor-pointer">
               <UserCog className="h-4 w-4 mr-2" />
-              Manage Users
+              Quản lý người dùng
             </Button>
           </Link>
           <Button variant="outline" className="cursor-pointer">
             <Settings className="h-4 w-4 mr-2" />
-            Settings
+            Cài đặt
           </Button>
         </div>
       </div>
@@ -120,15 +120,15 @@ const AdminDashboard = () => {
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
-                  Weekly Activity
+                  Hoạt động tuần
                 </CardTitle>
-                <CardDescription>Song views and uploads this week</CardDescription>
+                <CardDescription>Lượt xem và tải lên trong tuần</CardDescription>
               </div>
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day, index) => {
+              {["T2", "T3", "T4", "T5", "T6", "T7", "CN"].map((day, index) => {
                 const percentage = [65, 80, 45, 90, 75, 55, 70][index]
                 return (
                   <div key={day} className="flex items-center gap-3">
@@ -152,9 +152,9 @@ const AdminDashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <TrendingUp className="h-5 w-5" />
-              Top Favorited Songs
+              Bài hát yêu thích nhất
             </CardTitle>
-            <CardDescription>Most popular songs by favorites</CardDescription>
+            <CardDescription>Bài hát phổ biến nhất theo lượt yêu thích</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -185,8 +185,8 @@ const AdminDashboard = () => {
       {/* Quick Actions */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common administrative tasks</CardDescription>
+          <CardTitle>Hành động nhanh</CardTitle>
+          <CardDescription>Các tác vụ quản trị thường dùng</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-3 md:grid-cols-2">
@@ -194,8 +194,8 @@ const AdminDashboard = () => {
               <Button variant="outline" className="cursor-pointer w-full justify-start h-auto py-4 bg-transparent">
                 <UserCog className="h-5 w-5 mr-3" />
                 <div className="text-left">
-                  <p className="font-medium">Manage Users</p>
-                  <p className="text-xs text-muted-foreground">View and edit user accounts</p>
+                  <p className="font-medium">Quản lý người dùng</p>
+                  <p className="text-xs text-muted-foreground">Xem và chỉnh sửa tài khoản người dùng</p>
                 </div>
               </Button>
             </Link>
@@ -203,8 +203,8 @@ const AdminDashboard = () => {
               <Button variant="outline" className="cursor-pointer w-full justify-start h-auto py-4 bg-transparent">
                 <FileText className="h-5 w-5 mr-3" />
                 <div className="text-left">
-                  <p className="font-medium">Review Uploads</p>
-                  <p className="text-xs text-muted-foreground">Approve pending chord sheets</p>
+                  <p className="font-medium">Duyệt bài tải lên</p>
+                  <p className="text-xs text-muted-foreground">Phê duyệt các chord sheet chờ duyệt</p>
                 </div>
               </Button>
             </Link>

@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { Mail, ArrowRight, Music, ArrowLeft, Lock } from 'lucide-react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useSearchParams } from 'react-router-dom'
+import { AuthService } from '../services/BackendService'
 
 const PasswordReset = () => {
   const navigate = useNavigate()
-  const [step, setStep] = useState('email') // 'email', 'code', 'reset'
+  const [searchParams] = useSearchParams()
+  const tokenFromUrl = searchParams.get('token')
+  
+  const [step, setStep] = useState(tokenFromUrl ? 'reset' : 'email') // 'email', 'code', 'reset'
   const [email, setEmail] = useState('')
-  const [code, setCode] = useState('')
+  const [resetToken, setResetToken] = useState(tokenFromUrl || '')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [loading, setLoading] = useState(false)
@@ -21,28 +25,19 @@ const PasswordReset = () => {
     }
     setLoading(true)
     setError('')
-    // Mock sending code
-    setTimeout(() => {
-      setStep('code')
-      setSuccess('Mã xác thực đã được gửi đến email của bạn')
+    setSuccess('')
+    
+    try {
+      const response = await AuthService.requestPasswordReset(email)
+      console.log('Password reset response:', response)
+      setSuccess('Liên kết đặt lại mật khẩu đã được gửi đến email của bạn. Vui lòng kiểm tra hộp thư đến.')
       setLoading(false)
-    }, 1000)
-  }
-
-  const handleCodeSubmit = async (e) => {
-    e.preventDefault()
-    if (!code) {
-      setError('Vui lòng nhập mã xác thực')
-      return
+    } catch (err) {
+      console.error('Password reset error:', err)
+      console.error('Error response:', err.response?.data)
+      setError(err.response?.data?.message || 'Có lỗi xảy ra. Vui lòng thử lại sau.')
+      setLoading(false)
     }
-    setLoading(true)
-    setError('')
-    // Mock verifying code
-    setTimeout(() => {
-      setStep('reset')
-      setSuccess('Mã đã được xác thực. Nhập mật khẩu mới của bạn.')
-      setLoading(false)
-    }, 1000)
   }
 
   const handleResetSubmit = async (e) => {
@@ -55,18 +50,26 @@ const PasswordReset = () => {
       setError('Mật khẩu không khớp')
       return
     }
-    if (newPassword.length < 8) {
-      setError('Mật khẩu phải có ít nhất 8 ký tự')
+    if (newPassword.length < 6) {
+      setError('Mật khẩu phải có ít nhất 6 ký tự')
       return
     }
     setLoading(true)
     setError('')
-    // Mock resetting password
-    setTimeout(() => {
+    setSuccess('')
+    
+    try {
+      console.log('Resetting password with token:', resetToken)
+      const response = await AuthService.confirmPasswordReset(resetToken, newPassword)
+      console.log('Reset successful:', response)
       setSuccess('Đặt lại mật khẩu thành công!')
       setTimeout(() => navigate('/auth/login'), 2000)
+    } catch (err) {
+      console.error('Reset password error:', err)
+      console.error('Error response:', err.response?.data)
+      setError(err.response?.data?.message || 'Mã đặt lại không hợp lệ hoặc đã hết hạn. Vui lòng yêu cầu mã mới.')
       setLoading(false)
-    }, 1000)
+    }
   }
 
   return (
@@ -83,8 +86,7 @@ const PasswordReset = () => {
 
           <h1 className="text-2xl font-semibold text-center text-gray-950 mb-2">Đặt lại mật khẩu</h1>
           <p className="text-center text-gray-500 text-sm mb-6">
-            {step === 'email' && 'Nhập email của bạn để nhận mã đặt lại'}
-            {step === 'code' && 'Nhập mã xác thực đã được gửi đến email của bạn'}
+            {step === 'email' && 'Nhập email của bạn để nhận liên kết đặt lại mật khẩu'}
             {step === 'reset' && 'Tạo mật khẩu mới cho tài khoản của bạn'}
           </p>
 
@@ -123,35 +125,13 @@ const PasswordReset = () => {
                 disabled={loading}
                 className="w-full mt-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-all"
               >
-                {loading ? 'Đang gửi mã...' : 'Gửi mã đặt lại'}
+                {loading ? 'Đang gửi...' : 'Gửi liên kết đặt lại'}
               </button>
-            </form>
-          )}
-
-          {/* Code Step */}
-          {step === 'code' && (
-            <form onSubmit={handleCodeSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-950 mb-2">
-                  Mã xác thực
-                </label>
-                <input
-                  type="text"
-                  value={code}
-                  onChange={(e) => setCode(e.target.value)}
-                  placeholder="000000"
-                  maxLength="6"
-                  className="w-full px-4 py-2 text-center text-2xl tracking-widest rounded-lg border border-gray-200 bg-white text-gray-950 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-transparent transition-all"
-                />
-                <p className="text-xs mt-2 text-gray-500">Kiểm tra email của bạn để lấy mã 6 chữ số</p>
+              <div className="mt-4 text-center">
+                <Link to="/auth/login" className="text-sm text-primary hover:underline">
+                  Quay lại đăng nhập
+                </Link>
               </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full mt-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-all"
-              >
-                {loading ? 'Đang xác thực...' : 'Xác thực mã'}
-              </button>
             </form>
           )}
 
@@ -195,6 +175,11 @@ const PasswordReset = () => {
               >
                 {loading ? 'Đang đặt lại...' : 'Đặt lại mật khẩu'}
               </button>
+              <div className="mt-4 text-center">
+                <Link to="/auth/login" className="text-sm text-primary hover:underline">
+                  Quay lại đăng nhập
+                </Link>
+              </div>
             </form>
           )}
         </div>
@@ -204,3 +189,4 @@ const PasswordReset = () => {
 }
 
 export default PasswordReset
+            

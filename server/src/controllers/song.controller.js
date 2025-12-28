@@ -43,9 +43,9 @@ class SongController {
     }
 
     async getChordSheets(req, res) {
-        const {uploader_id} = req.params;
+        const {uploader_id, status} = req.query;
         try {
-            const result = await songService.getAllChordSheets({ uploader_id });
+            const result = await songService.getAllChordSheets({ uploader_id, status });
             res.status(200).json({
                 success: true,
                 data: result

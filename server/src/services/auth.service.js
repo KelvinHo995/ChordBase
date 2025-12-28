@@ -84,32 +84,44 @@ class AuthService {
             expires_at: expiresAt
         });
 
-        // TODO: Send email with reset link
-        // 5. Gửi email (TODO - chưa implement)
         // 5. Gửi email reset password
-        const resetLink = `${vars.frontendUrl}/reset-password?token=${resetToken}`;
+        const resetLink = `${vars.frontendUrl}/auth/password-reset?token=${resetToken}`;
 
-        await sendEmail({
-            to: user.email,
-            subject: 'ChordBase - Reset Password',
-            html: `
-                <p>Xin chào ${user.display_name || ''},</p>
-                <p>Bạn đã yêu cầu đặt lại mật khẩu.</p>
-                <p>Click vào link bên dưới để đặt lại mật khẩu:</p>
-                <a href="${resetLink}">${resetLink}</a>
-                <p>Link này sẽ hết hạn sau 1 giờ.</p>
-                <br />
-                <p>— ChordBase Team</p>
-            `
-        });
+        try {
+            // Only send email if credentials are configured
+            if (vars.mailUser && vars.mailPass) {
+                await sendEmail({
+                    to: user.email,
+                    subject: 'ChordBase - Reset Password',
+                    html: `
+                        <p>Xin chào ${user.display_name || ''},</p>
+                        <p>Bạn đã yêu cầu đặt lại mật khẩu.</p>
+                        <p>Click vào link bên dưới để đặt lại mật khẩu:</p>
+                        <a href="${resetLink}">${resetLink}</a>
+                        <p>Link này sẽ hết hạn sau 1 giờ.</p>
+                        <br />
+                        <p>— ChordBase Team</p>
+                    `
+                });
+            } else {
+                // Log the reset link for development
+                console.log('='.repeat(80));
+                console.log('PASSWORD RESET LINK (Email not configured):');
+                console.log(resetLink);
+                console.log('Reset Token:', resetToken);
+                console.log('='.repeat(80));
+            }
+        } catch (emailError) {
+            console.error('Failed to send email:', emailError.message);
+            // Don't fail the request if email fails, just log it
+            console.log('Reset Token (email failed):', resetToken);
+        }
 
-
-        // For now, return token (in production, only send via email)
         // 6. Trả về (trong dev mode, trả về token để test)
         return {
             message: 'Password reset link sent to email',
-            // Remove this in production
-            // reset_token: resetToken
+            // Include token in development for testing
+            ...(vars.env === 'development' && { reset_token: resetToken })
         };
     }
 

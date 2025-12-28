@@ -60,27 +60,27 @@ const UserManagement = () => {
       <div className="mb-8">
         <div className="flex items-center gap-2">
           <Users className="h-6 w-6 text-primary" />
-          <h1 className="text-3xl font-bold text-foreground">User Management</h1>
+          <h1 className="text-3xl font-bold text-foreground">Quản lý người dùng</h1>
         </div>
-        <p className="mt-2 text-muted-foreground">Manage user accounts, roles, and permissions.</p>
+        <p className="mt-2 text-muted-foreground">Quản lý tài khoản, vai trò và quyền người dùng.</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>All Users</CardTitle>
-          <CardDescription>{allUsers.length} users registered on ChordBase</CardDescription>
+          <CardTitle>Tất cả người dùng</CardTitle>
+          <CardDescription>{allUsers.length} người dùng đã đăng ký trên ChordBase</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>User</TableHead>
+                  <TableHead>Người dùng</TableHead>
                   <TableHead>Email</TableHead>
-                  <TableHead>Role</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Joined</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
+                  <TableHead>Vai trò</TableHead>
+                  <TableHead>Trạng thái</TableHead>
+                  <TableHead>Tham gia</TableHead>
+                  <TableHead className="text-right">Hành động</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -107,14 +107,14 @@ const UserManagement = () => {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="user">User</SelectItem>
+                          <SelectItem value="user">Người dùng</SelectItem>
                           <SelectItem value="admin">Admin</SelectItem>
                         </SelectContent>
                       </Select>
                     </TableCell>
                     <TableCell>
                       <Badge variant={user.status === "active" ? "default" : "destructive"}>
-                        {user.status === "active" ? "Active" : "Locked"}
+                        {user.status === "active" ? "Đang hoạt động" : "Bị khóa"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-muted-foreground">{formatDate(user.created_at)}</TableCell>
@@ -123,12 +123,12 @@ const UserManagement = () => {
                         {user.status !== "active" ? (
                           <>
                             <Unlock className="h-3 w-3" />
-                            Unlock
+                            Mở khóa
                           </>
                         ) : (
                           <>
                             <Lock className="h-3 w-3" />
-                            Lock
+                            Khóa
                           </>
                         )}
                       </Button>
