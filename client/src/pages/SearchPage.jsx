@@ -3,9 +3,7 @@ import { useSearchParams } from "react-router-dom"
 import { SongList } from "@/components/SongList"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Library, Filter, ArrowUpDown, Loader2 } from "lucide-react"
-import { SongService } from "@/services/BackendService"
-
-const GENRES = ["Rock", "Pop", "Folk", "Country", "Jazz", "Blues"]
+import { SongService, GenreService } from "@/services/BackendService"
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams()
@@ -13,10 +11,25 @@ const SearchPage = () => {
   console.log(searchQuery)
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [sortBy, setSortBy] = useState("rating")
+  const [genres, setGenres] = useState([])
   
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  // Fetch genres on mount
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await GenreService.getAll();
+        setGenres(response.data?.genres || []);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+        setGenres([]);
+      }
+    };
+    fetchGenres();
+  }, []);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -25,8 +38,8 @@ const SearchPage = () => {
       try {
         const params = {}
         if (searchQuery) params.q = searchQuery
-        if (selectedGenre !== "all") params.genre = selectedGenre
-        if (sortBy) params.sort = sortBy
+        if (selectedGenre !== "all") params.genre_id = parseInt(selectedGenre)
+        if (sortBy) params.sort_by = sortBy
 
         const res = await SongService.getAll(params)
         console.log(res);
@@ -67,9 +80,9 @@ const SearchPage = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tất cả thể loại</SelectItem>
-                {GENRES.map((genre) => (
-                  <SelectItem key={genre} value={genre}>
-                    {genre}
+                {genres.map((genre) => (
+                  <SelectItem key={genre.genre_id} value={genre.genre_id.toString()}>
+                    {genre.name}
                   </SelectItem>
                 ))}
               </SelectContent>

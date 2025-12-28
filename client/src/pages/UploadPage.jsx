@@ -127,10 +127,14 @@ const CreateSong = () => {
       const uploader_id = user?.user_id;
       
       const param = {
-        ...formData, 
-        uploader_id,
-        // If user selected an existing song, include the song_id
-        song_id: selectedSong?.song_id || null
+        song_id: selectedSong?.song_id || null,
+        songname: formData.title, // Map title to songname for backend
+        author: formData.author,
+        genre_id: formData.genre_id || null,
+        key: formData.key,
+        difficulty: formData.difficulty,
+        content: formData.content,
+        uploader_id
       };
       
       await SongService.create(param);
