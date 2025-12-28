@@ -2,13 +2,14 @@ import { useMemo, useState, useEffect } from "react"
 import { useSearchParams } from "react-router-dom"
 import { SongList } from "@/components/SongList"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Library, Filter, ArrowUpDown, Loader2 } from "lucide-react"
+import { Library, Filter, ArrowUpDown, Loader2, Music, User } from "lucide-react"
 import { SongService, GenreService } from "@/services/BackendService"
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get("q") || ""
   console.log(searchQuery)
+  const [searchType, setSearchType] = useState("all")
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [sortBy, setSortBy] = useState("rating")
   const [genres, setGenres] = useState([])
@@ -38,6 +39,7 @@ const SearchPage = () => {
       try {
         const params = {}
         if (searchQuery) params.q = searchQuery
+        if (searchType !== "all") params.type = searchType
         if (selectedGenre !== "all") params.genre_id = parseInt(selectedGenre)
         if (sortBy) params.sort_by = sortBy
 
@@ -58,7 +60,7 @@ const SearchPage = () => {
     }
 
     fetchSongs()
-  }, [searchQuery, selectedGenre, sortBy])
+  }, [searchQuery, searchType, selectedGenre, sortBy])
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -72,7 +74,19 @@ const SearchPage = () => {
 
       <div className="mb-6 space-y-4">
         <div className="flex flex-col gap-4 sm:flex-row">
-          <div className="flex gap-2">
+          <div className="flex gap-2 flex-wrap">
+            <Select value={searchType} onValueChange={setSearchType}>
+              <SelectTrigger className="w-[140px]">
+                <Music className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Loại tìm kiếm" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Tất cả</SelectItem>
+                <SelectItem value="song">Bài hát</SelectItem>
+                <SelectItem value="artist">Nghệ sĩ</SelectItem>
+              </SelectContent>
+            </Select>
+
             <Select value={selectedGenre} onValueChange={setSelectedGenre}>
               <SelectTrigger className="w-[140px]">
                 <Filter className="mr-2 h-4 w-4" />

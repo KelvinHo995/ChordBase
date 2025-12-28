@@ -58,6 +58,7 @@ const HoverChord = ({ chordName, hoverable=true }) => {
     const [popupPosition, setPopupPosition] = useState({ top: 0, left: 0 });
     const chordRef = useRef(null);
     const hoverTimeout = useRef(null);
+    const leaveTimeout = useRef(null);
 
     const chordPositions = getChordPositions(chordName, instrument);
 
@@ -84,6 +85,12 @@ const HoverChord = ({ chordName, hoverable=true }) => {
     }, [hovered]);
 
     const handleMouseEnter = () => {
+        // Clear any pending leave timeout
+        if (leaveTimeout.current) {
+            clearTimeout(leaveTimeout.current);
+            leaveTimeout.current = null;
+        }
+        
         hoverTimeout.current = setTimeout(() => {
             setHovered(true);
         }, 500);
@@ -92,7 +99,26 @@ const HoverChord = ({ chordName, hoverable=true }) => {
     const handleMouseLeave = () => {
         if (hoverTimeout.current) {
             clearTimeout(hoverTimeout.current);
+            hoverTimeout.current = null;
         }
+        
+        // Add delay before closing to allow mouse to reach popup
+        leaveTimeout.current = setTimeout(() => {
+            setHovered(false);
+        }, 200);
+    };
+
+    const handlePopupMouseEnter = () => {
+        // Clear the leave timeout when mouse enters popup
+        if (leaveTimeout.current) {
+            clearTimeout(leaveTimeout.current);
+            leaveTimeout.current = null;
+        }
+        setHovered(true);
+    };
+
+    const handlePopupMouseLeave = () => {
+        // Close immediately when leaving popup
         setHovered(false);
     };
 
@@ -153,8 +179,8 @@ const HoverChord = ({ chordName, hoverable=true }) => {
                         left: `${popupPosition.left}px`,
                         transform: 'translate(-50%, -100%)'
                     }}
-                    onMouseEnter={() => setHovered(true)}
-                    onMouseLeave={() => setHovered(false)}
+                    onMouseEnter={handlePopupMouseEnter}
+                    onMouseLeave={handlePopupMouseLeave}
                 >
                     {chordPositions != null ? (
                         <div className="flex flex-col items-center w-full">

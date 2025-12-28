@@ -25,11 +25,11 @@ module.exports = {
     corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     
     // ===== EMAIL CONFIGURATION (cho password reset) =====
-    mailHost: process.env.MAIL_HOST || 'smtp.gmail.com',
-    mailPort: parseInt(process.env.MAIL_PORT, 10) || 587,
-    mailUser: process.env.MAIL_USER || '',
-    mailPass: process.env.MAIL_PASS || '',
-    mailFrom: process.env.MAIL_FROM || 'noreply@chordbase.com',
+    mailHost: process.env.MAIL_HOST || process.env.SMTP_HOST || 'smtp.gmail.com',
+    mailPort: parseInt(process.env.MAIL_PORT || process.env.SMTP_PORT, 10) || 587,
+    mailUser: process.env.MAIL_USER || process.env.SMTP_USER || '',
+    mailPass: process.env.MAIL_PASS || process.env.SMTP_PASS || '',
+    mailFrom: process.env.MAIL_FROM || process.env.SMTP_FROM || 'noreply@chordbase.com',
     
     // ===== FILE UPLOAD CONFIGURATION =====
     maxFileSize: parseInt(process.env.MAX_FILE_SIZE, 10) || 5 * 1024 * 1024, // 5MB

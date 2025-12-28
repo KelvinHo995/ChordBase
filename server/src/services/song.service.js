@@ -411,9 +411,39 @@ class SongService {
 
     // ===== GET ALL CHORD SHEETS =====
     async getAllChordSheets(params) {
-        const {uploader_id} = params || {};
+        const {uploader_id, status} = params || {};
+        const whereCondition = { is_deleted: false };
+        
+        if (uploader_id) whereCondition.uploader_id = uploader_id;
+        if (status) whereCondition.status = status;
+        
         const chordSheets = await ChordSheet.findAll({
-            where: uploader_id ? { uploader_id, is_deleted: false } : { is_deleted: false }
+            where: whereCondition,
+            include: [
+                {
+                    model: Song,
+                    as: 'song',
+                    include: [
+                        {
+                            model: Artist,
+                            as: 'artists',
+                            attributes: ['artist_id', 'name'],
+                            through: { attributes: [] }
+                        },
+                        {
+                            model: Genre,
+                            as: 'genre',
+                            attributes: ['genre_id', 'name']
+                        }
+                    ]
+                },
+                {
+                    model: User,
+                    as: 'uploader',
+                    attributes: ['user_id', 'display_name']
+                }
+            ],
+            order: [['created_at', 'DESC']]
         });
         return chordSheets;
     }

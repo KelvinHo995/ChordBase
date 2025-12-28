@@ -89,7 +89,12 @@ const Login = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Mật khẩu</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">Mật khẩu</Label>
+                <Link to="/auth/password-reset" className="text-xs text-primary hover:underline">
+                  Quên mật khẩu?
+                </Link>
+              </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input 
@@ -103,6 +108,10 @@ const Login = () => {
                 />
               </div>
             </div>
+
+            {error && (
+              <div className="text-sm text-red-500 text-center">{error}</div>
+            )}
 
             <Button type="submit" className="w-full" disabled={loading}>
               Đăng nhập

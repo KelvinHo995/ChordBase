@@ -45,6 +45,13 @@ export const SongService = {
         return response.data;
     },
 
+    getApproved: async () => {
+        const response = await apiClient.get('/songs/chord-sheets', { 
+            params: { status: 'approved' }
+        });
+        return response.data;
+    },
+
     getById: async (songId, userId = null) => {
         const config = {
             params: {}
@@ -81,6 +88,11 @@ export const SongService = {
             config.params.submittedBy = userId;
 
         const response = await apiClient.delete(`/songs/${songId}`, config);
+        return response.data;
+    },
+
+    deleteChordSheet: async (chordSheetId) => {
+        const response = await apiClient.delete(`/upload/chord-sheet/${chordSheetId}`);
         return response.data;
     }
 }
@@ -217,8 +229,8 @@ export const AuthService = {
     confirmPasswordReset: async (token, newPassword) => {
         // You must send the TOKEN so the backend knows who this is for
         const response = await apiClient.post('/auth/reset-password', { 
-            token, 
-            newPassword 
+            reset_token: token, 
+            new_password: newPassword 
         });
         return response.data;
     },
