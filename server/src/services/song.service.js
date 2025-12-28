@@ -22,6 +22,11 @@ class SongService {
             is_deleted: include_deleted ? undefined : false
         };
 
+        // Add genre filter if provided
+        if (genre_id) {
+            whereConditions.genre_id = genre_id;
+        }
+
         // Search by type
         let songs = [];
         let total = 0;
@@ -164,8 +169,17 @@ class SongService {
 
     // ===== SEARCH ALL (Song + Artist) =====
     async searchAll(query, whereConditions, offset, limit, sort_by) {
+        // Build song title search condition
+        const songSearchWhere = query ? {
+            ...whereConditions,
+            [Op.or]: [
+                literal(`to_tsvector('english', "Song"."title") @@ plainto_tsquery('english', '${query}')`),
+                { title: { [Op.iLike]: `%${query}%` } }
+            ]
+        } : whereConditions;
+
         const { count, rows } = await Song.findAndCountAll({
-            where: whereConditions,
+            where: songSearchWhere,
             include: [
                 {
                     model: Genre,
@@ -177,22 +191,9 @@ class SongService {
                     as: 'artists',
                     attributes: ['artist_id', 'name'],
                     through: { attributes: [] },
-                    where: query ? {
-                        [Op.or]: [
-                            literal(`to_tsvector('english', "artists"."name") @@ plainto_tsquery('english', '${query}')`),
-                            { name: { [Op.iLike]: `%${query}%` } }
-                        ]
-                    } : undefined,
-                    required: false // LEFT JOIN
+                    required: false // LEFT JOIN to always include artists
                 }
             ],
-            where: query ? {
-                ...whereConditions,
-                [Op.or]: [
-                    literal(`to_tsvector('english', "Song"."title") @@ plainto_tsquery('english', '${query}')`),
-                    { title: { [Op.iLike]: `%${query}%` } }
-                ]
-            } : whereConditions,
             offset,
             limit,
             order: this.getOrderClause(sort_by),
@@ -306,18 +307,6 @@ class SongService {
                     as: 'artists',
                     attributes: ['artist_id', 'name'],
                     through: { attributes: [] }
-                },
-                {
-                    model: ChordSheet,
-                    as: 'chord_sheets',
-                    attributes: ['chord_sheet_id', 'content', 'is_canonical', 'created_at'],
-                    include: [
-                        {
-                            model: User,
-                            as: 'uploader',
-                            attributes: ['user_id', 'display_name']
-                        }
-                    ]
                 }
             ]
         });
@@ -447,10 +436,12 @@ class SongService {
                 }
             ],
             order: [[literal('(SELECT COUNT(*) FROM song_views WHERE song_views.song_id = "Song"."song_id")'), 'DESC']],
-            limit
+            limit: limit * 2 // Fetch more to account for filtering
         });
 
-        return await Promise.all(songs.map(song => this.enrichSongData(song)));
+        const enrichedSongs = await Promise.all(songs.map(song => this.enrichSongData(song)));
+        // Filter out songs without approved chord versions
+        return enrichedSongs.filter(song => song.chord_versions && song.chord_versions.length > 0).slice(0, limit);
     }
 
     // ===== GET RECENT SONGS =====
@@ -471,10 +462,12 @@ class SongService {
                 }
             ],
             order: [['created_at', 'DESC']],
-            limit
+            limit: limit * 2 // Fetch more to account for filtering
         });
 
-        return await Promise.all(songs.map(song => this.enrichSongData(song)));
+        const enrichedSongs = await Promise.all(songs.map(song => this.enrichSongData(song)));
+        // Filter out songs without approved chord versions
+        return enrichedSongs.filter(song => song.chord_versions && song.chord_versions.length > 0).slice(0, limit);
     }
 
     async getPendingSongs() {

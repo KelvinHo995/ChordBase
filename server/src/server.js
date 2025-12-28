@@ -14,10 +14,9 @@ const ratingRoutes = require('./routes/rating.route');
 
 const app = express();
 
-// Middlewares
-app.use(cors());
+// CORS configuration - allow all origins in development
 app.use(cors({
-    origin: vars.corsOrigin,
+    origin: true, // Allow all origins
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']

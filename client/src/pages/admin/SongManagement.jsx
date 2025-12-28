@@ -97,7 +97,7 @@ const SongManagement = () => {
                 </TableHeader>
                 <TableBody>
                   {allPendingSongs.map((song) => (
-                    <TableRow key={song.song_id}>
+                    <TableRow key={song.chord_sheet_id}>
                       <TableCell>
                         <div>
                           <p className="font-medium text-foreground">{song.song.title}</p>
