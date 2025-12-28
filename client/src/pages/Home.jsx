@@ -8,11 +8,13 @@ import { SongService } from "@/services/BackendService";
 export default function HomePage() {
   const [trendingSongs, setTrendingSongs] = useState([]);
   const [recentSongs, setRecentSongs] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const filteredSongs = [];
 
   useEffect(() => {
     const fetchSongs = async () => {
       try {
+        setIsLoading(true)
         const resTrending = await SongService.getTrending();
         console.log(resTrending.data);
         setTrendingSongs(resTrending.data);
@@ -22,6 +24,8 @@ export default function HomePage() {
         setRecentSongs(resRecent.data);
       } catch (err) {
         console.log(err);
+      } finally {
+        setIsLoading(false);
       }
     }
 
@@ -43,22 +47,13 @@ export default function HomePage() {
           Browse thousands of chord sheets, transpose to any key, and auto-scroll while you play.
         </p>
       </div>
-
-      {/* Search Results
-      {searchQuery && (
-        <section className="mb-12">
-          <h2 className="mb-6 text-2xl font-bold text-gray-950">Search Results for "{searchQuery}"</h2>
-          <SongList songs={filteredSongs} emptyMessage="No songs found matching your search." />
-        </section>
-      )} */}
-
       
       <section className="mb-12">
         <div className="mb-6 flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-blue-600" />
           <h2 className="text-2xl font-bold text-gray-950">Trending Songs</h2>
         </div>
-        <SongList songs={trendingSongs} />
+        {isLoading ? <h>Loading...</h> : <SongList songs={trendingSongs} />}
       </section>
 
       {/* Recently Added */}
@@ -67,7 +62,7 @@ export default function HomePage() {
           <Clock className="h-5 w-5 text-blue-600" />
           <h2 className="text-2xl font-bold text-gray-950">Recently Added</h2>
         </div>
-        <SongList songs={recentSongs} />
+        {isLoading ? <h>Loading...</h> : <SongList songs={recentSongs} />}
       </section>
         
     </div>

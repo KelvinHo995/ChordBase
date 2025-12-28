@@ -88,11 +88,11 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user')
         setUser(null)
         setIsLoggedIn(false)
-        setIsAdmin(false)
+        setIsAdmin(false)   
     }
 
     return (
-        <AuthContext.Provider value={{ user, isLoggedIn, isAdmin, isLoading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, setUser, isLoggedIn, isAdmin, isLoading, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     )

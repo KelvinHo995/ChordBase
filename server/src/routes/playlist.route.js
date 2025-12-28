@@ -16,6 +16,10 @@ router.post('/', protect, PlaylistController.createPlaylist);
 
 // Get favorite songs of the authenticated user
 router.get('/favorites', protect, PlaylistController.getFavoriteSongs);
+// Add to favorites
+router.post('/favorites/:songId', protect, PlaylistController.addFavorite);
+// Remove from favorites
+router.delete('/favorites/:songId', protect, PlaylistController.removeFavorite);
 
 // Delete a favorite song of the authenticated user
 router.delete('/favorites/:songId', protect, PlaylistController.removeSongFromFavorites);

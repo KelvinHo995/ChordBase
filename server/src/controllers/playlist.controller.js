@@ -130,22 +130,25 @@ class PlaylistController {
         }
     }
 
-    // DELETE /api/playlists/favorites/:songId
-    async removeSongFromFavorites(req, res) {
-        console.log("Removing song from favorites for user:", req.user);
+    async addFavorite(req, res) {
         try {
             const user_id = req.user.user_id;
-            const song_id = req.params.songId;
-            await playlistService.removeSongFromFavorites(user_id, song_id);
-            res.status(200).json({
-                success: true,
-                message: 'Song removed from favorites'
-            });
+            const { songId } = req.params;
+            await playlistService.addFavoriteSong(user_id, songId);
+            res.status(200).json({ success: true, message: 'Added to favorites' });
         } catch (error) {
-            res.status(500).json({
-                success: false,
-                message: error.message
-            });
+            res.status(500).json({ success: false, message: error.message });
+        }
+    }
+
+    async removeFavorite(req, res) {
+        try {
+            const user_id = req.user.user_id;
+            const { songId } = req.params;
+            await playlistService.removeFavoriteSong(user_id, songId);
+            res.status(200).json({ success: true, message: 'Removed from favorites' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
         }
     }
 }

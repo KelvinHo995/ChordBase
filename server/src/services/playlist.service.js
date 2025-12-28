@@ -111,6 +111,16 @@ class PlaylistService {
         });
     }
 
+    async addFavoriteSong(user_id, song_id) {
+        const existing = await Favorite.findOne({ where: { user_id, song_id } });
+        if (existing) return existing;
+        return Favorite.create({ user_id, song_id });
+    }
+
+    async removeFavoriteSong(user_id, song_id) {
+        await Favorite.destroy({ where: { user_id, song_id } });
+    }
+
     // Define playlist-related service methods here
     async getFavoriteSongsByUserId(user_id) {
         const favorite_songs = await Favorite.findAll({

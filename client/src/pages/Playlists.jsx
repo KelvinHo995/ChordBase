@@ -76,13 +76,28 @@ const Playlists = () => {
     }
   }
 
-  const removeFromFavorites = (songId) => {
+  const removeFromFavorites = async (songId) => {
     try {
+      await PlaylistService.removeFavorite(songId);
       setFavorites(favorites.filter(song => song.song_id !== songId))
-      PlaylistService.removeFavoriteSong(songId);
-      console.log("Removed song from favorites:", songId);
+    } catch (err) {
+      console.log('Error removing from favourites', err.message);
+    }
+  }
+
+  const deletePlaylist = async (playlistId) => {
+    if (!window.confirm('Are you sure you want to delete this playlist? This action cannot be undone.')) {
+      return;
+    }
+    try {
+      await PlaylistService.delete(playlistId);
+      setPlaylists(playlists.filter(pl => pl.id !== playlistId));
+      if (selectedPlaylist && selectedPlaylist.id === playlistId) {
+        setSelectedPlaylist(null);
+      }
     } catch (error) {
-      console.error("Failed to remove song from favorites:", error);
+      console.error('Failed to delete playlist:', error);
+      alert('Could not delete playlist. Please try again.');
     }
   }
 
@@ -123,8 +138,6 @@ const Playlists = () => {
       </div>
     )
   }
-
-  // const favoriteSongs = mockSongs.filter((song) => favorites.includes(song.id))
 
   const handleCreatePlaylist = (e) => {
     e.preventDefault()
@@ -210,14 +223,23 @@ const Playlists = () => {
 
               <Card>
                 <CardHeader>
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                      <ListMusic className="h-6 w-6 text-primary" />
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-4">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                        <ListMusic className="h-6 w-6 text-primary" />
+                      </div>
+                      <div>
+                        <CardTitle>{selectedPlaylist.name}</CardTitle>
+                        <CardDescription>{selectedPlaylist.songs.length} songs</CardDescription>
+                      </div>
                     </div>
-                    <div>
-                      <CardTitle>{selectedPlaylist.name}</CardTitle>
-                      <CardDescription>{selectedPlaylist.songs.length} songs</CardDescription>
-                    </div>
+                    <Button
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => deletePlaylist(selectedPlaylist.id)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -278,23 +300,35 @@ const Playlists = () => {
               {playlists.length > 0 ? (
                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                   {playlists.map((playlist) => (
-                    <Card
-                      key={playlist.id}
-                      className="cursor-pointer hover:border-primary/50 transition-colors"
-                      onClick={() => setSelectedPlaylist(playlist)}
-                    >
-                      <CardContent className="p-5">
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
-                            <ListMusic className="h-6 w-6 text-primary" />
+                    <div key={playlist.id} className="relative group">
+                      <Card
+                        className="cursor-pointer hover:border-primary/50 transition-colors"
+                        onClick={() => setSelectedPlaylist(playlist)}
+                      >
+                        <CardContent className="p-5">
+                          <div className="flex items-center gap-4">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/10">
+                              <ListMusic className="h-6 w-6 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold">{playlist.name}</h3>
+                              <p className="text-sm text-muted-foreground">{playlist.songs.length} songs</p>
+                            </div>
                           </div>
-                          <div>
-                            <h3 className="font-semibold">{playlist.name}</h3>
-                            <p className="text-sm text-muted-foreground">{playlist.songs.length} songs</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                        </CardContent>
+                      </Card>
+                      <Button
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          deletePlaylist(playlist.id);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
                   ))}
                 </div>
               ) : (

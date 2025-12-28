@@ -10,6 +10,7 @@ CREATE TABLE users (
     email          CITEXT UNIQUE NOT NULL,
     password_hash  TEXT NOT NULL,
     display_name   VARCHAR(100) NOT NULL,
+    bio            TEXT,
     role           VARCHAR(20) NOT NULL DEFAULT 'user', -- user/admin
     status         VARCHAR(20) NOT NULL DEFAULT 'active',
     preferences    JSONB,              -- default instrument, capo, scroll speed, ...

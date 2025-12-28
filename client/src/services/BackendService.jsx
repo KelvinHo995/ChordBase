@@ -105,6 +105,16 @@ export const UserService = {
     updateRole: async (id, userData) => {
         const response = await apiClient.put(`/users/${id}/role`, userData);
         return response.data;
+    },
+
+    updateProfile: async (profileData) => {
+        const response = await apiClient.put('/users/profile', profileData);
+        return response.data;
+    },
+
+    getMyProfile: async () => {
+        const response = await apiClient.get('/users/me');
+        return response.data;
     }
 }
 
@@ -121,6 +131,16 @@ export const PlaylistService = {
 
     getFavoriteSongs: async () => {
         const response = await apiClient.get(`/playlists/favorites`);
+        return response.data;
+    },
+
+    addFavorite: async (songId) => {
+        const response = await apiClient.post(`/playlists/favorites/${songId}`);
+        return response.data;
+    },
+
+    removeFavorite: async (songId) => {
+        const response = await apiClient.delete(`/playlists/favorites/${songId}`);
         return response.data;
     },
 
