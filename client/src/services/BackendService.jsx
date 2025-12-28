@@ -120,6 +120,11 @@ export const UserService = {
     getMyProfile: async () => {
         const response = await apiClient.get('/users/me');
         return response.data;
+    },
+
+    changePassword: async (passwordData) => {
+        const response = await apiClient.post('/users/change-password', passwordData);
+        return response.data;
     }
 }
 

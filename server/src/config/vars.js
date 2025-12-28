@@ -49,6 +49,14 @@ module.exports = {
     // ===== FRONTEND URL (cho email links) =====
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
     
+    // ===== GOOGLE OAUTH CONFIGURATION =====
+    googleClientId: process.env.GOOGLE_CLIENT_ID || '',
+    googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    googleCallbackUrl: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/api/auth/google/callback',
+    
+    // ===== SESSION CONFIGURATION =====
+    sessionSecret: process.env.SESSION_SECRET || 'your-session-secret-change-in-production',
+    
     // ===== LOGGING =====
     logLevel: process.env.LOG_LEVEL || 'info', // error, warn, info, debug
     

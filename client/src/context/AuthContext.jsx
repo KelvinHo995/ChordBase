@@ -91,8 +91,24 @@ export const AuthProvider = ({ children }) => {
         setIsAdmin(false)   
     }
 
+    const googleLogin = async (accessToken) => {
+        setIsLoading(true);
+        try {
+            const user = await AuthService.loginWithGoogle(accessToken);
+            setUser(user);
+            setIsLoggedIn(true);
+            setIsAdmin(user.role === 'admin');
+            localStorage.setItem('user', JSON.stringify(user));
+            return { success: true };
+        } catch (error) {
+            throw error;
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, setUser, isLoggedIn, isAdmin, isLoading, login, register, logout }}>
+        <AuthContext.Provider value={{ user, setUser, isLoggedIn, isAdmin, isLoading, login, register, logout, googleLogin }}>
             {children}
         </AuthContext.Provider>
     )

@@ -24,7 +24,12 @@ const User = sequelize.define('User', {
     },
     password_hash: {
         type: DataTypes.TEXT,
-        allowNull: false
+        allowNull: true  // Nullable for Google OAuth users
+    },
+    google_id: {
+        type: DataTypes.STRING(255),
+        allowNull: true,
+        unique: true
     },
     display_name: {
         type: DataTypes.STRING(100),
@@ -88,6 +93,7 @@ const User = sequelize.define('User', {
 
 // Instance methods
 User.prototype.comparePassword = async function(candidatePassword) {
+    if (!this.password_hash) return false;
     return await bcrypt.compare(candidatePassword, this.password_hash);
 };
 
@@ -98,6 +104,40 @@ User.prototype.toJSON = function() {
 };
 
 // Class methods
+User.findByEmail = async function(email) {
+    return await this.findOne({ where: { email, is_deleted: false } });
+};
+
+User.findByGoogleId = async function(googleId) {
+    return await this.findOne({ where: { google_id: googleId, is_deleted: false } });
+};
+
+User.findOrCreateFromGoogle = async function(profile) {
+    const email = profile.emails[0].value;
+    let user = await this.findByGoogleId(profile.id);
+    
+    if (!user) {
+        user = await this.findByEmail(email);
+        if (user) {
+            // Link existing account to Google
+            user.google_id = profile.id;
+            await user.save();
+        } else {
+            // Create new user
+            user = await this.create({
+                email: email,
+                google_id: profile.id,
+                display_name: profile.displayName || email.split('@')[0],
+                role: 'user',
+                status: 'active'
+            });
+        }
+    }
+    
+    return user;
+};
+
+module.exports = User;
 User.findByEmail = async function(email) {
     return await this.findOne({ where: { email, is_deleted: false } });
 };

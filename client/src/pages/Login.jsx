@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useGoogleLogin } from '@react-oauth/google'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -9,7 +10,7 @@ import { useAuth } from "../context/AuthContext"
 
 const Login = () => {
   const navigate = useNavigate()
-  const { login } = useAuth()
+  const { login, googleLogin } = useAuth()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -40,6 +41,24 @@ const Login = () => {
       setLoading(false)
     }
   }
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setLoading(true)
+      setError('')
+      try {
+        await googleLogin(tokenResponse.access_token)
+        navigate('/')
+      } catch (err) {
+        setError('Google login failed. Please try again.')
+      } finally {
+        setLoading(false)
+      }
+    },
+    onError: () => {
+      setError('Google login failed. Please try again.')
+    }
+  })
 
   return (
     <div className="mx-auto flex min-h-[calc(100vh-200px)] max-w-md flex-col items-center justify-center px-4 py-12">
@@ -98,7 +117,7 @@ const Login = () => {
               </div>
             </div>
 
-            <Button type="button" variant="outline" className="w-full gap-2 bg-transparent">
+            <Button type="button" variant="outline" className="w-full gap-2 bg-transparent" onClick={handleGoogleLogin} disabled={loading}>
               <svg className="h-4 w-4" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
