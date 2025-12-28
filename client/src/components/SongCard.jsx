@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import { Heart, Eye, Star, Music2 } from "lucide-react"
 
 export function SongCard({ song }) {
-  // console.log("Rendering SongCard for song:", song.artists[0].name);
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Beginner":
@@ -41,11 +40,11 @@ export function SongCard({ song }) {
             <Badge variant="secondary" className="text-xs">
               {song.genre.name}
             </Badge>
-            {/* <Badge
+            <Badge
               className={`text-xs ${getDifficultyColor(song.difficulty)}`}
               variant="outline">
               {song.difficulty}
-            </Badge> */}
+            </Badge>
           </div>
 
           {/* <div className="mt-3 flex items-center gap-4 text-xs text-muted-foreground">

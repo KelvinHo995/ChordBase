@@ -11,26 +11,26 @@ export default function Footer() {
             <span className="font-semibold text-foreground">ChordBase</span>
           </div>
           <nav className="flex gap-6">
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
+            <Link to="/" className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
               Home
             </Link>
             <Link
-              href="/songs"
-              className="text-sm text-muted-foreground hover:text-foreground">
+              to="/songs"
+              className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
               Songs
             </Link>
             <Link
-              href="/upload"
-              className="text-sm text-muted-foreground hover:text-foreground">
+              to="/upload"
+              className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
               Upload
             </Link>
           </nav>
           <div className="flex items-center gap-4">
-            <a href="#" className="text-muted-foreground hover:text-foreground">
+            <a href="#" className="text-muted-foreground hover:text-foreground cursor-pointer">
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </a>
-            <a href="#" className="text-muted-foreground hover:text-foreground">
+            <a href="#" className="text-muted-foreground hover:text-foreground cursor-pointer">
               <Twitter className="h-5 w-5" />
               <span className="sr-only">Twitter</span>
             </a>

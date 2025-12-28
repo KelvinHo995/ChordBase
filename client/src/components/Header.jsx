@@ -51,7 +51,7 @@ const Header = () => {
         <div className="flex h-16 items-center justify-between gap-4">
           
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 shrink-0">
+          <Link to="/" className="flex items-center gap-2 shrink-0 cursor-pointer">
             <Music className="h-8 w-8 text-indigo-600" />
             <span className="text-xl font-bold text-gray-900">ChordBase</span>
           </Link>

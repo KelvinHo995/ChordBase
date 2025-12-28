@@ -14,7 +14,7 @@ class SongController {
                 sort_by = 'relevance'
             } = req.query;
 
-            if (!query && type !== 'genre') {
+            if (!query && type !== 'genre' && type !== 'all') {
                 return res.status(400).json({
                     success: false,
                     message: 'Query parameter "q" is required'
@@ -35,6 +35,22 @@ class SongController {
             });
         } catch (error) {
             console.error('Search error:', error);
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
+
+    async getChordSheets(req, res) {
+        const {uploader_id} = req.params;
+        try {
+            const result = await songService.getAllChordSheets({ uploader_id });
+            res.status(200).json({
+                success: true,
+                data: result
+            });
+        } catch (error) {
             res.status(500).json({
                 success: false,
                 message: error.message

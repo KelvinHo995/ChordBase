@@ -10,6 +10,9 @@ const router = express.Router();
 // Main search endpoint
 router.get('/', optionalAuth, songController.search);
 
+// Get chord-sheets
+router.get('/chord-sheets', optionalAuth, songController.getChordSheets);
+
 // Get popular songs
 router.get('/popular', songController.getPopular);
 
