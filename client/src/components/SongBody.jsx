@@ -57,7 +57,7 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
             {showControl && (
                 <CardHeader className="pb-3 print:hidden">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <CardTitle className="text-xl">Chord Sheet</CardTitle>
+                        <CardTitle className="text-xl">Hợp âm</CardTitle>
                         <div className="flex flex-wrap items-center gap-2">
                             {/* Transpose Controls */}
                             <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/50 p-1">
@@ -78,7 +78,7 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                             {/* Instrument Selector */}
                             <Select onValueChange={handleInstrumentChange} defaultValue="guitar">
                                 <SelectTrigger className="h-10 w-[120px] text-base">
-                                    <SelectValue placeholder="Instrument" />
+                                    <SelectValue placeholder="Nhạc cụ" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="guitar" className="text-base">Guitar</SelectItem>
@@ -96,11 +96,11 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                             >
                                 {isAutoscroll ? (
                                     <>
-                                        <Pause className="mr-2 h-4 w-4" /> Stop
+                                        <Pause className="mr-2 h-4 w-4" /> Dừng
                                     </>
                                 ) : (
                                     <>
-                                        <Play className="mr-2 h-4 w-4" /> Scroll
+                                        <Play className="mr-2 h-4 w-4" /> Cuộn
                                     </>
                                 )}
                             </Button>

@@ -18,6 +18,12 @@ export function SongCard({ song }) {
     }
   }
 
+  const difficultyMap = {
+    "Beginner": "Cơ bản",
+    "Intermediate": "Trung bình",
+    "Advanced": "Nâng cao"
+  }
+
   return (
     <Link to={`/songs/${song.song_id}`}>
       <Card className="group cursor-pointer transition-all hover:shadow-lg hover:border-primary/30">
@@ -43,7 +49,7 @@ export function SongCard({ song }) {
             <Badge
               className={`text-xs ${getDifficultyColor(song.difficulty)}`}
               variant="outline">
-              {song.difficulty}
+              {difficultyMap[song.difficulty] || song.difficulty}
             </Badge>
           </div>
 

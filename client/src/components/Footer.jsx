@@ -4,7 +4,7 @@ import { Music, Github, Twitter } from "lucide-react"
 export default function Footer() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <div className="flex items-center gap-2">
             <Music className="h-5 w-5 text-primary" />
@@ -12,17 +12,17 @@ export default function Footer() {
           </div>
           <nav className="flex gap-6">
             <Link to="/" className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
-              Home
+              Trang chủ
             </Link>
             <Link
               to="/songs"
               className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
-              Songs
+              Bài hát
             </Link>
             <Link
               to="/upload"
               className="text-sm text-muted-foreground hover:text-foreground cursor-pointer">
-              Upload
+              Tải lên
             </Link>
           </nav>
           <div className="flex items-center gap-4">
@@ -37,7 +37,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="mt-6 text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} ChordBase. All rights reserved.
+          &copy; {new Date().getFullYear()} ChordBase. Đã đăng ký bản quyền.
         </div>
       </div>
     </footer>

@@ -93,7 +93,7 @@ const UserProfile = () => {
       setTimeout(() => setShowSuccessMessage(false), 3000);
     } catch (error) {
       console.error('Failed to update profile:', error);
-      alert('Failed to update profile. Please try again.');
+      alert('Cập nhật hồ sơ thất bại. Vui lòng thử lại.');
     } finally {
       setIsSaving(false);
     }
@@ -155,7 +155,7 @@ const UserProfile = () => {
     return (
       <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground">Please log in to view your profile</h1>
+          <h1 className="text-2xl font-bold text-foreground">Vui lòng đăng nhập để xem hồ sơ của bạn</h1>
         </div>
       </div>
     )
@@ -164,8 +164,8 @@ const UserProfile = () => {
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground">My Profile</h1>
-        <p className="mt-2 text-muted-foreground">Manage your account and view your activity.</p>
+        <h1 className="text-3xl font-bold text-foreground">Hồ sơ của tôi</h1>
+        <p className="mt-2 text-muted-foreground">Quản lý tài khoản và xem hoạt động của bạn.</p>
       </div>
 
       {/* Profile Overview */}
@@ -183,11 +183,11 @@ const UserProfile = () => {
               <p className="text-muted-foreground">{user.email}</p>
               <div className="mt-2 flex flex-wrap items-center justify-center gap-3 sm:justify-start">
                 <Badge variant={user.role === "admin" ? "default" : "secondary"}>
-                  {user.role === "admin" ? "Admin" : "User"}
+                  {user.role === "admin" ? "Quản trị viên" : "Người dùng"}
                 </Badge>
                 <span className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Calendar className="h-3.5 w-3.5" />
-                  Joined {new Date(user.created_at).toLocaleDateString("en-US", {
+                  Tham gia {new Date(user.created_at).toLocaleDateString("vi-VN", {
                           year: "numeric",
                           month: "short",
                           day: "numeric"})}
@@ -204,21 +204,21 @@ const UserProfile = () => {
                 <Music className="h-5 w-5 text-primary" />
                 {stats.uploaded}
               </div>
-              <p className="text-sm text-muted-foreground">Uploaded</p>
+              <p className="text-sm text-muted-foreground">Đã tải lên</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-foreground">
                 <Heart className="h-5 w-5 text-destructive" />
                 {stats.favorites}
               </div>
-              <p className="text-sm text-muted-foreground">Favorites</p>
+              <p className="text-sm text-muted-foreground">Yêu thích</p>
             </div>
             <div className="text-center">
               <div className="flex items-center justify-center gap-1 text-2xl font-bold text-foreground">
                 <ListMusic className="h-5 w-5 text-primary" />
                 {stats.playlists}
               </div>
-              <p className="text-sm text-muted-foreground">Playlists</p>
+              <p className="text-sm text-muted-foreground">Danh sách phát</p>
             </div>
           </div>
         </CardContent>
@@ -229,49 +229,49 @@ const UserProfile = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5" />
-            Edit Profile
+            Chỉnh sửa hồ sơ
           </CardTitle>
-          <CardDescription>Update your public profile information.</CardDescription>
+          <CardDescription>Cập nhật thông tin hồ sơ công khai của bạn.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSaveProfile} className="space-y-4">
             {showSuccessMessage && (
               <Alert className="border-success/50 bg-success/5">
                 <CheckCircle className="h-4 w-4 text-success" />
-                <AlertDescription className="text-success">Profile updated successfully!</AlertDescription>
+                <AlertDescription className="text-success">Cập nhật hồ sơ thành công!</AlertDescription>
               </Alert>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor="displayName">Display Name</Label>
+              <Label htmlFor="displayName">Tên hiển thị</Label>
               <Input
                 id="displayName"
                 value={formData.display_name}
                 onChange={handleInputChange}
-                placeholder="Your display name"
+                placeholder="Tên hiển thị của bạn"
               />
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input id="email" value={user.email} disabled className="bg-muted" />
-              <p className="text-xs text-muted-foreground">Email cannot be changed.</p>
+              <p className="text-xs text-muted-foreground">Email không thể thay đổi.</p>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="bio">Bio</Label>
+              <Label htmlFor="bio">Tiểu sử</Label>
               <Textarea
                 id="bio"
                 value={formData.bio}
                 onChange={handleInputChange}
-                placeholder="Tell us about yourself..."
+                placeholder="Hãy kể cho chúng tôi về bản thân bạn..."
                 rows={3}
               />
             </div>
 
             <Button type="submit" disabled={isSaving} className="gap-2">
               <Save className="h-4 w-4" />
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? "Đang lưu..." : "Lưu thay đổi"}
             </Button>
           </form>
         </CardContent>

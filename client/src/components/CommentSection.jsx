@@ -42,13 +42,13 @@ const CommentItem = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-medium text-foreground text-base">
-              {comment.user?.display_name || "Unknown User"}
+              {comment.user?.display_name || "Người dùng ẩn danh"}
             </span>
             <span className="text-sm text-muted-foreground">
               {formatDate(comment.created_at)}
             </span>
             {comment.updated_at !== comment.created_at && (
-              <span className="text-xs text-muted-foreground italic">(edited)</span>
+              <span className="text-xs text-muted-foreground italic">(đã chỉnh sửa)</span>
             )}
           </div>
           
@@ -73,7 +73,7 @@ const CommentItem = ({
                   disabled={!editText.trim() || isSubmitting}
                   className="text-sm"
                 >
-                  Save
+                  Lưu
                 </Button>
                 <Button
                   size="sm"
@@ -84,7 +84,7 @@ const CommentItem = ({
                   }}
                   className="text-sm"
                 >
-                  Cancel
+                  Hủy
                 </Button>
               </div>
             </div>
@@ -103,7 +103,7 @@ const CommentItem = ({
                   className="h-7 px-2 text-sm text-muted-foreground hover:text-foreground"
                 >
                   <Reply className="h-3 w-3 mr-1" />
-                  {isReplying ? 'Cancel' : 'Reply'}
+                  {isReplying ? 'Hủy' : 'Trả lời'}
                 </Button>
               )}
               
@@ -119,7 +119,7 @@ const CommentItem = ({
                     className="h-7 px-2 text-sm text-muted-foreground hover:text-foreground"
                   >
                     <Edit2 className="h-3 w-3 mr-1" />
-                    Edit
+                    Chỉnh sửa
                   </Button>
                   <Button
                     variant="ghost"
@@ -128,7 +128,7 @@ const CommentItem = ({
                     className="h-7 px-2 text-sm text-destructive hover:text-destructive"
                   >
                     <Trash2 className="h-3 w-3 mr-1" />
-                    Delete
+                    Xóa
                   </Button>
                 </>
               )}
@@ -139,7 +139,7 @@ const CommentItem = ({
           {isReplying && (
             <div className="mt-3 space-y-2">
               <Textarea
-                placeholder={`Reply to ${comment.user?.display_name || "this comment"}...`}
+                placeholder={`Trả lời ${comment.user?.display_name || "bình luận này"}...`}
                 value={replyText}
                 onChange={(e) => setReplyText(e.target.value)}
                 rows={2}
@@ -154,7 +154,7 @@ const CommentItem = ({
                   disabled={!replyText.trim() || isSubmitting}
                   className="text-sm"
                 >
-                  {isSubmitting ? 'Posting...' : 'Post Reply'}
+                  {isSubmitting ? 'Đang đăng...' : 'Đăng trả lời'}
                 </Button>
                 <Button
                   size="sm"
@@ -165,7 +165,7 @@ const CommentItem = ({
                   }}
                   className="text-sm"
                 >
-                  Cancel
+                  Hủy
                 </Button>
               </div>
             </div>
@@ -234,7 +234,7 @@ export function CommentSection({
   }, [userRating]);
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+    return new Date(dateString).toLocaleDateString("vi-VN", {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -319,7 +319,7 @@ export function CommentSection({
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl">
           <MessageSquare className="h-5 w-5" />
-          Comments & Rating
+          Bình luận & Đánh giá
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -327,10 +327,10 @@ export function CommentSection({
         <div className="border-b border-border pb-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-lg font-semibold">Rating</h3>
+              <h3 className="text-lg font-semibold">Đánh giá</h3>
               {ratingStats.count > 0 && (
                 <p className="text-sm text-muted-foreground">
-                  {ratingStats.average.toFixed(1)} stars ({ratingStats.count} {ratingStats.count === 1 ? 'rating' : 'ratings'})
+                  {ratingStats.average.toFixed(1)} sao ({ratingStats.count} {ratingStats.count === 1 ? 'đánh giá' : 'đánh giá'})
                 </p>
               )}
             </div>
@@ -338,7 +338,7 @@ export function CommentSection({
           
           {isLoggedIn ? (
             <div>
-              <Label className="mb-2 block text-base">{userRating ? 'Your Rating' : 'Rate this chord sheet'}</Label>
+              <Label className="mb-2 block text-base">{userRating ? 'Đánh giá của bạn' : 'Đánh giá bản hợp âm này'}</Label>
               <div className="flex gap-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
@@ -360,13 +360,13 @@ export function CommentSection({
               </div>
               {userRating && (
                 <p className="text-sm text-muted-foreground mt-2">
-                  You rated this {userRating} {userRating === 1 ? 'star' : 'stars'}
+                  Bạn đã đánh giá {userRating} {userRating === 1 ? 'sao' : 'sao'}
                 </p>
               )}
             </div>
           ) : (
             <div className="text-center py-4">
-              <p className="text-muted-foreground text-base mb-2">Log in to rate this chord sheet</p>
+              <p className="text-muted-foreground text-base mb-2">Đăng nhập để đánh giá bản hợp âm này</p>
             </div>
           )}
         </div>
@@ -375,7 +375,7 @@ export function CommentSection({
         {isLoggedIn ? (
           <form onSubmit={handleSubmit} className="space-y-4">
             <Textarea
-              placeholder="Write your comment..."
+              placeholder="Viết bình luận của bạn..."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
               rows={3}
@@ -383,23 +383,23 @@ export function CommentSection({
               disabled={isSubmitting}
             />
             <Button type="submit" disabled={!newComment.trim() || isSubmitting} className="text-base">
-              {isSubmitting ? 'Posting...' : 'Post Comment'}
+              {isSubmitting ? 'Đang đăng...' : 'Đăng bình luận'}
             </Button>
           </form>
         ) : (
           <div className="rounded-lg border border-border bg-muted/50 p-4 text-center">
-            <p className="mb-3 text-muted-foreground text-base">Log in to leave a comment</p>
+            <p className="mb-3 text-muted-foreground text-base">Đăng nhập để để lại bình luận</p>
             <Button asChild className="text-base">
-              <Link to="/auth/login">Log in</Link>
+              <Link to="/auth/login">Đăng nhập</Link>
             </Button>
           </div>
         )}
 
         <div className="space-y-4">
           {isLoadingComments ? (
-            <p className="py-4 text-center text-muted-foreground text-base">Loading comments...</p>
+            <p className="py-4 text-center text-muted-foreground text-base">Đang tải bình luận...</p>
           ) : organizedComments.length === 0 ? (
-            <p className="py-4 text-center text-muted-foreground text-base">No comments yet. Be the first to comment!</p>
+            <p className="py-4 text-center text-muted-foreground text-base">Chưa có bình luận nào. Hãy là người đầu tiên bình luận!</p>
           ) : (
             organizedComments.map((comment) => (
               <CommentItem 

@@ -16,7 +16,7 @@ const PasswordReset = () => {
   const handleEmailSubmit = async (e) => {
     e.preventDefault()
     if (!email) {
-      setError('Please enter your email')
+      setError('Vui lòng nhập email của bạn')
       return
     }
     setLoading(true)
@@ -24,7 +24,7 @@ const PasswordReset = () => {
     // Mock sending code
     setTimeout(() => {
       setStep('code')
-      setSuccess('Verification code sent to your email')
+      setSuccess('Mã xác thực đã được gửi đến email của bạn')
       setLoading(false)
     }, 1000)
   }
@@ -32,7 +32,7 @@ const PasswordReset = () => {
   const handleCodeSubmit = async (e) => {
     e.preventDefault()
     if (!code) {
-      setError('Please enter the verification code')
+      setError('Vui lòng nhập mã xác thực')
       return
     }
     setLoading(true)
@@ -40,7 +40,7 @@ const PasswordReset = () => {
     // Mock verifying code
     setTimeout(() => {
       setStep('reset')
-      setSuccess('Code verified. Enter your new password.')
+      setSuccess('Mã đã được xác thực. Nhập mật khẩu mới của bạn.')
       setLoading(false)
     }, 1000)
   }
@@ -48,22 +48,22 @@ const PasswordReset = () => {
   const handleResetSubmit = async (e) => {
     e.preventDefault()
     if (!newPassword || !confirmPassword) {
-      setError('Please fill in all fields')
+      setError('Vui lòng điền vào tất cả các trường')
       return
     }
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match')
+      setError('Mật khẩu không khớp')
       return
     }
     if (newPassword.length < 8) {
-      setError('Password must be at least 8 characters')
+      setError('Mật khẩu phải có ít nhất 8 ký tự')
       return
     }
     setLoading(true)
     setError('')
     // Mock resetting password
     setTimeout(() => {
-      setSuccess('Password reset successfully!')
+      setSuccess('Đặt lại mật khẩu thành công!')
       setTimeout(() => navigate('/auth/login'), 2000)
       setLoading(false)
     }, 1000)
@@ -81,11 +81,11 @@ const PasswordReset = () => {
             </div>
           </div>
 
-          <h1 className="text-2xl font-semibold text-center text-gray-950 mb-2">Reset Password</h1>
+          <h1 className="text-2xl font-semibold text-center text-gray-950 mb-2">Đặt lại mật khẩu</h1>
           <p className="text-center text-gray-500 text-sm mb-6">
-            {step === 'email' && 'Enter your email to receive a reset code'}
-            {step === 'code' && 'Enter the verification code sent to your email'}
-            {step === 'reset' && 'Create a new password for your account'}
+            {step === 'email' && 'Nhập email của bạn để nhận mã đặt lại'}
+            {step === 'code' && 'Nhập mã xác thực đã được gửi đến email của bạn'}
+            {step === 'reset' && 'Tạo mật khẩu mới cho tài khoản của bạn'}
           </p>
 
           {error && (
@@ -105,7 +105,7 @@ const PasswordReset = () => {
             <form onSubmit={handleEmailSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-950 mb-2">
-                  Email Address
+                  Địa chỉ Email
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -123,7 +123,7 @@ const PasswordReset = () => {
                 disabled={loading}
                 className="w-full mt-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-all"
               >
-                {loading ? 'Sending code...' : 'Send Reset Code'}
+                {loading ? 'Đang gửi mã...' : 'Gửi mã đặt lại'}
               </button>
             </form>
           )}
@@ -133,7 +133,7 @@ const PasswordReset = () => {
             <form onSubmit={handleCodeSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-950 mb-2">
-                  Verification Code
+                  Mã xác thực
                 </label>
                 <input
                   type="text"
@@ -143,14 +143,14 @@ const PasswordReset = () => {
                   maxLength="6"
                   className="w-full px-4 py-2 text-center text-2xl tracking-widest rounded-lg border border-gray-200 bg-white text-gray-950 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-transparent transition-all"
                 />
-                <p className="text-xs mt-2 text-gray-500">Check your email for the 6-digit code</p>
+                <p className="text-xs mt-2 text-gray-500">Kiểm tra email của bạn để lấy mã 6 chữ số</p>
               </div>
               <button
                 type="submit"
                 disabled={loading}
                 className="w-full mt-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-all"
               >
-                {loading ? 'Verifying...' : 'Verify Code'}
+                {loading ? 'Đang xác thực...' : 'Xác thực mã'}
               </button>
             </form>
           )}
@@ -160,7 +160,7 @@ const PasswordReset = () => {
             <form onSubmit={handleResetSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-950 mb-2">
-                  New Password
+                  Mật khẩu mới
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -175,7 +175,7 @@ const PasswordReset = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-950 mb-2">
-                  Confirm Password
+                  Xác nhận mật khẩu
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
@@ -193,7 +193,7 @@ const PasswordReset = () => {
                 disabled={loading}
                 className="w-full mt-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-all"
               >
-                {loading ? 'Resetting...' : 'Reset Password'}
+                {loading ? 'Đang đặt lại...' : 'Đặt lại mật khẩu'}
               </button>
             </form>
           )}

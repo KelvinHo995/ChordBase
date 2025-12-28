@@ -36,9 +36,9 @@ const Header = () => {
 
   // Action Links (Visible only when logged in)
   const userLinks = [
-    { href: "/playlists", label: "Favorites", icon: Heart },
-    { href: "/upload", label: "Upload", icon: Upload },
-    { href: "/chord-generator", label: "AI Generate", icon: Sparkles },
+    { href: "/playlists", label: "Yêu thích", icon: Heart },
+    { href: "/upload", label: "Tải lên", icon: Upload },
+    { href: "/chord-generator", label: "Tạo bằng AI", icon: Sparkles },
   ]
 
   const handleLogout = () => {
@@ -47,7 +47,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white shadow-sm print:hidden">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between gap-4">
           
           {/* Logo */}
@@ -87,21 +87,21 @@ const Header = () => {
                     <DropdownMenuItem asChild>
                       <Link to="/profile" className="cursor-pointer">
                         <User className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
+                        <span>Hồ sơ</span>
                       </Link>
                     </DropdownMenuItem>
                     {isAdmin && (
                       <DropdownMenuItem asChild>
                         <Link to="/admin/dashboard" className="cursor-pointer">
                           <Shield className="mr-2 h-4 w-4" />
-                          <span>Admin Dashboard</span>
+                          <span>Bảng điều khiển Admin</span>
                         </Link>
                       </DropdownMenuItem>
                     )}
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="text-red-600 cursor-pointer">
                       <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
+                      <span>Đăng xuất</span>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -110,10 +110,10 @@ const Header = () => {
               // Logged Out State
               <div className="hidden sm:flex sm:items-center sm:gap-2">
                 <Button variant="ghost" asChild>
-                  <Link to="/auth/login">Log in</Link>
+                  <Link to="/auth/login">Đăng nhập</Link>
                 </Button>
                 <Button asChild className="bg-indigo-600 hover:bg-indigo-700">
-                  <Link to="/auth/register">Sign up</Link>
+                  <Link to="/auth/register">Đăng ký</Link>
                 </Button>
               </div>
             )}

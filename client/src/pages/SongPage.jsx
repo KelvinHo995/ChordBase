@@ -96,7 +96,7 @@ const SongPage = () => {
   }
 
   const handleDeleteComment = async (commentId) => {
-    if (!confirm('Are you sure you want to delete this comment?')) {
+    if (!confirm('Bạn có chắc chắn muốn xóa bình luận này không?')) {
       return;
     }
 
@@ -203,20 +203,20 @@ const SongPage = () => {
   if (isLoading) {
     return (
       <main className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8"> 
-        <h1 className="text-2xl font-bold text-foreground">Loading...</h1>
+        <h1 className="text-2xl font-bold text-foreground">Đang tải...</h1>
       </main>
     )
   }
   if (!song) {
     return (
       <div className="mx-auto max-w-7xl px-4 py-16 text-center sm:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold text-foreground">Song not found</h1>
-        <p className="mt-2 text-muted-foreground">The song you're looking for doesn't exist.</p>
+        <h1 className="text-2xl font-bold text-foreground">Không tìm thấy bài hát</h1>
+        <p className="mt-2 text-muted-foreground">Bài hát bạn đang tìm kiếm không tồn tại.</p>
         <div className="mt-6 flex justify-center gap-3">
           <Button onClick={() => navigate(-1)} variant="outline">
-            Go Back
+            Quay lại
           </Button>
-          <Button onClick={() => navigate("/")}>Browse Songs</Button>
+          <Button onClick={() => navigate("/")}>Duyệt bài hát</Button>
         </div>
       </div>
     )
@@ -238,7 +238,7 @@ const SongPage = () => {
     } catch (error) {
       console.error('Favorite toggle failed:', error);
       setFavorite(!next); // revert
-      alert('Could not update favorite. Please try again.');
+      alert('Không thể cập nhật yêu thích. Vui lòng thử lại.');
     }
   }
 
@@ -278,9 +278,9 @@ const SongPage = () => {
       {showLoginPrompt && !isLoggedIn && (
         <Card className="mb-6 border-yellow-500/50 bg-yellow-50">
           <CardContent className="flex items-center justify-between p-4">
-            <p className="text-base text-foreground">Please log in to save favorites and create playlists.</p>
+            <p className="text-base text-foreground">Vui lòng đăng nhập để lưu yêu thích và tạo danh sách phát.</p>
             <Button size="sm" onClick={() => navigate("/auth/login")}>
-              Log in
+              Đăng nhập
             </Button>
           </CardContent>
         </Card>
@@ -288,7 +288,7 @@ const SongPage = () => {
 
       <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="mb-6 gap-2 text-lg -ml-4 print:hidden">
         <ArrowLeft className="h-5 w-5" />
-        Back
+        Quay lại
       </Button>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -316,7 +316,20 @@ const SongPage = () => {
           </div>
 
           {/* Chord Sheet with Controls */}
-          <SongBody lyrics={version.content} songKey={version.original_key} showControl={true} />
+          <SongBody 
+            lyrics={version.content} 
+            songKey={version.original_key} 
+            showControl={true} 
+            versions={song.chord_versions}
+            currentVersionId={version.chord_sheet_id}
+            onVersionChange={(versionId) => {
+              const newVersion = song.chord_versions.find(v => v.chord_sheet_id === versionId);
+              if (newVersion) {
+                setVersion(newVersion);
+                navigate(`/songs/${song.song_id}/${versionId}`);
+              }
+            }}
+          />
 
           {/* Comments Section */}
           <div className="mt-8 print:hidden">
@@ -341,7 +354,7 @@ const SongPage = () => {
           {/* Chord Diagrams */}
           <Card>
             <CardContent className="pt-6">
-              <h3 className="text-lg font-semibold mb-4">Chords Used</h3>
+              <h3 className="text-lg font-semibold mb-4">Hợp âm sử dụng</h3>
               <ChordList chords={chords} />
             </CardContent>
           </Card>

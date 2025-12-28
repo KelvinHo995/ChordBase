@@ -112,7 +112,7 @@ const SongManagement = () => {
                       <TableCell>
                         <div className="flex justify-end gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link to={`/song/${song.song_id}`}>
+                            <Link to={`/songs/${song.song_id}/${song.chord_sheet_id}`}>
                               <Eye className="mr-1 h-3 w-3" />
                               Preview
                             </Link>
