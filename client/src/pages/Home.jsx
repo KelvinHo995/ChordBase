@@ -33,36 +33,36 @@ export default function HomePage() {
   }, [])
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <div className="mx-auto max-w-screen-2xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <div className="mb-12 text-center">
         <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-1.5">
           <Music2 className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium text-blue-600">Your Chord Sheet Library</span>
+          <span className="text-sm font-medium text-blue-600">Thư viện hợp âm của bạn</span>
         </div>
         <h1 className="mb-4 text-4xl font-bold tracking-tight text-gray-950 sm:text-5xl">
-          Find chords for any song
+          Tìm hợp âm cho bất kỳ bài hát nào
         </h1>
         <p className="mx-auto mb-8 max-w-2xl text-lg text-zinc-500">
-          Browse thousands of chord sheets, transpose to any key, and auto-scroll while you play.
+          Duyệt qua hàng ngàn bản hợp âm, chuyển tông đến bất kỳ khóa nào và tự động cuộn khi bạn chơi.
         </p>
       </div>
       
       <section className="mb-12">
         <div className="mb-6 flex items-center gap-2">
           <TrendingUp className="h-5 w-5 text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-950">Trending Songs</h2>
+          <h2 className="text-2xl font-bold text-gray-950">Bài hát thịnh hành</h2>
         </div>
-        {isLoading ? <h1>Loading...</h1> : <SongList songs={trendingSongs} />}
+        {isLoading ? <h1>Đang tải...</h1> : <SongList songs={trendingSongs} />}
       </section>
 
       {/* Recently Added */}
       <section>
         <div className="mb-6 flex items-center gap-2">
           <Clock className="h-5 w-5 text-blue-600" />
-          <h2 className="text-2xl font-bold text-gray-950">Recently Added</h2>
+          <h2 className="text-2xl font-bold text-gray-950">Mới thêm gần đây</h2>
         </div>
-        {isLoading ? <h1>Loading...</h1> : <SongList songs={recentSongs} />}
+        {isLoading ? <h1>Đang tải...</h1> : <SongList songs={recentSongs} />}
       </section>
         
     </div>

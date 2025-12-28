@@ -24,15 +24,15 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     if (!formData.name || !formData.email || !formData.password || !formData.confirmPassword) {
-      setError('Please fill in all fields')
+      setError('Vui lòng điền vào tất cả các trường')
       return
     }
     if (formData.password !== formData.confirmPassword) {
-      setError('Passwords do not match')
+      setError('Mật khẩu không khớp')
       return
     }
     if (formData.password.length < 6) {
-      setError('Password must be at least 6 characters')
+      setError('Mật khẩu phải có ít nhất 6 ký tự')
       return
     }
 
@@ -46,7 +46,7 @@ const Register = () => {
       })
       navigate('/auth/login')
     } catch (err) {
-      setError('Registration failed. Please try again.')
+      setError('Đăng ký thất bại. Vui lòng thử lại.')
     } finally {
       setLoading(false)
     }
@@ -59,13 +59,13 @@ const Register = () => {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
             <Music className="h-6 w-6 text-primary" />
           </div>
-          <CardTitle className="text-2xl">Create an account</CardTitle>
-          <CardDescription>Join ChordBase and start sharing chord sheets</CardDescription>
+          <CardTitle className="text-2xl">Tạo tài khoản</CardTitle>
+          <CardDescription>Tham gia ChordBase và bắt đầu chia sẻ bản hợp âm</CardDescription>
         </CardHeader>
         <CardContent>
           <form className="space-y-4" onSubmit={handleSubmit}>
             <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
+              <Label htmlFor="username">Tên người dùng</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input 
@@ -97,14 +97,14 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Mật khẩu</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input 
                   id="password" 
                   name="password"
                   type="password" 
-                  placeholder="Create a password" 
+                  placeholder="Tạo mật khẩu" 
                   className="pl-10" 
                   value={formData.password}
                   onChange={handleChange}
@@ -113,14 +113,14 @@ const Register = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
+              <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                 <Input 
                   id="confirmPassword" 
                   name="confirmPassword"
                   type="password" 
-                  placeholder="Confirm your password" 
+                  placeholder="Xác nhận mật khẩu của bạn" 
                   className="pl-10" 
                   value={formData.confirmPassword}
                   onChange={handleChange}
@@ -129,7 +129,7 @@ const Register = () => {
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              Create account
+              Tạo tài khoản
             </Button>
 
             <div className="relative my-6">
@@ -137,7 +137,7 @@ const Register = () => {
                 <div className="w-full border-t border-border" />
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-card px-2 text-muted-foreground">Or continue with</span>
+                <span className="bg-card px-2 text-muted-foreground">Hoặc tiếp tục với</span>
               </div>
             </div>
 
@@ -160,14 +160,14 @@ const Register = () => {
                   d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
                 />
               </svg>
-              Register with Google
+              Đăng ký bằng Google
             </Button>
           </form>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Already have an account?{" "}
+            Đã có tài khoản?{" "}
             <Link to="/auth/login" className="font-medium text-primary hover:underline">
-              Sign in
+              Đăng nhập
             </Link>
           </p>
         </CardContent>

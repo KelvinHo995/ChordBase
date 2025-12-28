@@ -86,7 +86,7 @@ const Playlists = () => {
   }
 
   const deletePlaylist = async (playlistId) => {
-    if (!window.confirm('Are you sure you want to delete this playlist? This action cannot be undone.')) {
+    if (!window.confirm('Bạn có chắc chắn muốn xóa danh sách phát này không? Hành động này không thể hoàn tác.')) {
       return;
     }
     try {
@@ -97,7 +97,7 @@ const Playlists = () => {
       }
     } catch (error) {
       console.error('Failed to delete playlist:', error);
-      alert('Could not delete playlist. Please try again.');
+      alert('Không thể xóa danh sách phát. Vui lòng thử lại.');
     }
   }
 
@@ -130,10 +130,10 @@ const Playlists = () => {
         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mx-auto mb-4">
           <Heart className="h-8 w-8 text-primary" />
         </div>
-        <h1 className="text-2xl font-bold mb-4">Login Required</h1>
-        <p className="text-muted-foreground mb-6">Please log in to view your favorites and playlists.</p>
+        <h1 className="text-2xl font-bold mb-4">Yêu cầu đăng nhập</h1>
+        <p className="text-muted-foreground mb-6">Vui lòng đăng nhập để xem danh sách yêu thích và danh sách phát của bạn.</p>
         <Link to="/auth/login">
-          <Button>Login</Button>
+          <Button>Đăng nhập</Button>
         </Link>
       </div>
     )
@@ -154,19 +154,19 @@ const Playlists = () => {
   return (
     <div className="container py-12 max-w-5xl mx-auto">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">My Library</h1>
-        <p className="text-muted-foreground">Your favorite songs and custom playlists</p>
+        <h1 className="text-3xl font-bold mb-2">Thư viện của tôi</h1>
+        <p className="text-muted-foreground">Bài hát yêu thích và danh sách phát tùy chỉnh của bạn</p>
       </div>
 
       <Tabs defaultValue="favorites" className="space-y-6">
         <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
-          <TabsTrigger value="favorites" className="flex items-center gap-2">
+          <TabsTrigger value="favorites" className="flex items-center gap-2 cursor-pointer">
             <Heart className="h-4 w-4" />
-            Favorites
+            Yêu thích
           </TabsTrigger>
-          <TabsTrigger value="playlists" className="flex items-center gap-2">
+          <TabsTrigger value="playlists" className="flex items-center gap-2 cursor-pointer">
             <ListMusic className="h-4 w-4" />
-            Playlists
+            Danh sách phát
           </TabsTrigger>
         </TabsList>
 
@@ -175,7 +175,7 @@ const Playlists = () => {
           {favorites.length > 0 ? (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <p className="text-muted-foreground">{favorites.length} songs in favorites</p>
+                <p className="text-muted-foreground">{favorites.length} bài hát trong mục yêu thích</p>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
                 {favorites.map((song) => (
@@ -202,10 +202,10 @@ const Playlists = () => {
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mx-auto mb-4">
                   <Heart className="h-8 w-8 text-primary" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">No favorites yet</h3>
-                <p className="text-muted-foreground mb-6">Start adding songs to your favorites to see them here.</p>
+                <h3 className="text-xl font-semibold mb-2">Chưa có bài hát yêu thích nào</h3>
+                <p className="text-muted-foreground mb-6">Bắt đầu thêm bài hát vào mục yêu thích để xem chúng ở đây.</p>
                 <Link to="/">
-                  <Button>Browse Songs</Button>
+                  <Button>Duyệt bài hát</Button>
                 </Link>
               </CardContent>
             </Card>
@@ -218,7 +218,7 @@ const Playlists = () => {
             <div className="space-y-6">
               <Button variant="ghost" onClick={() => setSelectedPlaylist(null)} className="flex items-center gap-2">
                 <ArrowLeft className="h-4 w-4" />
-                Back to Playlists
+                Quay lại danh sách phát
               </Button>
 
               <Card>
@@ -230,7 +230,7 @@ const Playlists = () => {
                       </div>
                       <div>
                         <CardTitle>{selectedPlaylist.name}</CardTitle>
-                        <CardDescription>{selectedPlaylist.songs.length} songs</CardDescription>
+                        <CardDescription>{selectedPlaylist.songs.length} bài hát</CardDescription>
                       </div>
                     </div>
                     <Button
@@ -246,41 +246,39 @@ const Playlists = () => {
                   {getPlaylistSongs(selectedPlaylist).length > 0 ? (
                     <div className="space-y-3 md:grid md:grid-cols-3 gap-4">
                       {getPlaylistSongs(selectedPlaylist).map((song) => (
-                        <div
-                          key={song.id}
-                          className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/50 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                              <Music className="h-5 w-5 text-primary" />
+                        <Link to={`/songs/${song.id}`} key={song.id} className="no-underline">
+                          <div
+                            key={song.id}
+                            className="flex items-center justify-between p-3 rounded-lg bg-secondary/30 hover:bg-secondary/100 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
+                                <Music className="h-5 w-5 text-primary" />
+                              </div>
+                              <div>
+                                <p className="font-medium">{song.title}</p>
+                                <p className="text-sm text-muted-foreground">{song.artist}</p>
+                              </div>
                             </div>
-                            <div>
-                              <p className="font-medium">{song.title}</p>
-                              <p className="text-sm text-muted-foreground">{song.artist}</p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Link to={`/song/${song.id}`}>
-                              <Button variant="ghost" size="icon">
-                                <ExternalLink className="h-4 w-4" />
+                            
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={() => removeFromPlaylist(selectedPlaylist.id, song.id)}
+                              >
+                                <Trash2 className="h-4 w-4 text-destructive" />
                               </Button>
-                            </Link>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => removeFromPlaylist(selectedPlaylist.id, song.id)}
-                            >
-                              <Trash2 className="h-4 w-4 text-destructive" />
-                            </Button>
+                            </div>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </div>
                   ) : (
                     <div className="text-center py-8">
-                      <p className="text-muted-foreground mb-4">This playlist is empty.</p>
+                      <p className="text-muted-foreground mb-4">Danh sách phát này đang trống.</p>
                       <Link to="/">
-                        <Button variant="outline">Add Songs</Button>
+                        <Button variant="outline">Thêm bài hát</Button>
                       </Link>
                     </div>
                   )}
@@ -290,10 +288,10 @@ const Playlists = () => {
           ) : (
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <p className="text-muted-foreground">{playlists.length} playlists</p>
+                <p className="text-muted-foreground">{playlists.length} danh sách phát</p>
                 <Button onClick={() => setCreateDialogOpen(true)}>
                   <Plus className="h-4 w-4 mr-2" />
-                  Create Playlist
+                  Tạo danh sách phát
                 </Button>
               </div>
 
@@ -312,7 +310,7 @@ const Playlists = () => {
                             </div>
                             <div>
                               <h3 className="font-semibold">{playlist.name}</h3>
-                              <p className="text-sm text-muted-foreground">{playlist.songs.length} songs</p>
+                              <p className="text-sm text-muted-foreground">{playlist.songs.length} bài hát</p>
                             </div>
                           </div>
                         </CardContent>
@@ -337,11 +335,11 @@ const Playlists = () => {
                     <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mx-auto mb-4">
                       <ListMusic className="h-8 w-8 text-primary" />
                     </div>
-                    <h3 className="text-xl font-semibold mb-2">No playlists yet</h3>
-                    <p className="text-muted-foreground mb-6">Create your first playlist to organize your songs.</p>
+                    <h3 className="text-xl font-semibold mb-2">Chưa có danh sách phát nào</h3>
+                    <p className="text-muted-foreground mb-6">Tạo danh sách phát đầu tiên để sắp xếp các bài hát của bạn.</p>
                     <Button onClick={() => setCreateDialogOpen(true)}>
                       <Plus className="h-4 w-4 mr-2" />
-                      Create Playlist
+                      Tạo danh sách phát
                     </Button>
                   </CardContent>
                 </Card>
@@ -350,32 +348,31 @@ const Playlists = () => {
           )}
         </TabsContent>
       </Tabs>
-
-      {/* Create Playlist Dialog */}
-      <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Create New Playlist</DialogTitle>
-            <DialogDescription>Give your playlist a name to get started</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleCreatePlaylist} className="space-y-4 pt-4">
-            <Input
-              placeholder="Playlist name"
-              value={newPlaylistName}
-              onChange={(e) => setNewPlaylistName(e.target.value)}
-              autoFocus
-            />
-            <div className="flex gap-3 justify-end">
-              <Button type="button" variant="ghost" onClick={() => setCreateDialogOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={!newPlaylistName.trim()}>
-                Create
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+        {/* Create Playlist Dialog */}
+        <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle>Tạo danh sách phát mới</DialogTitle>
+              <DialogDescription>Đặt tên cho danh sách phát của bạn để bắt đầu</DialogDescription>
+            </DialogHeader>
+            <form onSubmit={handleCreatePlaylist} className="space-y-4 pt-4">
+              <Input
+                placeholder="Tên danh sách phát"
+                value={newPlaylistName}
+                onChange={(e) => setNewPlaylistName(e.target.value)}
+                autoFocus
+              />
+              <div className="flex gap-3 justify-end">
+                <Button type="button" variant="ghost" onClick={() => setCreateDialogOpen(false)}>
+                  Hủy
+                </Button>
+                <Button type="submit" disabled={!newPlaylistName.trim()}>
+                  Tạo
+                </Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
     </div>
   )
 }

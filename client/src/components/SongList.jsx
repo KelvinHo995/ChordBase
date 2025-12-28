@@ -1,6 +1,6 @@
 import { SongCard } from "./SongCard"
 
-export function SongList({ songs = [], emptyMessage = "No songs found" }) {
+export function SongList({ songs = [], emptyMessage = "Không tìm thấy bài hát nào" }) {
   if (songs.length === 0) {
     return (
       <div className="py-12 text-center">

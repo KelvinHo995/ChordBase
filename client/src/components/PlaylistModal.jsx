@@ -50,10 +50,10 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
     try {
       await PlaylistService.addSong(playlistId, songId)
       setAddedToPlaylistIds(prev => new Set([...prev, playlistId]))
-      alert('Song added to playlist!')
+      alert('Đã thêm bài hát vào danh sách phát!')
     } catch (error) {
       console.error('Failed to add song to playlist:', error)
-      alert('Failed to add song. Please try again.')
+      alert('Thêm bài hát thất bại. Vui lòng thử lại.')
     } finally {
       setIsAdding(false)
     }
@@ -67,11 +67,11 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
       await PlaylistService.create({ name: newPlaylistName })
       setNewPlaylistName('')
       setShowNewPlaylistInput(false)
-      alert('Playlist created!')
+      alert('Đã tạo danh sách phát!')
       await fetchPlaylists()
     } catch (error) {
       console.error('Failed to create playlist:', error)
-      alert('Failed to create playlist. Please try again.')
+      alert('Tạo danh sách phát thất bại. Vui lòng thử lại.')
     } finally {
       setIsCreating(false)
     }
@@ -81,15 +81,15 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl">Add to Playlist</DialogTitle>
-          <DialogDescription className="text-base">Select a playlist or create a new one.</DialogDescription>
+          <DialogTitle className="text-2xl">Thêm vào danh sách phát</DialogTitle>
+          <DialogDescription className="text-base">Chọn danh sách phát hoặc tạo mới.</DialogDescription>
         </DialogHeader>
 
         <ScrollArea className="max-h-[300px]">
           {loading ? (
-            <div className="py-4 text-center text-muted-foreground">Loading playlists...</div>
+            <div className="py-4 text-center text-muted-foreground">Đang tải danh sách phát...</div>
           ) : playlists.length === 0 ? (
-            <div className="py-4 text-center text-muted-foreground">No playlists yet. Create one below!</div>
+            <div className="py-4 text-center text-muted-foreground">Chưa có danh sách phát nào. Hãy tạo mới bên dưới!</div>
           ) : (
             <div className="space-y-2">
               {playlists.map((playlist) => {
@@ -117,10 +117,10 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
         <div className="border-t border-border pt-4">
           {showNewPlaylistInput ? (
             <div className="space-y-3">
-              <Label htmlFor="new-playlist" className="text-base">New Playlist Name</Label>
+              <Label htmlFor="new-playlist" className="text-base">Tên danh sách phát mới</Label>
               <Input
                 id="new-playlist"
-                placeholder="My Playlist"
+                placeholder="Danh sách phát của tôi"
                 className="text-base h-12"
                 value={newPlaylistName}
                 onChange={(e) => setNewPlaylistName(e.target.value)}
@@ -132,7 +132,7 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
                   className="text-lg h-12"
                   disabled={isCreating || !newPlaylistName.trim()}
                 >
-                  Create
+                  Tạo
                 </Button>
                 <Button 
                   variant="outline" 
@@ -143,7 +143,7 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
                   className="text-lg h-12"
                   disabled={isCreating}
                 >
-                  Cancel
+                  Hủy
                 </Button>
               </div>
             </div>
@@ -155,7 +155,7 @@ export function PlaylistModal({ open, onOpenChange, songId }) {
               disabled={isCreating}
             >
               <Plus className="h-5 w-5" />
-              Create New Playlist
+              Tạo danh sách phát mới
             </Button>
           )}
         </div>

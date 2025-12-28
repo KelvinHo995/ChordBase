@@ -187,7 +187,7 @@ const HoverChord = ({ chordName, hoverable=true }) => {
                             </div>
                         </div>
                     ) : (
-                        <span className="flex justify-center text-sm text-gray-600 py-3">Chord not supported!</span>
+                        <span className="flex justify-center text-sm text-gray-600 py-3">Hợp âm không được hỗ trợ!</span>
                     )}
                     {/* Triangle pointer */}
                     <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-full">

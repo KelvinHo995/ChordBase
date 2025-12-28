@@ -20,7 +20,7 @@ const SearchBar = () => {
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search songs, artists, or keywords..."
+                placeholder="Tìm kiếm bài hát, nghệ sĩ hoặc từ khóa..."
                 className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-white text-gray-950 placeholder:text-zinc-500 focus:outline-none focus:ring-0 focus:border-slate-200 transition-all"
             />
         </form>
