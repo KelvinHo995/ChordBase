@@ -21,9 +21,6 @@ router.post('/favorites/:songId', protect, PlaylistController.addFavorite);
 // Remove from favorites
 router.delete('/favorites/:songId', protect, PlaylistController.removeFavorite);
 
-// Delete a favorite song of the authenticated user
-router.delete('/favorites/:songId', protect, PlaylistController.removeSongFromFavorites);
-
 // Get a specific playlist by ID
 router.get('/:id', protect, PlaylistController.getPlaylistById);
 
