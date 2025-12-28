@@ -3,9 +3,7 @@ import { useSearchParams } from "react-router-dom"
 import { SongList } from "@/components/SongList"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Library, Filter, ArrowUpDown, Loader2 } from "lucide-react"
-import { SongService } from "@/services/BackendService"
-
-const GENRES = ["Rock", "Pop", "Folk", "Country", "Jazz", "Blues"]
+import { SongService, GenreService } from "@/services/BackendService"
 
 const SearchPage = () => {
   const [searchParams] = useSearchParams()
@@ -13,10 +11,25 @@ const SearchPage = () => {
   console.log(searchQuery)
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [sortBy, setSortBy] = useState("rating")
+  const [genres, setGenres] = useState([])
   
   const [songs, setSongs] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
+
+  // Fetch genres on mount
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const response = await GenreService.getAll();
+        setGenres(response.data?.genres || []);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+        setGenres([]);
+      }
+    };
+    fetchGenres();
+  }, []);
 
   useEffect(() => {
     const fetchSongs = async () => {
@@ -25,8 +38,8 @@ const SearchPage = () => {
       try {
         const params = {}
         if (searchQuery) params.q = searchQuery
-        if (selectedGenre !== "all") params.genre = selectedGenre
-        if (sortBy) params.sort = sortBy
+        if (selectedGenre !== "all") params.genre_id = parseInt(selectedGenre)
+        if (sortBy) params.sort_by = sortBy
 
         const res = await SongService.getAll(params)
         console.log(res);
@@ -38,7 +51,7 @@ const SearchPage = () => {
         // setSongs(Array.isArray(data) ? data : data.songs || [])
       } catch (err) {
         console.error("Failed to fetch songs:", err)
-        setError("Failed to load songs. Please try again later.")
+        setError("Tải bài hát thất bại. Vui lòng thử lại sau.")
       } finally {
         setLoading(false)
       }
@@ -52,9 +65,9 @@ const SearchPage = () => {
       <div className="mb-8">
         <div className="flex items-center gap-2">
           <Library className="h-6 w-6 text-primary" />
-          <h1 className="text-3xl font-bold text-foreground">Songs Library</h1>
+          <h1 className="text-3xl font-bold text-foreground">Thư viện bài hát</h1>
         </div>
-        <p className="mt-2 text-muted-foreground">Browse and discover chord sheets from our collection.</p>
+        <p className="mt-2 text-muted-foreground">Duyệt và khám phá các bản hợp âm từ bộ sưu tập của chúng tôi.</p>
       </div>
 
       <div className="mb-6 space-y-4">
@@ -63,13 +76,13 @@ const SearchPage = () => {
             <Select value={selectedGenre} onValueChange={setSelectedGenre}>
               <SelectTrigger className="w-[140px]">
                 <Filter className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Genre" />
+                <SelectValue placeholder="Thể loại" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">All Genres</SelectItem>
-                {GENRES.map((genre) => (
-                  <SelectItem key={genre} value={genre}>
-                    {genre}
+                <SelectItem value="all">Tất cả thể loại</SelectItem>
+                {genres.map((genre) => (
+                  <SelectItem key={genre.genre_id} value={genre.genre_id.toString()}>
+                    {genre.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -78,13 +91,13 @@ const SearchPage = () => {
             <Select value={sortBy} onValueChange={setSortBy}>
               <SelectTrigger className="w-[140px]">
                 <ArrowUpDown className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Sort" />
+                <SelectValue placeholder="Sắp xếp" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="rating">Top Rated</SelectItem>
-                <SelectItem value="latest">Latest</SelectItem>
-                <SelectItem value="views">Most Viewed</SelectItem>
-                <SelectItem value="title">Title A-Z</SelectItem>
+                <SelectItem value="rating">Đánh giá cao nhất</SelectItem>
+                <SelectItem value="latest">Mới nhất</SelectItem>
+                <SelectItem value="views">Xem nhiều nhất</SelectItem>
+                <SelectItem value="title">Tiêu đề A-Z</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -96,19 +109,19 @@ const SearchPage = () => {
         {loading ? (
              <div className="flex items-center gap-2 text-muted-foreground">
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Searching...</span>
+                <span>Đang tìm kiếm...</span>
              </div>
         ) : error ? (
             <div className="text-red-500">{error}</div>
         ) : (
             <p className="text-sm text-muted-foreground">
-            Showing {songs.length} songs
+            Hiển thị {songs.length} bài hát
             </p>
         )}
       </div>
 
       {!loading && !error && (
-        <SongList songs={songs} emptyMessage="No songs found with the current filters." />
+        <SongList songs={songs} emptyMessage="Không tìm thấy bài hát nào với các bộ lọc hiện tại." />
       )}
     </div>
   )

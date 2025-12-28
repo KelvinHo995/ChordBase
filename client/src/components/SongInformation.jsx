@@ -19,12 +19,18 @@ export function SongInformation({ song, version }) {
     }
   }
 
+  const difficultyMap = {
+    "Beginner": "Cơ bản",
+    "Intermediate": "Trung bình",
+    "Advanced": "Nâng cao"
+  }
+
   return (
     <Card className="print:hidden">
       <CardHeader>
         <CardTitle className="text-xl flex items-center gap-2">
           <Music2 className="h-5 w-5 text-primary" />
-          Song Information
+          Thông tin bài hát
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -34,8 +40,12 @@ export function SongInformation({ song, version }) {
             <User className="h-4 w-4 text-primary" />
           </div>
           <div className="flex-1 space-y-1">
-            <p className="text-sm font-medium text-muted-foreground">Artist</p>
-            <p className="text-base font-semibold text-foreground">{song.artist}</p>
+            <p className="text-sm font-medium text-muted-foreground">Nghệ sĩ</p>
+            <p className="text-base font-semibold text-foreground">
+              {song.artists?.map((a) => a.name).join(", ") ||
+                (Array.isArray(song.artist) ? song.artist.join(", ") : song.artist) ||
+                "Không rõ"}
+            </p>
           </div>
         </div>
 
@@ -44,15 +54,15 @@ export function SongInformation({ song, version }) {
         {/* Genre & Difficulty */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Genre</span>
+            <span className="text-sm font-medium text-muted-foreground">Thể loại</span>
             <Badge variant="secondary" className="text-sm">
               {song.genre.name}
             </Badge>
           </div>
 
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Difficulty</span>
-            <Badge className={`${getDifficultyColor(song.difficulty)} text-sm`}>{song.difficulty || "Beginner"}</Badge>
+            <span className="text-sm font-medium text-muted-foreground">Độ khó</span>
+            <Badge className={`${getDifficultyColor(song.difficulty)} text-sm`}>{difficultyMap[song.difficulty] || song.difficulty || "Cơ bản"}</Badge>
           </div>
         </div>
 
@@ -63,7 +73,7 @@ export function SongInformation({ song, version }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Star className="h-4 w-4" />
-              <span className="text-sm font-medium">Rating</span>
+              <span className="text-sm font-medium">Đánh giá</span>
             </div>
             <div className="flex items-center gap-1">
               <span className="text-base font-bold text-foreground">{version.rating.avg.toFixed(1)}</span>
@@ -74,7 +84,7 @@ export function SongInformation({ song, version }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Eye className="h-4 w-4" />
-              <span className="text-sm font-medium">Views</span>
+              <span className="text-sm font-medium">Lượt xem</span>
             </div>
             <span className="text-base font-bold text-foreground">{song.stats.total_views.toLocaleString()}</span>
           </div>
@@ -82,10 +92,10 @@ export function SongInformation({ song, version }) {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-muted-foreground">
               <TrendingUp className="h-4 w-4" />
-              <span className="text-sm font-medium">Popularity</span>
+              <span className="text-sm font-medium">Độ phổ biến</span>
             </div>
             <Badge variant="outline" className="text-sm">
-              {song.views > 20000 ? "Trending" : song.views > 10000 ? "Popular" : "Rising"}
+              {song.views > 20000 ? "Thịnh hành" : song.views > 10000 ? "Phổ biến" : "Đang lên"}
             </Badge>
           </div>
         </div>
@@ -95,17 +105,17 @@ export function SongInformation({ song, version }) {
         {/* Upload Info */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium text-muted-foreground">Uploaded by</span>
-            <span className="text-base font-semibold text-foreground">{version.uploader?.display_name || "AI Generator"}</span>
+            <span className="text-sm font-medium text-muted-foreground">Đăng bởi</span>
+            <span className="text-base font-semibold text-foreground">{version.uploader?.display_name || "AI Tạo"}</span>
           </div>
 
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="h-4 w-4" />
-              <span className="text-sm font-medium">Upload Date</span>
+              <span className="text-sm font-medium">Ngày đăng</span>
             </div>
             <span className="text-sm text-muted-foreground">
-              {new Date(version.created_at).toLocaleDateString("en-US", {
+              {new Date(version.created_at).toLocaleDateString("vi-VN", {
                 year: "numeric",
                 month: "short",
                 day: "numeric",

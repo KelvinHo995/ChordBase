@@ -11,17 +11,17 @@ const ChordGenerator = () => {
         <div className="mb-8">
             <div className="flex items-center gap-2">
             <Sparkles className="h-6 w-6 text-primary" />
-            <h1 className="text-3xl font-bold text-foreground">AI Generate Chord Sheet</h1>
+            <h1 className="text-3xl font-bold text-foreground">AI Tạo Bản Hợp Âm</h1>
             </div>
-            <p className="mt-2 text-muted-foreground">Let AI create a chord sheet for you based on an audio source.</p>
+            <p className="mt-2 text-muted-foreground">Để AI tạo bản hợp âm cho bạn dựa trên nguồn âm thanh.</p>
         </div>
 
         {/* Usage Counter */}
         <Card className="mb-6">
             <CardContent className="flex items-center justify-between p-4">
             <div>
-                <p className="font-medium text-foreground">AI Generates Remaining</p>
-                <p className="text-sm text-muted-foreground">Resets daily</p>
+                <p className="font-medium text-foreground">Số lần tạo AI còn lại</p>
+                <p className="text-sm text-muted-foreground">Đặt lại hàng ngày</p>
             </div>
             <Badge variant="default" className="text-lg">
                 5 / 5
@@ -31,19 +31,19 @@ const ChordGenerator = () => {
 
         <Card className="mb-6">
             <CardHeader>
-            <CardTitle>Song Information</CardTitle>
-            <CardDescription>Provide the song details and an audio source for AI analysis.</CardDescription>
+            <CardTitle>Thông tin bài hát</CardTitle>
+            <CardDescription>Cung cấp chi tiết bài hát và nguồn âm thanh để AI phân tích.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
             <div className="grid gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                <Label htmlFor="songName">Song Name *</Label>
-                <Input id="songName" placeholder="e.g., Wonderwall" />
+                <Label htmlFor="songName">Tên bài hát *</Label>
+                <Input id="songName" placeholder="Ví dụ: Wonderwall" />
                 </div>
 
                 <div className="space-y-2">
-                <Label htmlFor="artistName">Artist Name *</Label>
-                <Input id="artistName" placeholder="e.g., Oasis" />
+                <Label htmlFor="artistName">Tên nghệ sĩ *</Label>
+                <Input id="artistName" placeholder="Ví dụ: Oasis" />
                 </div>
             </div>
 
@@ -51,27 +51,27 @@ const ChordGenerator = () => {
                 <div className="space-y-2">
                 <Label htmlFor="audioLink" className="flex items-center gap-2">
                     <Link2 className="h-4 w-4" />
-                    Audio Link
+                    Liên kết âm thanh
                 </Label>
-                <Input id="audioLink" type="url" placeholder="https://youtube.com/watch?v=... or Spotify link" />
+                <Input id="audioLink" type="url" placeholder="https://youtube.com/watch?v=... hoặc liên kết Spotify" />
                 </div>
 
                 <div className="relative flex items-center">
                 <div className="flex-grow border-t border-border" />
-                <span className="mx-4 flex-shrink text-sm text-muted-foreground">OR</span>
+                <span className="mx-4 flex-shrink text-sm text-muted-foreground">HOẶC</span>
                 <div className="flex-grow border-t border-border" />
                 </div>
 
                 <div className="space-y-2">
                 <Label className="flex items-center gap-2">
                     <FileAudio className="h-4 w-4" />
-                    Upload Audio File
+                    Tải lên tệp âm thanh
                 </Label>
                 <div className="flex items-center gap-2">
                     <Input id="audioFile" type="file" accept="audio/*" className="hidden" />
                     <Button type="button" variant="outline" className="gap-2 bg-transparent">
                     <FileAudio className="h-4 w-4" />
-                    Choose Audio File
+                    Chọn tệp âm thanh
                     </Button>
                 </div>
                 </div>
@@ -79,7 +79,7 @@ const ChordGenerator = () => {
 
             <Button className="w-full gap-2">
                 <Sparkles className="h-4 w-4" />
-                Generate Chord Sheet
+                Tạo bản hợp âm
             </Button>
             </CardContent>
         </Card>

@@ -2,8 +2,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Music, Clock, Check, X, Eye } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Music, Clock, Check, X, Eye, ArrowLeft } from "lucide-react"
+import { Link, useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import { useState } from "react"
 import { SongService } from "@/services/BackendService"
@@ -52,8 +52,14 @@ const SongManagement = () => {
     fetchPendingSongs();
   }, []);
 
+  const navigate = useNavigate();
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <Button variant="ghost" size="sm" onClick={() => navigate(-1)} className="cursor-pointer mb-6 gap-2 text-lg -ml-4 print:hidden">
+        <ArrowLeft className="h-5 w-5" />
+        Back
+      </Button>
       <div className="mb-8">
         <div className="flex items-center gap-2">
           <Music className="h-6 w-6 text-primary" />
@@ -91,7 +97,7 @@ const SongManagement = () => {
                 </TableHeader>
                 <TableBody>
                   {allPendingSongs.map((song) => (
-                    <TableRow key={song.song_id}>
+                    <TableRow key={song.chord_sheet_id}>
                       <TableCell>
                         <div>
                           <p className="font-medium text-foreground">{song.song.title}</p>
@@ -106,7 +112,7 @@ const SongManagement = () => {
                       <TableCell>
                         <div className="flex justify-end gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link to={`/song/${song.song_id}`}>
+                            <Link to={`/songs/${song.song_id}/${song.chord_sheet_id}`}>
                               <Eye className="mr-1 h-3 w-3" />
                               Preview
                             </Link>

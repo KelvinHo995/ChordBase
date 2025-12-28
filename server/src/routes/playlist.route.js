@@ -18,6 +18,7 @@ router.post('/', protect, PlaylistController.createPlaylist);
 router.get('/favorites', protect, PlaylistController.getFavoriteSongs);
 // Add to favorites
 router.post('/favorites/:songId', protect, PlaylistController.addFavorite);
+
 // Remove from favorites
 router.delete('/favorites/:songId', protect, PlaylistController.removeFavorite);
 

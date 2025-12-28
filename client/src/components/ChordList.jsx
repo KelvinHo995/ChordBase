@@ -12,7 +12,7 @@ export function ChordList({
   if (!chords || chords.length === 0) {
     return (
       <div className="text-lg text-muted-foreground flex items-center gap-2 italic">
-        <Music className="h-5 w-5" /> No chords listed
+        <Music className="h-5 w-5" /> Không có hợp âm nào
       </div>
     )
   }

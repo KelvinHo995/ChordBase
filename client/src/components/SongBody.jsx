@@ -5,12 +5,12 @@ import { useInstrument } from '../context/InstrumentContext';
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Plus, Minus, Play, Pause, Download, RotateCcw } from "lucide-react"
+import { Plus, Minus, Play, Pause, Download, RotateCcw, Music2 } from "lucide-react"
 
 const songKeyTemp = "G";
 const lyricsTemp = "[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n[G]I found a [Em]love for [C]me\nDarling just [G]dive right in\n";
 
-const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
+const SongBody = ({ lyrics=null, songKey=null, showControl=true, versions=[], currentVersionId=null, onVersionChange=null }) => {
     if (lyrics == null)
         lyrics = lyricsTemp;
     if (songKey == null) 
@@ -57,8 +57,28 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
             {showControl && (
                 <CardHeader className="pb-3 print:hidden">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-                        <CardTitle className="text-xl">Chord Sheet</CardTitle>
+                        <CardTitle className="text-xl">Hợp âm</CardTitle>
                         <div className="flex flex-wrap items-center gap-2">
+                            {/* Version Selector */}
+                            {versions && versions.length > 1 && (
+                                <Select 
+                                    value={currentVersionId?.toString()} 
+                                    onValueChange={(value) => onVersionChange && onVersionChange(value)}
+                                >
+                                    <SelectTrigger className="h-10 w-[140px] text-base">
+                                        <Music2 className="mr-2 h-4 w-4" />
+                                        <SelectValue placeholder="Chọn phiên bản" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {versions.map((version, index) => (
+                                            <SelectItem key={version.chord_sheet_id} value={version.chord_sheet_id.toString()} className="text-base">
+                                                Version {index + 1}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            )}
+                            
                             {/* Transpose Controls */}
                             <div className="flex items-center gap-1 rounded-lg border border-border bg-muted/50 p-1">
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => handleTranspose(-1)}>
@@ -78,7 +98,7 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                             {/* Instrument Selector */}
                             <Select onValueChange={handleInstrumentChange} defaultValue="guitar">
                                 <SelectTrigger className="h-10 w-[120px] text-base">
-                                    <SelectValue placeholder="Instrument" />
+                                    <SelectValue placeholder="Nhạc cụ" />
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="guitar" className="text-base">Guitar</SelectItem>
@@ -96,11 +116,11 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                             >
                                 {isAutoscroll ? (
                                     <>
-                                        <Pause className="mr-2 h-4 w-4" /> Stop
+                                        <Pause className="mr-2 h-4 w-4" /> Dừng
                                     </>
                                 ) : (
                                     <>
-                                        <Play className="mr-2 h-4 w-4" /> Scroll
+                                        <Play className="mr-2 h-4 w-4" /> Cuộn
                                     </>
                                 )}
                             </Button>
@@ -121,13 +141,13 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                 </CardHeader>
             )}
             
-            <CardContent className="py-6 px-2 m-6 bg-gray-100 rounded-2xl">
+            <CardContent className={`py-6 ${showControl ? 'px-2 m-6' : 'px-4 m-0'} bg-gray-100 rounded-2xl`}>
                 <div 
-                    className={`flex flex-col font-mono whitespace-pre-wrap ${isAutoscroll ? "h-[500px] overflow-y-auto" : ""}`}
+                    className={`flex flex-col font-mono whitespace-pre-wrap break-words overflow-hidden ${isAutoscroll ? "h-[500px] overflow-y-auto" : ""}`}
                     ref={lyricRef}
                 >
                     {lines.map((line, i) => (
-                        <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps}/>
+                        <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps} compact={!showControl}/>
                     ))}
                 </div>
             </CardContent>

@@ -29,6 +29,11 @@ const Song = sequelize.define('Song', {
     },
     deleted_at: {
         type: DataTypes.DATE
+    },
+    difficulty: {
+        type: DataTypes.ENUM('Beginner', 'Intermediate', 'Advanced'),
+        allowNull: false,
+        defaultValue: 'Beginner'
     }
 }, {
     tableName: 'songs',
