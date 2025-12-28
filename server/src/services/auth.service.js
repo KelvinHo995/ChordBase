@@ -179,6 +179,44 @@ class AuthService {
             }
         );
     }
+
+    // Google OAuth login
+    async loginWithGoogle(accessToken) {
+        try {
+            // Fetch user info from Google
+            const response = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch Google user info');
+            }
+
+            const googleUser = await response.json();
+            
+            // Create profile object similar to Passport strategy
+            const profile = {
+                id: googleUser.sub,
+                emails: [{ value: googleUser.email }],
+                displayName: googleUser.name || googleUser.email.split('@')[0]
+            };
+
+            // Find or create user
+            const user = await User.findOrCreateFromGoogle(profile);
+            
+            // Generate token
+            const token = this.generateToken(user);
+
+            return {
+                user: user.toJSON(),
+                token
+            };
+        } catch (error) {
+            throw new Error('Google authentication failed');
+        }
+    }
 }
 
 module.exports = new AuthService();

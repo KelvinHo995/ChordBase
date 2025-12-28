@@ -155,6 +155,35 @@ class AuthController {
             message: 'Logged out successfully'
         });
     }
+
+    // POST /api/auth/google/token
+    async googleTokenLogin(req, res) {
+        try {
+            const { access_token } = req.body;
+
+            if (!access_token) {
+                return res.status(400).json({
+                    success: false,
+                    message: 'Access token is required'
+                });
+            }
+
+            const result = await authService.loginWithGoogle(access_token);
+            
+            res.status(200).json({
+                success: true,
+                message: 'Google login successful',
+                user: result.user,
+                token: result.token
+            });
+        } catch (error) {
+            console.error('Google token login error:', error);
+            res.status(401).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
 }
 
 module.exports = new AuthController();
