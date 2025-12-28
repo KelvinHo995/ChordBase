@@ -121,13 +121,13 @@ const SongBody = ({ lyrics=null, songKey=null, showControl=true }) => {
                 </CardHeader>
             )}
             
-            <CardContent className="py-6 px-2 m-6 bg-gray-100 rounded-2xl">
+            <CardContent className={`py-6 ${showControl ? 'px-2 m-6' : 'px-4 m-0'} bg-gray-100 rounded-2xl`}>
                 <div 
-                    className={`flex flex-col font-mono whitespace-pre-wrap ${isAutoscroll ? "h-[500px] overflow-y-auto" : ""}`}
+                    className={`flex flex-col font-mono whitespace-pre-wrap break-words overflow-hidden ${isAutoscroll ? "h-[500px] overflow-y-auto" : ""}`}
                     ref={lyricRef}
                 >
                     {lines.map((line, i) => (
-                        <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps}/>
+                        <SongLine key={i} line={line} semitones={semitones} preferSharps={preferSharps} compact={!showControl}/>
                     ))}
                 </div>
             </CardContent>

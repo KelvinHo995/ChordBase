@@ -76,6 +76,7 @@ class UploadService {
             genre_id,
             // Chord sheet data
             key,
+            difficulty,
             content,
             uploader_id
         } = data;
@@ -128,6 +129,7 @@ class UploadService {
                 song = await Song.create({
                     title: songname.trim(),
                     genre_id: genre_id || null,
+                    difficulty: difficulty || 'Beginner',
                     duration_sec: null
                 }, { transaction });
 

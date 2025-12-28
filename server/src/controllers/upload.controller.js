@@ -60,6 +60,7 @@ class UploadController {
                 genre_id,
                 // Chord sheet
                 key,
+                difficulty,
                 content,
                 uploader_id
             } = req.body;
@@ -85,6 +86,7 @@ class UploadController {
                 author,
                 genre_id,
                 key,
+                difficulty: difficulty || 'Beginner',
                 content,
                 uploader_id: uploader_id || req.user?.user_id || null
             });
