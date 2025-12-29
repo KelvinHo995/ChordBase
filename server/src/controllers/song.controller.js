@@ -62,8 +62,8 @@ class SongController {
     async getSong(req, res) {
         try {
             const { song_id } = req.params;
-            const user_id = req.user?.user_id || null; // Get user_id from auth middleware if available
-            const song = await songService.getSongById(song_id, user_id);
+            const currentUser = req.user || null; // Get user from auth middleware if available
+            const song = await songService.getSongById(song_id, currentUser);
 
             res.status(200).json({
                 success: true,

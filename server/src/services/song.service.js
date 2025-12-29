@@ -205,16 +205,30 @@ class SongService {
     }
 
     // ===== ENRICH SONG WITH CHORD VERSIONS & STATS =====
-    async enrichSongData(song, includeFullContent = false) {
+    async enrichSongData(song, includeFullContent = false, currentUser = null) {
         const songData = song.toJSON();
+
+        const whereCondition = {
+            song_id: song.song_id,
+            is_deleted: false
+        };
+
+        if (currentUser?.role === 'admin') {
+            // Admin sees all statuses
+        } else if (currentUser?.user_id) {
+            // User sees approved + their own pending/rejected
+            whereCondition[Op.or] = [
+                { status: 'approved' },
+                { uploader_id: currentUser.user_id }
+            ];
+        } else {
+            // Guest sees only approved
+            whereCondition.status = 'approved';
+        }
 
         // Get all chord versions for this song
         const chordVersions = await ChordSheet.findAll({
-            where: {
-                song_id: song.song_id,
-                status: 'approved',
-                is_deleted: false
-            },
+            where: whereCondition,
             include: [
                 {
                     model: User,
@@ -290,7 +304,8 @@ class SongService {
     }
 
     // ===== GET SINGLE SONG WITH DETAILS =====
-    async getSongById(song_id, user_id = null) {
+    async getSongById(song_id, currentUser = null) {
+        const user_id = currentUser?.user_id;
         const song = await Song.findOne({
             where: {
                 song_id,
@@ -316,7 +331,7 @@ class SongService {
         }
 
         // Enrich with chord versions and stats
-        const enrichedSong = await this.enrichSongData(song, true); // includeFullContent = true
+        const enrichedSong = await this.enrichSongData(song, true, currentUser); // includeFullContent = true
 
         // Check if song is favorited by user
         let is_favorited = false;
