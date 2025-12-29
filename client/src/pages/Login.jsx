@@ -156,11 +156,11 @@ const Login = () => {
             </Link>
           </p>
 
-          <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3 text-xs text-muted-foreground">
+          {/* <div className="mt-4 rounded-lg border border-border bg-muted/50 p-3 text-xs text-muted-foreground">
             <p className="font-medium">Tài khoản demo:</p>
             <p>Admin: john@example.com / password123</p>
             <p>User: jane@example.com / password123</p>
-          </div>
+          </div> */}
         </CardContent>
       </Card>
     </div>
