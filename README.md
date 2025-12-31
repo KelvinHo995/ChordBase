@@ -107,7 +107,7 @@ EMAIL_PORT=587
 EMAIL_USER=your_email@gmail.com
 EMAIL_PASSWORD=your_email_password
 
-PORT=your-port
+PORT=your_backend_port
 NODE_ENV=development
 ```
 
@@ -130,7 +130,7 @@ npm install
 
 3. Create a `.env` file in the client directory:
 ```env
-VITE_API_URL=http://localhost:your-backend-port
+VITE_API_URL=http://localhost:your_backend_port
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 

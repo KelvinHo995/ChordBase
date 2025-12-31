@@ -121,7 +121,6 @@ export const UserService = {
     },
 
     updateStatus: async (id, userData) => {
-        console.log("Updating user status:", userData);
         const response = await apiClient.put(`/users/${id}/status`, {status: userData.status});
         return response.data;
     },
@@ -203,12 +202,10 @@ export const AuthService = {
     loginUser: async (credentials) => {
         try {   
             const response = await apiClient.post('/auth/login', credentials);
-            console.log('Logged in:', response);
             const token = response.data.token;
             localStorage.setItem('token', token);
             return response.data.user;
         } catch (error) {
-            // console.log('Login error:', error);
             throw new Error(error.response?.data?.message || 'Login failed');
         }
     },

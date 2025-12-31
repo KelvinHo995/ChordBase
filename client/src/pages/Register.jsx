@@ -38,7 +38,6 @@ const Register = () => {
 
     try {
       setLoading(true)
-      console.log('Registering user:', formData)
       const result = await register({
         display_name: formData.name,
         email: formData.email,

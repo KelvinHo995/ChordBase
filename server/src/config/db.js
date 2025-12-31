@@ -1,4 +1,4 @@
-// config/db.js - PHIÊN BẢN MỚI (AN TOÀN)
+// config/db.js - Database configuration
 const { Sequelize } = require('sequelize');
 const vars = require('./vars');
 
@@ -10,7 +10,6 @@ const sequelize = new Sequelize(
         dialect: 'postgres',
         logging: vars.env === 'development' ? console.log : false,
         
-        // ✅ THÊM: Connection pool
         pool: {
             max: 5,
             min: 0,
@@ -18,16 +17,14 @@ const sequelize = new Sequelize(
             idle: 10000
         },
         
-        // ✅ THÊM: Timezone
         timezone: '+07:00',
         
         define: {
             timestamps: true,
-            underscored: true,      // ✅ snake_case
-            freezeTableName: true,  // ✅ Không pluralize
+            underscored: true,      
+            freezeTableName: true,  
         },
         
-        // ✅ THÊM: SSL cho production
         dialectOptions: {
             ssl: vars.env === 'production' ? {
                 require: true,
@@ -42,33 +39,26 @@ const sequelize = new Sequelize(
 exports.connect = async () => {
     try {
         await sequelize.authenticate();
-        console.log('✅ Kết nối thành công tới PostgreSQL.');
-        
-        // ✅ BỎ sequelize.sync() - Dùng SQL files thay vì
-        // Schema được quản lý bởi schema.sql và ready.sql
-        
+        console.log('✅ Successfully connected to PostgreSQL.');
     } catch (error) {
-        console.error('❌ LỖI KẾT NỐI DB:', error.message);
-        console.error('📋 Chi tiết lỗi:', error);
+        console.error('❌ DATABASE CONNECTION ERROR:', error.message);
+        console.error('📋 Error details:', error);
         process.exit(1);
     }
 };
 
-// ✅ THÊM: Function đóng kết nối
 exports.disconnect = async () => {
     try {
         await sequelize.close();
-        console.log('🔌 Đã đóng kết nối database');
+        console.log('🔌 Database connection closed');
     } catch (error) {
-        console.error('❌ Lỗi khi đóng kết nối:', error.message);
+        console.error('❌ Error closing connection:', error.message);
     }
 };
 
-// ✅ THÊM: Test query function
 exports.testQuery = async () => {
     try {
         const result = await sequelize.query('SELECT NOW() as current_time');
-        console.log('⏰ Database time:', result[0][0].current_time);
         return true;
     } catch (error) {
         console.error('❌ Test query failed:', error.message);
@@ -77,4 +67,4 @@ exports.testQuery = async () => {
 };
 
 exports.sequelize = sequelize;
-exports.Sequelize = Sequelize; // ✅ Export thêm class
+exports.Sequelize = Sequelize; 

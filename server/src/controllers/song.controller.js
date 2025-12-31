@@ -109,7 +109,6 @@ class SongController {
 
     // GET /api/search/popular
     async getPopular(req, res) {
-        console.log('Fetching popular songs');
         try {
             const limit = parseInt(req.query.limit) || 10;
             const songs = await songService.getPopularSongs(limit);
@@ -128,7 +127,6 @@ class SongController {
 
     // GET /api/search/recent
     async getRecent(req, res) {
-        console.log('Fetching recent songs');
         try {
             const limit = parseInt(req.query.limit) || 10;
             const songs = await songService.getRecentSongs(limit);
@@ -147,7 +145,6 @@ class SongController {
 
     // GET /api/search/pending
     async getPending(req, res) {
-        console.log('Fetching pending songs');
         try {
             const songs = await songService.getPendingSongs();
             
@@ -165,7 +162,6 @@ class SongController {
 
     // POST /api/search/pending/approve/:song_id
     async approveSong(req, res) {
-        console.log('Approving song:', req.params.chord_sheet_id);
         try {
             const { chord_sheet_id } = req.params;
             await songService.approveSong(chord_sheet_id);
@@ -182,7 +178,6 @@ class SongController {
     }
 
     async rejectSong(req, res) {
-        console.log('Rejecting song:', req.params.chord_sheet_id);
         try {
             const { chord_sheet_id } = req.params;
             await songService.rejectSong(chord_sheet_id);

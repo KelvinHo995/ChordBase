@@ -54,7 +54,6 @@ class AuthController {
                 });
             }
             const result = await authService.login(email, password);
-            console.log('Login successful for user:', result.user.email);
             res.status(200).json({
                 success: true,
                 message: 'Login successful',
@@ -62,7 +61,6 @@ class AuthController {
                 token: result.token
             });
         } catch (error) {
-            console.log('Login error:', error.message);
             res.status(401).json({
                 success: false,
                 message: error.message

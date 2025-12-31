@@ -8,7 +8,6 @@ import { SongService, GenreService } from "@/services/BackendService"
 const SearchPage = () => {
   const [searchParams] = useSearchParams()
   const searchQuery = searchParams.get("q") || ""
-  console.log(searchQuery)
   const [searchType, setSearchType] = useState("all")
   const [selectedGenre, setSelectedGenre] = useState("all")
   const [sortBy, setSortBy] = useState("rating")
@@ -44,7 +43,6 @@ const SearchPage = () => {
         if (sortBy) params.sort_by = sortBy
 
         const res = await SongService.getAll(params)
-        console.log(res);
         setSongs(res.data.songs || []);
         // Assuming the backend returns an array of songs directly or { data: [...] }
         // Adjust based on actual API response structure. 

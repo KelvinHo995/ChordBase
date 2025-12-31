@@ -38,12 +38,10 @@ const SongPage = () => {
 
   const handlePostComment = async (commentText, parentCommentId = null) => {
     if (!version?.chord_sheet_id) {
-      console.error('No chord sheet ID available');
       return;
     }
 
     if (!commentText.trim()) {
-      console.error('Comment text is empty');
       return;
     }
 
@@ -56,7 +54,6 @@ const SongPage = () => {
       };
 
       const response = await CommentService.create(commentData);
-      console.log('Comment posted successfully:', response);
       
       // Refresh comments after posting
       if (version?.chord_sheet_id) {
@@ -75,13 +72,11 @@ const SongPage = () => {
 
   const handleUpdateComment = async (commentId, newContent) => {
     if (!newContent.trim()) {
-      console.error('Comment content is empty');
       return;
     }
 
     try {
       const response = await CommentService.update(commentId, newContent.trim());
-      console.log('Comment updated successfully:', response);
       
       // Refresh comments after updating
       if (version?.chord_sheet_id) {
@@ -102,7 +97,6 @@ const SongPage = () => {
 
     try {
       await CommentService.delete(commentId);
-      console.log('Comment deleted successfully');
       
       // Refresh comments after deleting
       if (version?.chord_sheet_id) {
@@ -119,7 +113,6 @@ const SongPage = () => {
       try {
         setIsLoading(true)
         const res = await SongService.getById(songID);
-        console.log(res.data.song);
 
         setSong(res.data.song);
         setFavorite(Boolean(res.data.song.is_favorited ?? res.data.song.is_favourited));
@@ -130,7 +123,7 @@ const SongPage = () => {
           setVersion(currentVersion);
         }
       } catch (err) {
-        console.log(err);
+        // Handle error silently or show notification
       } finally {
         setIsLoading(false)
       }
@@ -145,7 +138,6 @@ const SongPage = () => {
     setIsLoadingComments(true);
     try {
       const response = await CommentService.getByChordSheet(chordSheetId);
-      console.log('Comments fetched:', response);
       setComments(response.data.comments || []);
     } catch (error) {
       console.error('Failed to fetch comments:', error);
@@ -160,7 +152,6 @@ const SongPage = () => {
     
     try {
       const response = await RatingService.getByChordSheet(chordSheetId);
-      console.log('Rating fetched:', response);
       setRatingStats(response.data.rating);
       setUserRating(response.data.userRating);
     } catch (error) {

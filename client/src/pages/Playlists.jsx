@@ -43,7 +43,6 @@ const Playlists = () => {
       try {
           const res = await PlaylistService.getFavoriteSongs()
           const favSongs = res.data.map(fav => fav.song)
-          console.log("Fetched favorite songs:", favSongs)
           setFavorites(favSongs)
       } catch (error) {
         console.error("Failed to fetch favorite songs:", error)

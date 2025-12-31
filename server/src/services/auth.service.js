@@ -8,7 +8,6 @@ const { sendEmail } = require('../utils/email');
 class AuthService {
     // Register new user
     async register(userData) {
-        console.log('Registering user:', userData);
         const { email, password, display_name } = userData;
 
         // Check if user already exists
@@ -103,18 +102,9 @@ class AuthService {
                         <p>— ChordBase Team</p>
                     `
                 });
-            } else {
-                // Log the reset link for development
-                console.log('='.repeat(80));
-                console.log('PASSWORD RESET LINK (Email not configured):');
-                console.log(resetLink);
-                console.log('Reset Token:', resetToken);
-                console.log('='.repeat(80));
             }
         } catch (emailError) {
             console.error('Failed to send email:', emailError.message);
-            // Don't fail the request if email fails, just log it
-            console.log('Reset Token (email failed):', resetToken);
         }
 
         // 6. Trả về (trong dev mode, trả về token để test)

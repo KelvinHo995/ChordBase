@@ -8,12 +8,12 @@ module.exports = {
 
     // ===== DATABASE CONFIGURATION =====
     dbUser: process.env.DB_USER || 'postgres',
-    dbPass: process.env.DB_PASS || 'thanhdat8328',
+    dbPass: process.env.DB_PASS || '',
     dbName: process.env.DB_NAME || 'chordbase',
     dbHost: process.env.DB_HOST || 'localhost',
     dbPort: parseInt(process.env.DB_PORT, 10) || 5432,
 
-    // Database sync (CHỈ dùng trong development nếu cần)
+    // Database sync (only use in development if needed)
     autoSync: process.env.DB_AUTO_SYNC === 'true' || false,
     
     // ===== JWT CONFIGURATION =====
@@ -24,7 +24,7 @@ module.exports = {
     // ===== CORS CONFIGURATION =====
     corsOrigin: process.env.CORS_ORIGIN || 'http://localhost:5173',
     
-    // ===== EMAIL CONFIGURATION (cho password reset) =====
+    // ===== EMAIL CONFIGURATION (for password reset) =====
     mailHost: process.env.MAIL_HOST || process.env.SMTP_HOST || 'smtp.gmail.com',
     mailPort: parseInt(process.env.MAIL_PORT || process.env.SMTP_PORT, 10) || 587,
     mailUser: process.env.MAIL_USER || process.env.SMTP_USER || '',
@@ -46,7 +46,7 @@ module.exports = {
     // ===== PASSWORD RESET =====
     passwordResetExpireHours: parseInt(process.env.PASSWORD_RESET_EXPIRE_HOURS, 10) || 1,
     
-    // ===== FRONTEND URL (cho email links) =====
+    // ===== FRONTEND URL (for email links) =====
     frontendUrl: process.env.FRONTEND_URL || 'http://localhost:5173',
     
     // ===== GOOGLE OAUTH CONFIGURATION =====

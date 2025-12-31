@@ -114,7 +114,6 @@ class PlaylistController {
 
     // GET /api/playlists/favorites
     async getFavoriteSongs(req, res) {
-        console.log("Fetching favorite songs for user:", req.user);
         try {
             const user_id = req.user.user_id;
             const songs = await playlistService.getFavoriteSongsByUserId(user_id);
