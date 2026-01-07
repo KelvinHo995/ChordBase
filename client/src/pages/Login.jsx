@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import { useGoogleLogin } from '@react-oauth/google'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -12,16 +12,31 @@ const Login = () => {
   const navigate = useNavigate()
   const { login, googleLogin } = useAuth()
   const [formData, setFormData] = useState({ email: '', password: '' })
-  const [showPassword, setShowPassword] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+
+  const emailRef = useRef(null)
+  const passwordRef = useRef(null)
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
     setError('')
   }
 
+  const handleCloseError = () => {
+    // Focus first empty field when closing an error popup
+    if (!formData.email) {
+      emailRef.current?.focus()
+    } else if (!formData.password) {
+      passwordRef.current?.focus()
+    } else {
+      emailRef.current?.focus()
+    }
+    setError('')
+  }
+
   const handleSubmit = async (e) => {
+    console.log('Submitting form with data:', formData)
     e.preventDefault()
     setLoading(true)
     setError('')
@@ -29,6 +44,10 @@ const Login = () => {
       if (!formData.email || !formData.password) {
         setError('Vui lòng điền vào tất cả các trường')
         setLoading(false)
+
+        // log for debugging
+        console.log('Validation failed: Missing email or password')
+
         return
       }
 
@@ -36,6 +55,8 @@ const Login = () => {
       console.log(result)
       navigate('/')
     } catch (err) {
+      // log for debugging
+      console.error('Login error:', err)
       setError('Đăng nhập thất bại. Vui lòng thử lại.')
     } finally {
       setLoading(false)
@@ -84,6 +105,7 @@ const Login = () => {
                   className="pl-10" 
                   value={formData.email}
                   onChange={handleChange}
+                  ref={emailRef}
                 />
               </div>
             </div>
@@ -105,6 +127,7 @@ const Login = () => {
                   className="pl-10" 
                   value={formData.password}
                   onChange={handleChange}
+                  ref={passwordRef}
                 />
               </div>
             </div>
@@ -163,6 +186,22 @@ const Login = () => {
           </div> */}
         </CardContent>
       </Card>
+
+      {/* Simple popup for validation/login errors */}
+      {error && (
+        <div
+          role="alert"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+          aria-live="assertive"
+        >
+          <div className="w-full max-w-sm rounded-lg bg-card p-4 shadow-lg">
+            <p className="mb-4 text-sm">{error}</p>
+            <div className="flex justify-end">
+              <Button onClick={handleCloseError}>Close</Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
